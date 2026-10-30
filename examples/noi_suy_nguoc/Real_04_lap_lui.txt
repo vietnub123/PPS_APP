@@ -1,0 +1,405 @@
+Nội suy ngược — Newton lùi
+
+================================================================
+
+1. Bài toán và lựa chọn
+
+Thông số của lượt chạy
+
+Phương pháp: Nội suy ngược — Newton lùi. Mức cần tìm: 2. Bậc tối đa: 3.
+
+Khoảng x: [2, 2.2]. Khoảng mục tiêu do người dùng cung cấp, độc lập với gốc và tập mốc tính.
+
+ε_x=1.000000000000e-6; ε_y=1.000000000000e-6; tối đa 100 vòng.
+
+Khởi tạo: Theo phần tuyến tính tại gốc. Chế độ: chỉ nhận kết quả có chứng nhận.
+
+Chỉ số mốc dùng: [0, 1, 2, 3] (bắt đầu từ 0).
+
+Giữ số đầy đủ khi tính; bảng trung gian hiển thị 12 chữ số hoặc dạng khoa học.
+
+Các mốc đã chọn
+
+Các cặp dùng trong mô hình
+================================================================
+
+Các cặp dùng trong mô hình
+dòng gốc  x_i  y_i
+0         1.6  4.23
+1         1.8  3.67
+2         2    2.99
+3         2.2  1.24
+
+
+Khảo sát mức và các nhánh trên mẫu
+
+Mốc đúng mức: []; khoảng đổi dấu: [(2, 3)]; nhánh trên mẫu: [[0, 1, 2, 3]]; hai đầu cùng mức: [].
+
+Nếu hàm thật liên tục, mỗi khoảng đổi dấu có ít nhất một nghiệm. Phép quét có thể bỏ sót nghiệm tiếp xúc; đơn điệu trên mẫu không chứng minh đơn điệu giữa các mốc.
+
+2. Kiểm tra điều kiện
+
+✓ Đạt — Ghép cặp và giá trị hữu hạn: Hai dãy cùng độ dài, có ít nhất 2 cặp; mọi số hữu hạn.
+
+✓ Đạt — Hoành độ phân biệt: Sắp theo x tăng và giữ nguyên cặp cùng chỉ số hàng gốc.
+
+✓ Đạt — Số mốc và bậc đã chọn: Số mốc = bậc + 1; không tự chọn lại mốc.
+
+✓ Đạt — Độ tách biệt của tung độ: Ngưỡng chỉ phát cảnh báo; không gộp hoặc thay đổi mốc.
+
+✓ Đạt — Lưới x đều: Dung sai nhận dạng lưới độc lập với hai ngưỡng sai số nghiệm.
+
+✓ Đạt — Giữ nguyên tập mốc và gốc khai triển: Khoảng nghiệm ở giữa bảng không làm thiếu mốc; số vòng không làm tăng số mốc cần dùng.
+
+✓ Đạt — Khoảng đang giải: Khoảng mục tiêu do người dùng cung cấp, độc lập với gốc và tập mốc tính.
+
+✓ Đạt — Đối chiếu mức tại hai đầu khoảng: Hai đầu đổi dấu. Nếu hàm thật liên tục thì có ít nhất một nghiệm.
+
+✓ Đạt — Đơn điệu của tập mốc lặp: Không suy từ thứ tự mẫu ra tính đơn điệu của hàm thật giữa mọi mốc.
+
+✓ Đạt — Sai phân tuyến tính tại gốc: Không thay d bằng một số nhỏ tùy ý và không dùng ngưỡng cảnh báo làm ngưỡng sai số nghiệm.
+
+✓ Đạt — Khởi tạo so với khoảng mục tiêu: T được tính từ khoảng nghiệm và gốc thật. Khởi tạo ngoài T không chặn phép lặp thực hành.
+
+✓ Đạt — Điều kiện co trên toàn J: Chặn hữu tỷ trên toàn đoạn của chính mô hình đã chọn.
+
+Lưới x: h=0.2; độ lệch lớn nhất=0; atol=0; rtol=1.000000000000e-10.
+
+Các bước lưới thực nhập
+
+Kiểm tra lưới x
+================================================================
+
+Kiểm tra lưới x
+i  h_i
+0  0.2
+1  0.2
+2  0.2
+
+
+3. Bảng tính trung gian
+
+Bảng sai phân lùi
+================================================================
+
+Bảng sai phân lùi
+i  x_i  y_i   ∇y     ∇²y    ∇³y
+0  1.6  4.23  —      —      —
+1  1.8  3.67  -0.56  —      —
+2  2    2.99  -0.68  -0.12  —
+3  2.2  1.24  -1.75  -1.07  -0.95
+
+
+Hệ số c = [1.24, -1.75, -1.07, -0.95].
+
+Bậc tối đa 3; bậc thực tế của đa thức từ hệ số đang giữ: 3. Không tự cắt các hệ số nhỏ về 0.
+
+Bảng ∇ đặt ô tại hàng kết thúc; lấy các hệ số cùng hàng gốc phải.
+
+Phép tính từng ô và cách lấy hệ số
+
+Các phép tính đã lưu
+================================================================
+
+Các phép tính đã lưu
+i  cấp  phải   trái   tử     mẫu  kết quả
+0  1    3.67   4.23   -0.56  1    -0.56
+1  1    2.99   3.67   -0.68  1    -0.68
+2  1    1.24   2.99   -1.75  1    -1.75
+0  2    -0.68  -0.56  -0.12  1    -0.12
+1  2    -1.75  -0.68  -1.07  1    -1.07
+0  3    -1.07  -0.12  -0.95  1    -0.95
+
+
+Hệ số và mẫu giai thừa
+================================================================
+
+Hệ số và mẫu giai thừa
+r  dòng dùng  c_r    r!  c_r/r!
+0  3          1.24   1   1.24
+1  2          -1.75  1   -1.75
+2  1          -1.07  2   -0.535
+3  0          -0.95  6   -19/120
+
+
+4. Thiết lập công thức
+
+Đổi biến và đa thức thuận
+
+t=(x-(2.2))/(0.2); x=2.2+(0.2)*t.
+
+Ảnh T của khoảng mục tiêu theo đúng gốc đang dùng: [-1,0].
+
+p(t) = 1.24-(1.75)*t-(0.535)*t*(t+1)
+
+    -(19/120)*t*(t+1)*(t+2)
+
+Phần hiệu chỉnh từ cấp 2 đến bậc đã chọn
+
+H(t) = -(0.535)*t*(t+1)-(19/120)*t*(t+1)*(t+2)
+
+Phương trình cần giải: p(t)=2.
+
+Hàm lặp Phi(t)=(0.76-H(t))/(-1.75).
+
+t_0=(2-(1.24))/(-1.75)=-0.434285714286.
+
+x_0=2.2+(0.2)*(-0.434285714286)=2.113142857143.
+
+Cơ sở và hàm lặp tổng quát
+
+B_r(t)=prod(t+s,s=0..r-1)/r!; p(t)=sum(c_r*B_r(t),r=0..m).
+
+Phi(t)=(Y*−c_0−H(t))/c_1.
+
+5. Hội tụ và tiêu chuẩn dừng
+
+Căn cứ hội tụ trên đoạn đang chạy
+
+T=[-1, 0] là ảnh của khoảng mục tiêu theo gốc thật; t₀=-0.434285714286 thuộc T.
+
+J=[-1, 0] dùng để kiểm tra chứng nhận, phân biệt với T; t₀ thuộc J.
+
+Đã chặn hữu tỷ trên toàn đoạn
+
+Bao ảnh Phi(J) nằm trong [-76/175, -1313/4200].
+
+Cận |Phi′| = 73/150; nhỏ hơn 1.
+
+Nguồn cận: Chặn hữu tỷ trên toàn đoạn của chính mô hình đã chọn.
+
+Thiếu chứng nhận không tự chứng minh phân kỳ; không tự đổi t₀, khoảng hay phương pháp.
+
+Hai điều kiện dừng độc lập
+
+Cận vị trí nghiệm mô hình: B_j=|h|*q/(1-q)*|t_j-t_(j-1)| ≤ eps_x.
+
+Độ lệch tại giá trị mới: r_j=|p(t_j)−Y*| ≤ eps_y.
+
+ε_x=1.000000000000e-6; ε_y=1.000000000000e-6. Chỉ dừng đạt yêu cầu khi cả hai cùng đạt.
+
+Chi tiết phép chặn ảnh và đạo hàm
+
+Cận số hạng cấp cao trên J
+================================================================
+
+Cận số hạng cấp cao trên J
+r  cận dưới  cận trên
+2  0         0.13375
+3  0         19/240
+
+
+\Phi^\prime(t) = -73/150-202/175*t-19/70*t^2
+
+Trên cả J, Phi′(t) thuộc [-73/150, 208/525].
+
+Các điểm dùng để chặn đạo hàm
+================================================================
+
+Các điểm dùng để chặn đạo hàm
+t   Phi′(t)
+-1  208/525
+0   -73/150
+
+
+Bậc thấp xét đầu mút và cực trị; bậc cao dùng cận hệ số/đơn điệu đã chứng minh. Không lấy max từ một lưới mẫu float.
+
+Chứng nhận toán học xét mô hình đã công bố, chưa chứng nhận toàn bộ sai số máy bằng số học khoảng.
+
+6. Quá trình tính
+
+Bảng tổng hợp vòng lặp
+================================================================
+
+Bảng tổng hợp vòng lặp
+vòng  t_j              x_j             Cận sai số B_j     Độ lệch r_j        Trạng thái
+0     -0.434285714286  2.113142857143  —                  —                  Khởi tạo
+1     -0.324374102791  2.135125179442  0.020840383478     0.016953508928     Tiếp tục
+2     -0.334061822178  2.133187635564  0.001836892247     0.002306962960     Tiếp tục
+3     -0.332743557629  2.133451288474  0.000249956655     0.000304509942     Tiếp tục
+4     -0.332917563310  2.133416487338  3.299328499425e-5  4.036368409465e-5  Tiếp tục
+5     -0.332894498348  2.133421100330  4.373356495599e-6  5.347358644846e-6  Tiếp tục
+6     -0.332897553981  2.133420489204  5.793798605918e-7  7.084672134372e-7  Đạt cả hai
+
+
+Vòng 1 — Tiếp tục
+
+✓ Dùng giá trị cũ t_0=-0.434285714286.
+
+d=-1.75; P(t cũ)=2.192345320117; H′(t cũ)=-0.063996462585; q dùng để dừng=0.486666666667.
+
+T_2=(-1.07)*(-0.434285714286)*(0.565714285714)/2! = 0.131439673469.
+
+T_3=(-0.95)*(-0.434285714286)*(0.565714285714)*(1.565714285714)/3! = 0.060905646647.
+
+✓ Cộng H(t_0)=0.192345320117.
+
+✓ t_1=(0.76-(0.192345320117))/(-1.75)=-0.324374102791.
+
+✓ x_1=2.2+(0.2)*(-0.324374102791)=2.135125179442.
+
+So với khoảng mục tiêu T: ở trong. So với đoạn chứng nhận J: ở trong.
+
+Độ lệch tại giá trị mới: |1.983046491072-(2)|=0.016953508928.
+
+B_1=h*q/(1-q)*|t mới-t cũ|=0.020840383478.
+
+Vị trí: 0.020840383478 ≤ ε_x=1.000000000000e-6 — Chưa đạt.
+
+Độ lệch: 0.016953508928 ≤ ε_y=1.000000000000e-6 — Chưa đạt.
+
+Quyết định: Tiếp tục.
+
+Vòng 2 — Tiếp tục
+
+✓ Dùng giá trị cũ t_1=-0.324374102791.
+
+d=-1.75; P(t cũ)=1.983046491072; H′(t cũ)=-0.246409794346; q dùng để dừng=0.486666666667.
+
+T_2=(-1.07)*(-0.324374102791)*(0.675625897209)/2! = 0.117248216163.
+
+T_3=(-0.95)*(-0.324374102791)*(0.675625897209)*(1.675625897209)/3! = 0.058143595026.
+
+✓ Cộng H(t_1)=0.175391811189.
+
+✓ t_2=(0.76-(0.175391811189))/(-1.75)=-0.334061822178.
+
+✓ x_2=2.2+(0.2)*(-0.334061822178)=2.133187635564.
+
+So với khoảng mục tiêu T: ở trong. So với đoạn chứng nhận J: ở trong.
+
+Độ lệch tại giá trị mới: |2.00230696296-(2)|=0.00230696296.
+
+B_2=h*q/(1-q)*|t mới-t cũ|=0.001836892247.
+
+Vị trí: 0.001836892247 ≤ ε_x=1.000000000000e-6 — Chưa đạt.
+
+Độ lệch: 0.00230696296 ≤ ε_y=1.000000000000e-6 — Chưa đạt.
+
+Quyết định: Tiếp tục.
+
+Vòng 3 — Tiếp tục
+
+✓ Dùng giá trị cũ t_2=-0.334061822178.
+
+d=-1.75; P(t cũ)=2.00230696296; H′(t cũ)=-0.22987050386; q dùng để dừng=0.486666666667.
+
+T_2=(-1.07)*(-0.334061822178)*(0.665938177822)/2! = 0.11901851881.
+
+T_3=(-0.95)*(-0.334061822178)*(0.665938177822)*(1.665938177822)/3! = 0.058680255338.
+
+✓ Cộng H(t_2)=0.177698774149.
+
+✓ t_3=(0.76-(0.177698774149))/(-1.75)=-0.332743557629.
+
+✓ x_3=2.2+(0.2)*(-0.332743557629)=2.133451288474.
+
+So với khoảng mục tiêu T: ở trong. So với đoạn chứng nhận J: ở trong.
+
+Độ lệch tại giá trị mới: |1.999695490058-(2)|=0.000304509942.
+
+B_3=h*q/(1-q)*|t mới-t cũ|=0.000249956655.
+
+Vị trí: 0.000249956655 ≤ ε_x=1.000000000000e-6 — Chưa đạt.
+
+Độ lệch: 0.000304509942 ≤ ε_y=1.000000000000e-6 — Chưa đạt.
+
+Quyết định: Tiếp tục.
+
+Vòng 4 — Tiếp tục
+
+✓ Dùng giá trị cũ t_3=-0.332743557629.
+
+d=-1.75; P(t cũ)=1.999695490058; H′(t cũ)=-0.232115860949; q dùng để dừng=0.486666666667.
+
+T_2=(-1.07)*(-0.332743557629)*(0.667256442371)/2! = 0.11878352613.
+
+T_3=(-0.95)*(-0.332743557629)*(0.667256442371)*(1.667256442371)/3! = 0.058610738077.
+
+✓ Cộng H(t_3)=0.177394264207.
+
+✓ t_4=(0.76-(0.177394264207))/(-1.75)=-0.33291756331.
+
+✓ x_4=2.2+(0.2)*(-0.33291756331)=2.133416487338.
+
+So với khoảng mục tiêu T: ở trong. So với đoạn chứng nhận J: ở trong.
+
+Độ lệch tại giá trị mới: |2.000040363684-(2)|=4.036368409465e-5.
+
+B_4=h*q/(1-q)*|t mới-t cũ|=3.299328499425e-5.
+
+Vị trí: 3.299328499425e-5 ≤ ε_x=1.000000000000e-6 — Chưa đạt.
+
+Độ lệch: 4.036368409465e-5 ≤ ε_y=1.000000000000e-6 — Chưa đạt.
+
+Quyết định: Tiếp tục.
+
+Vòng 5 — Tiếp tục
+
+✓ Dùng giá trị cũ t_4=-0.33291756331.
+
+d=-1.75; P(t cũ)=2.000040363684; H′(t cũ)=-0.231819388161; q dùng để dừng=0.486666666667.
+
+T_2=(-1.07)*(-0.33291756331)*(0.66708243669)/2! = 0.118814650752.
+
+T_3=(-0.95)*(-0.33291756331)*(0.66708243669)*(1.66708243669)/3! = 0.058619977139.
+
+✓ Cộng H(t_4)=0.177434627891.
+
+✓ t_5=(0.76-(0.177434627891))/(-1.75)=-0.332894498348.
+
+✓ x_5=2.2+(0.2)*(-0.332894498348)=2.13342110033.
+
+So với khoảng mục tiêu T: ở trong. So với đoạn chứng nhận J: ở trong.
+
+Độ lệch tại giá trị mới: |1.999994652641-(2)|=5.347358644846e-6.
+
+B_5=h*q/(1-q)*|t mới-t cũ|=4.373356495599e-6.
+
+Vị trí: 4.373356495599e-6 ≤ ε_x=1.000000000000e-6 — Chưa đạt.
+
+Độ lệch: 5.347358644846e-6 ≤ ε_y=1.000000000000e-6 — Chưa đạt.
+
+Quyết định: Tiếp tục.
+
+Vòng 6 — Đạt cả hai
+
+✓ Dùng giá trị cũ t_5=-0.332894498348.
+
+d=-1.75; P(t cũ)=1.999994652641; H′(t cũ)=-0.231858684843; q dùng để dừng=0.486666666667.
+
+T_2=(-1.07)*(-0.332894498348)*(0.667105501652)/2! = 0.118810526955.
+
+T_3=(-0.95)*(-0.332894498348)*(0.667105501652)*(1.667105501652)/3! = 0.058618753577.
+
+✓ Cộng H(t_5)=0.177429280532.
+
+✓ t_6=(0.76-(0.177429280532))/(-1.75)=-0.332897553981.
+
+✓ x_6=2.2+(0.2)*(-0.332897553981)=2.133420489204.
+
+So với khoảng mục tiêu T: ở trong. So với đoạn chứng nhận J: ở trong.
+
+Độ lệch tại giá trị mới: |2.000000708467-(2)|=7.084672134372e-7.
+
+B_6=h*q/(1-q)*|t mới-t cũ|=5.793798605918e-7.
+
+Vị trí: 5.793798605918e-7 ≤ ε_x=1.000000000000e-6 — Đạt.
+
+Độ lệch: 7.084672134372e-7 ≤ ε_y=1.000000000000e-6 — Đạt.
+
+Quyết định: Đạt cả hai.
+
+7. Kết luận đúng phạm vi
+
+Đã đạt hai ngưỡng theo chứng nhận của mô hình.
+
+x gần đúng ≈ 2.133420489.
+
+Sau 6 vòng. Vị trí: 5.793798605918e-7 ≤ 1.000000000000e-6 — Đạt. Độ lệch: 7.084672134372e-7 ≤ 1.000000000000e-6 — Đạt.
+
+Cận sai số lặp đối với nghiệm mô hình: 5.793798605918e-7.
+
+Cận gồm chuyển sang float và làm tròn số đang in: 5.795835640917e-7; chưa gồm sai số nội suy hàm thật hoặc toàn bộ sai số số học máy.
+
+Chưa đủ dữ kiện chặn sai số so với nghiệm hàm thật. Sai số nội suy, sai số dữ liệu và sai số giải mô hình là các thành phần khác nhau.

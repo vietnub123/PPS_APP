@@ -190,22 +190,23 @@ class Report:
         self.tables.append((name, list(headers), [list(r) for r in rows]))
         return self
 
-    def text(self):
+    def text(self,row_limit=600):
         if self.presentation.get('blocks'):
             out=[self.title,'='*64]
             for kind,value in self.presentation['blocks']:
                 if kind=='table':
                     name,headers,rows=self.tables[value]
-                    out.append(Report(name,tables=[(name,headers,rows)]).text())
-                else:out.append(str(value))
+                    out.append(Report(name,tables=[(name,headers,rows)]).text(
+                        row_limit=None if self.presentation.get('inverse_solution') or self.presentation.get('worked_solution') else row_limit))
+                else:out.append(str(self.presentation.get('plain_formulas',{}).get(value,value)))
             return '\n\n'.join(out)
         out = [self.title, '=' * 64, *self.lines]
         for name, headers, rows in self.tables:
-            cells=[list(headers)]+[[fmt(v) for v in row] for row in rows[:600]]
+            cells=[list(headers)]+[[fmt(v) for v in row] for row in (rows if row_limit is None else rows[:row_limit])]
             widths=[max(len(row[j]) if j<len(row) else 0 for row in cells) for j in range(len(headers))]
             out.extend(['',name])
             out.extend('  '.join(value.ljust(widths[j]) for j,value in enumerate(row)).rstrip() for row in cells)
-            if len(rows) > 600:
-                out.append(f'Hiển thị 600/{len(rows)} dòng; xuất Excel/CSV để xem toàn bộ.')
+            if row_limit is not None and len(rows)>row_limit:
+                out.append(f'Hiển thị {row_limit}/{len(rows)} dòng; xuất Excel/CSV để xem toàn bộ.')
         out.extend(['',*self.presentation.get('after_tables_text',[])])
         return '\n'.join(out)

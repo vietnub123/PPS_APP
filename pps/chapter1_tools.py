@@ -181,14 +181,18 @@ def scan_level(x, y, target):
     if not np.isfinite(target): raise ValueError('Mức y phải hữu hạn.')
     exact = x[y == target].tolist()
     intervals = [(float(x[i]), float(x[i+1])) for i in range(len(x)-1)
-                 if (y[i]-target)*(y[i+1]-target) < 0]
+                 if y[i]<target<y[i+1] or y[i+1]<target<y[i]]
     flats = [(float(x[i]), float(x[i+1])) for i in range(len(x)-1)
              if y[i] == target and y[i+1] == target]
-    return Report('Quét mức trên bảng',
+    report=Report('Quét mức trên bảng',
                   [f'Nghiệm tại mốc: {exact}; khoảng đổi dấu: {intervals}; đoạn bằng mức: {flats}.',
+                   'Nếu hàm thật liên tục, mỗi khoảng đổi dấu có ít nhất một nghiệm.',
                    'Chỉ quét bảng; có thể bỏ sót nghiệm tiếp xúc giữa hai mốc.',
                    'Tính duy nhất của nghiệm thật cần giả thiết bổ sung.'],
                   value=(exact, intervals, flats))
+    report.table('So sánh từng tung độ với mức',['i','x_i','y_i','y_i − mức','dấu'],
+                 ((i,a,b,decimal_cell(Decimal(str(float(b)))-Decimal(str(float(target)))),'+' if b>target else '−' if b<target else '0') for i,(a,b) in enumerate(zip(x,y))))
+    return report
 
 
 def monotone_branches(x, y):
@@ -196,7 +200,7 @@ def monotone_branches(x, y):
     x,y,_=points(x,y,2)
     branches=[]; flats=[]; start=0; direction=0
     for i in range(len(x)-1):
-        step=int(np.sign(y[i+1]-y[i]))
+        step=1 if y[i+1]>y[i] else -1 if y[i+1]<y[i] else 0
         if step==0:
             if start<i:branches.append((start,i))
             flats.append((i,i+1)); start=i+1; direction=0
@@ -211,120 +215,26 @@ def monotone_branches(x, y):
                   value=(branches,flats))
 
 
-def inverse_by_swap(x, y, target, count=None):
-    """A23: nội suy x như hàm của y trên một nhánh mẫu đơn điệu."""
-    x, y, _ = points(x, y, 2)
-    if not (np.all(np.diff(y) > 0) or np.all(np.diff(y) < 0)):
-        raise ValueError('Cần chọn riêng một nhánh có y đơn điệu nghiêm ngặt.')
-    if not np.isfinite(target) or not min(y) <= target <= max(y):
-        raise ValueError('Mức y nằm ngoài nhánh đã chọn.')
-    count = len(x) if count is None else count
-    if not isinstance(count, (int, np.integer)) or not 2 <= count <= len(x):
-        raise ValueError('Số mốc đảo phải từ 2 đến kích thước nhánh.')
-    chosen = np.sort(np.argsort(abs(y-target), kind='stable')[:count])
-    estimate = float(NewtonPolynomial(y[chosen], x[chosen])(target))
-    forward = float(NewtonPolynomial(x[chosen], y[chosen])(estimate))
-    lines = [f'x xấp xỉ = {fmt(estimate, 12)}; phần dư đa thức thuận = {fmt(forward-target, 12)}.',
-             'Đây là nghiệm của đa thức nội suy bảng đảo; nói chung khác nghiệm đa thức thuận.']
-    if not x[chosen[0]] <= estimate <= x[chosen[-1]]:
-        lines.append('CẢNH BÁO: nghiệm mô hình đảo nằm ngoài nhóm mốc đã chọn.')
-    return Report('Nội suy hàm ngược', lines, value=estimate).table(
-        'Mốc đảo được chọn', ['x', 'y'], zip(x[chosen], y[chosen]))
+def inverse_by_swap(x, y, target, count=None, **options):
+    """A23: dùng đúng tập mốc người dùng chọn; không tự chọn gần mức."""
+    from .inverse_solution import solve_inverse, require_success
+    return require_success(solve_inverse(x,y,target,'inverse_function',count=count,**options))
 
 
 def bisect_model(model, target, a, b, tolerance=1e-10, max_steps=1000):
-    """A25: chia đôi P(x)=target; trả nghiệm và khoảng bao nghiệm mô hình."""
-    if not all(np.isfinite(v) for v in (target, a, b, tolerance)) or a >= b or tolerance <= 0:
-        raise ValueError('Cần a < b và dung sai dương, mọi tham số hữu hạn.')
-    if not isinstance(max_steps,(int,np.integer)) or max_steps<1:
-        raise ValueError('Số bước chia đôi tối đa phải là số nguyên dương.')
-    def residual(z):
-        value = float(model(z)) - target
-        if not np.isfinite(value): raise ValueError('Mô hình không hữu hạn trong khoảng chia đôi.')
-        return value
-    fa, fb = residual(a), residual(b)
-    if fa == 0: return Report('Chia đôi nghiệm mô hình',[f'Nghiệm đúng tại đầu trái: x = {fmt(a)}.'],value=(a, (a, a)))
-    if fb == 0: return Report('Chia đôi nghiệm mô hình',[f'Nghiệm đúng tại đầu phải: x = {fmt(b)}.'],value=(b, (b, b)))
-    if np.sign(fa) == np.sign(fb):
-        raise ValueError('Hai đầu không trái dấu; chưa đủ điều kiện chia đôi.')
-    for step in range(max_steps):
-        c = a/2 + b/2
-        fc = residual(c)
-        if fc == 0: a = b = c; break
-        if c==a or c==b:
-            if b/2-a/2<=tolerance:break
-            raise ValueError('Dung sai nhỏ hơn độ phân giải float của khoảng này; đổi gốc/đơn vị hoặc tăng dung sai.')
-        if np.sign(fa) != np.sign(fc): b, fb = c, fc
-        else: a, fa = c, fc
-        if b/2-a/2 <= tolerance: break
-    else:
-        raise ValueError('Chưa đạt dung sai sau số bước tối đa.')
-    root = a/2+b/2
-    return Report('Chia đôi nghiệm mô hình',
-                  [f'x ≈ {fmt(root, 12)}; khoảng [{fmt(a, 12)}, {fmt(b, 12)}].',
-                   f'Cận vị trí nghiệm mô hình ≤ {fmt(b/2-a/2, 12)}.',
-                   'Sai số so với nghiệm hàm thật cần thêm cận sai số mô hình và độ dốc.'],
-                  value=(root, (a, b)))
+    """Chia đôi đúng mô hình đã nhận, giữ đầy đủ lịch sử và khoảng cuối."""
+    from .inverse_solution import bisect_solution, require_success
+    return require_success(bisect_solution(model,target,a,b,tolerance,max_steps))
 
 
 def inverse_controlled(x, y, target, interval, backward=False,
-                       tolerance=1e-10, residual_tolerance=1e-10, max_steps=1000):
-    """A24: chỉ báo cận vị trí khi đã chặn được ánh xạ co trên J.
-
-    Chứng nhận dùng cận hệ số đa thức trên [-1,1], thường bảo thủ. Cận áp dụng
-    cho nghiệm của đa thức nội suy tính bằng số thực dấu phẩy động.
-    """
-    x,y,_=points(x,y,2)
-    h=spacing(x)
-    if len(interval)!=2 or not all(np.isfinite(v) for v in (target,*interval,tolerance,residual_tolerance)):
-        raise ValueError('Mức, khoảng và dung sai phải hữu hạn.')
-    left,right=map(float,interval)
-    if not x[0]<=left<right<=x[-1] or tolerance<=0 or residual_tolerance<=0:
-        raise ValueError('J phải nằm trong dải mốc; dung sai dương.')
-    if not isinstance(max_steps,(int,np.integer)) or max_steps<1:
-        raise ValueError('Số bước tối đa phải dương.')
-    at_node=np.flatnonzero((y==target)&(x>=left)&(x<=right))
-    if len(at_node):return Report('Nội suy ngược — mức tại mốc',[f'Mức bằng tung độ tại mốc x = {fmt(x[at_node[0]])}.'],value=float(x[at_node[0]]))
-    from .inverse_model import InverseMap, compose_interval
-    precision=max(50,-Decimal(str(float(tolerance))).adjusted()+40,-Decimal(str(float(residual_tolerance))).adjusted()+40)
-    model=InverseMap(x,y,target,backward,precision)
-    rows=[]
-    with localcontext() as ctx:
-        ctx.prec=model.precision
-        lo=(Decimal(str(left))-model.origin)/model.h;hi=(Decimal(str(right))-model.origin)/model.h
-        center=(lo+hi)/2;radius=(hi-lo)/2
-        change=compose_interval(model.phi,center,radius)
-        deviation=sum((abs(v) for v in change[1:]),Decimal(0))
-        center_value=change[0]
-        q=sum((k*abs(v) for k,v in enumerate(change)),Decimal(0))/radius
-        if q>=1 or center_value-deviation<lo or center_value+deviation>hi:
-            raise ValueError('Chưa chứng minh được phi(J) nằm trong J và |phi′|<1; chọn J khác hoặc chia đôi.')
-        t=model.initial()
-        if not lo<=t<=hi:t=center
-        dtol=Decimal(str(float(tolerance)));rtol=Decimal(str(float(residual_tolerance)))
-        for k in range(1,max_steps+1):
-            next_t=model.step(t)
-            if not lo<=next_t<=hi:raise ValueError('Bước lặp ra khỏi J.')
-            residual=model.residual(next_t)
-            bound=model.h*q/(1-q)*abs(next_t-t)
-            exact=model.location(next_t);value=float(exact)
-            rounding=abs(Decimal.from_float(value)-exact)
-            total_bound=bound+rounding
-            rows.append((k,decimal_cell(t),decimal_cell(next_t),decimal_cell(residual),decimal_cell(total_bound)))
-            if total_bound<=dtol and residual<=rtol:
-                return Report('Nội suy ngược — lặp có cận co',
-                              [f'x ≈ {fmt(value,12)}; cận nghiệm mô hình ≤ {fmt(decimal_cell(total_bound),12)}.',
-                               f'Đã kiểm tra trên J=[{fmt(left)},{fmt(right)}]: q ≤ {fmt(decimal_cell(q),12)} < 1.',
-                               f'Phần dư |P(x)-y*| = {fmt(decimal_cell(residual),12)}.',
-                               'Cận gồm sai số lặp và chuyển nghiệm sang float; chưa chứng nhận làm tròn hệ số bằng số học khoảng.',
-                               'Cận này chỉ xét đa thức nội suy; sai số hàm thật cần cận mô hình và độ dốc.'],
-                              value=value).table('Lịch sử lặp',
-                                  ['k','t trước','t sau','phần dư','cận vị trí x'],rows)
-            if bound<=dtol and residual<=rtol and rounding>dtol:
-                raise ValueError('Dung sai vị trí nhỏ hơn độ phân giải float; đổi gốc/đơn vị hoặc tăng dung sai.')
-            if next_t==t:break
-            t=next_t
-    raise ValueError('Hết số bước lặp mà chưa đạt cả hai dung sai.')
+                       tolerance=1e-10, residual_tolerance=1e-10, max_steps=1000, **options):
+    """A24: yêu cầu chứng nhận mô hình; giữ nguyên t0 và khoảng J đã chọn."""
+    from .inverse_solution import solve_inverse, require_success
+    return require_success(solve_inverse(x,y,target,
+        'backward_iteration' if backward else 'forward_iteration',interval=interval,
+        eps_x=tolerance,eps_y=residual_tolerance,max_iter=max_steps,
+        stop_mode='certified',**options))
 
 
 def spline_degree(x, y, degree, left_derivatives=()):

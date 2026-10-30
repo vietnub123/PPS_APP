@@ -30,9 +30,98 @@ class GuiTests(unittest.TestCase):
                     s=self.app.snapshot()
                     r=dispatch(tool,method,s['values'],s['x'],s['y'])
                     self.assertTrue(r.title)
+                    if tool=='Nội suy ngược':self.assertIsNone(r.presentation['inverse_solution']['failure'])
+                    if tool in ('Spline','Bình phương tối thiểu'):self.assertIsNone(r.presentation['worked_solution']['failure'])
                     self.app.display(r)
                     self.app.update_idletasks()
 
+    def test_failed_inverse_report_stays_visible_and_exportable(self):
+        self.app.select_tool('Nội suy ngược')
+        r=dispatch('Nội suy ngược','Lặp tiến',{'target':'.5','tol':'1e-6','max_iter':'1'},'0 1 2','0 1 8')
+        self.app.display(r);self.app.update_idletasks()
+        self.assertIs(self.app.report,r)
+        self.assertIn('Chưa đạt',self.app.status.get())
+        self.assertTrue(self.app.table_select['values'])
+        with tempfile.TemporaryDirectory() as folder:
+            target=Path(folder)/'failed.html'
+            with patch('pps.gui.filedialog.asksaveasfilename',return_value=str(target)):
+                self.app.export_report()
+            self.assertIn('1.25',target.read_text(encoding='utf-8'))
+
+    def test_inverse_layout_reflows_and_opens_details_without_solving_again(self):
+        r=dispatch('Nội suy ngược','Lặp có cận co',
+                   {'target':'4','a':'1.6','b':'1.8','tol':'1e-6','residual_tol':'1e-6'},
+                   '1.6 1.8 2 2.2','4.23 3.67 2.99 1.24')
+        self.app.display(r)
+        try:
+            self.app.deiconify();self.app.geometry('1500x810+0+0');self.app.update()
+            view=self.app.math_document.inverse_document
+            self.assertIs(view.report,r)
+            self.assertTrue(view.column_groups)
+            self.assertTrue(any(group.column_count==2 for group in view.column_groups))
+            detail=next(section for section in view.detail_sections if not section.opened)
+            with patch('pps.gui.dispatch',side_effect=AssertionError('Resizing must not solve')):
+                detail.set_open(True);self.app.update_idletasks()
+                self.assertTrue(detail.opened);self.assertTrue(detail.content.winfo_children())
+                detail.toggle();self.assertFalse(detail.opened)
+                self.app.geometry('1050x810+0+0');self.app.update()
+                self.assertTrue(all(group.column_count==1 for group in view.column_groups))
+            self.assertIs(self.app.report,r)
+            self.assertAlmostEqual(r.value,1.666001162884,places=11)
+            self.app.math_document.message('Đã chọn phương pháp khác.')
+            self.app.update_idletasks()
+            self.assertFalse(view.winfo_ismapped())
+            self.assertTrue(self.app.math_document.text.winfo_ismapped())
+        finally:
+            self.app.withdraw();self.app.geometry('1380x860')
+
+    def test_inverse_json_choices_survive_load_run_and_method_switch(self):
+        source=Path(__file__).resolve().parents[1]/'examples'/'noi_suy_nguoc'/'A_lagrange.json'
+        with patch('pps.gui.filedialog.askopenfilename',return_value=str(source)):
+            self.app.load_project()
+        state=self.app.snapshot()
+        self.assertEqual(state['values']['inverse_form'],'lagrange')
+        self.assertEqual(state['values']['interval'],'[1,1.5]')
+        self.assertIsNone(self.app.report)
+        r=dispatch(state['tool'],state['method'],state['values'],state['x'],state['y'])
+        self.assertEqual(r.presentation['inverse_solution']['model']['basis'],'lagrange')
+        self.app.method.set('Lặp tiến');self.app.show_form()
+        self.assertNotIn('inverse_form',self.app.snapshot()['values'])
+        self.app.method.set('Hàm ngược — Lagrange');self.app.show_form()
+        self.assertEqual(self.app.snapshot()['values']['inverse_form'],'lagrange')
+        self.app.reset_example()
+        self.assertNotIn('inverse_form',self.app.snapshot()['values'])
+
+    def test_saved_inverse_selected_indices_remain_json_and_worked_subjects_display(self):
+        task={'tool':'Nội suy ngược','method':'Lặp có cận co',
+              'values':{'target':'4','a':'1.6','b':'1.8','tol':'1e-6','residual_tol':'1e-6',
+                        'selected_indices':[0,1,2,3]},
+              'x':'1.6 1.8 2 2.2','y':'4.23 3.67 2.99 1.24'}
+        with tempfile.TemporaryDirectory() as folder:
+            path=Path(folder)/'selected.json';path.write_text(json.dumps(task),encoding='utf-8')
+            with patch('pps.gui.filedialog.askopenfilename',return_value=str(path)):self.app.load_project()
+            state=self.app.snapshot()
+            self.assertEqual(json.loads(state['values']['selected_indices']),[0,1,2,3])
+            report=dispatch(state['tool'],state['method'],state['values'],state['x'],state['y'])
+            self.assertIsNone(report.presentation['inverse_solution']['failure'])
+        for tool,method,values,x,y in [
+            ('Spline','Cubic tự nhiên',{'target':'2'},'0 1 3','0 1 0'),
+            ('Bình phương tối thiểu','Tuyến tính theo cơ sở',{'basis':'1;x','solver':'Hệ chuẩn — Gauss'},'0 1 2 3','1 2 2 4')]:
+            with self.subTest(tool=tool):
+                report=dispatch(tool,method,values,x,y)
+                self.assertIsNone(report.presentation['worked_solution']['failure'])
+                self.app.display(report);self.app.update_idletasks()
+                self.assertIs(self.app.math_document.inverse_document.report,report)
+                self.assertIn('Hoàn tất',self.app.status.get())
+        # Các bài đề thật lưu x/y dưới dạng mảng JSON, dùng đúng đường Mở bài.
+        folder=Path(__file__).resolve().parents[1]/'examples'/'de_20251'
+        for stem in ('01a_mu_x2_SSE_104','02a_lap_tien_cuc_bo'):
+            with patch('pps.gui.filedialog.askopenfilename',return_value=str(folder/(stem+'.json'))):
+                self.app.load_project()
+            state=self.app.snapshot()
+            report=dispatch(state['tool'],state['method'],state['values'],state['x'],state['y'])
+            data=report.presentation.get('inverse_solution',report.presentation.get('worked_solution'))
+            self.assertIsNone(data['failure'],str(data['failure']))
     def test_excel_csv_import_export_and_project(self):
         with tempfile.TemporaryDirectory() as tmp:
             tmp=Path(tmp); source=tmp/'input.xlsx'

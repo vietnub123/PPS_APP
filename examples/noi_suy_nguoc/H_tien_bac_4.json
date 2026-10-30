@@ -1,0 +1,14 @@
+{
+  "tool": "Nội suy ngược",
+  "method": "Lặp có cận co",
+  "values": {
+    "target": ".5",
+    "a": "0",
+    "b": "1",
+    "tol": "1e-8",
+    "residual_tol": "1e-8",
+    "direction": "Tiến"
+  },
+  "x": "0 1 2 3 4",
+  "y": "0 1.01 2.16 3.81 6.56"
+}

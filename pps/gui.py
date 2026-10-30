@@ -24,9 +24,9 @@ def F(key,label,default='',help=''):
 
 TOOLS={
  'Nội suy đa thức':(['Lagrange','Newton','Gauss I','Gauss II','Stirling','Bessel'],True),
-  'Spline':(['Tuyến tính','Bậc hai — biên trái','Bậc hai — biên phải','Cubic tự nhiên','Cubic kẹp','Cubic đạo hàm bậc hai','Cubic tuần hoàn','Cubic not-a-knot','Bậc 4 — đạo hàm trái'],True),
-  'Bình phương tối thiểu':(['Tuyến tính theo cơ sở','Lũy thừa','Hàm mũ','Lũy thừa — SSE thang y','Hàm mũ — SSE thang y'],True),
-  'Nội suy ngược':(['Lặp tiến','Lặp lùi','Lặp có cận co','Hàm ngược','Chia đôi đa thức'],True),
+  'Spline':(['Tuyến tính','Bậc hai — biên trái','Bậc hai — biên phải','Cubic tự nhiên','Cubic kẹp','Cubic đạo hàm bậc hai','Cubic hỗn hợp','Cubic tuần hoàn','Cubic not-a-knot','Bậc 4 — đạo hàm trái','Biên tổng quát'],True),
+  'Bình phương tối thiểu':(['Tuyến tính theo cơ sở','Lũy thừa','Hàm mũ','Lũy thừa — SSE thang y','Hàm mũ — SSE thang y','Log của tổ hợp cơ sở','1/(a+b*x)','x/(a+b*x)','a+b*ln(x)','A*b^x'],True),
+  'Nội suy ngược':(['Lặp tiến','Lặp lùi','Lặp có cận co','Hàm ngược — Newton','Hàm ngược — Lagrange','Chia đôi đa thức'],True),
  'Chọn mốc':(['Mốc cách đều','Mốc nội suy ngược','Chebyshev'],True),
  'Đạo hàm & Horner':(['Đạo hàm từ bảng','Horner'],True),
  'Tích phân':(['Hình thang','Simpson','Trung điểm','Newton-Cotes','Tích phân kép'],False),
@@ -44,24 +44,36 @@ def fields(tool,method):
                     F('order','Cấp đạo hàm (0 = giá trị hàm)',0),
                     F('count','Số mốc dùng (để trống: toàn bảng)','','Nhập điểm tính khi chọn ít mốc hơn. Không tự thay bậc đề yêu cầu.')]
         return [F('target','Điểm cần tính x',1.5),F('order','Cấp đạo hàm (0 = giá trị hàm)',0),
-                F('count','Số mốc dùng (để trống: toàn bảng)','','Stirling/Gauss: số lẻ; Bessel: số chẵn. Ví dụ nhập 9 để chọn 9 mốc gần điểm tính từ bảng lớn.')]
+                F('count','Số mốc dùng (để trống: toàn bảng)','','Stirling: số lẻ; Bessel: số chẵn; Gauss dùng được cả hai. Ví dụ nhập 9 để chọn 9 mốc gần điểm tính từ bảng lớn.')]
     if tool=='Spline':
-        v=[F('target','Điểm cần tính x',1.5)]
-        if method=='Bậc 4 — đạo hàm trái':return v+[F('derivatives','S′ S′′ S′′′ ở đầu trái','0 0 0')]
+        v=[F('target','Điểm cần tính x (có thể để trống)',1.5),F('order','Cấp đạo hàm (0 = giá trị)',0)]
+        if method=='Bậc 4 — đạo hàm trái':v+=[F('derivatives','S′ S′′ S′′′ ở đầu trái','0 2 0')]
+        if method=='Biên tổng quát':v+=[F('degree','Bậc spline',4),F('conditions','Điều kiện biên (JSON)','[["trái",1,0],["trái",2,2],["trái",3,0]]','Mỗi điều kiện ghi phía, cấp đạo hàm, giá trị; giữ đúng các điều kiện đề cho.')]
+        if method=='Cubic hỗn hợp':v+=[F('left_order','Cấp đạo hàm biên trái',1),F('right_order','Cấp đạo hàm biên phải',2)]
         if method in ('Bậc hai — biên trái','Cubic kẹp','Cubic đạo hàm bậc hai'): v.append(F('left','Giá trị đạo hàm tại biên trái',0))
         if method in ('Bậc hai — biên phải','Cubic kẹp','Cubic đạo hàm bậc hai'): v.append(F('right','Giá trị đạo hàm tại biên phải',0))
-        return v
+        if method=='Cubic hỗn hợp':v+=[F('left','Giá trị tại biên trái',0),F('right','Giá trị tại biên phải',2)]
+        return v+[F('integral_a','Cận tích phân a (không bắt buộc)',''),F('integral_b','Cận tích phân b (không bắt buộc)',''),F('solver','Cách giải hệ biên','Tự chọn'),F('detail_level','Mức trình bày','Tổng hợp')]
     if tool=='Bình phương tối thiểu':
-        v=[] if method.startswith('Lũy thừa') else [F('basis','Các hàm cơ sở (ngăn bằng dấu ;)', '1; x; x^2','Hàm mũ tự thêm hệ số hằng trong số mũ.')]
+        fixed=method in ('1/(a+b*x)','x/(a+b*x)','a+b*ln(x)','A*b^x')
+        v=[] if method.startswith('Lũy thừa') or fixed else [F('basis','Các hàm cơ sở (ngăn bằng dấu ;)','x' if method.startswith('Hàm mũ') else '1; x','Hàm mũ tự thêm hệ số hằng trong số mũ; đa thức bậc 2 nhập 1; x; x^2.')]
         if 'SSE thang y' in method:
-            return v+[F('initial','Tham số đầu A b1 b2... (để trống: tự chọn)','','Tối ưu phi tuyến; cần thử giá trị đầu khác nếu nhạy.')]
-        return v+[F('weights','Trọng số w_i (để trống: tất cả bằng 1)','','Cùng số phần tử và thứ tự với dữ liệu.')]
+            v+=[F('initial','Tham số đầu A b1 b2... (để trống: từ log)','','Lời giải ghi tham số và SSE từng vòng.'),F('tol','Ngưỡng dừng phi tuyến',1e-10),F('max_iter','Số vòng tối đa',100)]
+        v+=[F('weights','Trọng số w_i (để trống: tất cả bằng 1)','','Không âm, ít nhất một trọng số dương; giữ cùng thứ tự dữ liệu.')]
+        if 'SSE thang y' in method:v+=[F('solver','Bộ giải phi tuyến','Levenberg–Marquardt')]
+        else:v+=[F('solver','Cách giải bình phương tối thiểu','QR'),F('rank_policy','Quy tắc khi thiếu hạng','Nghiệm duy nhất')]
+        return v+[F('target','Điểm dự đoán x (không bắt buộc)',''),F('detail_level','Mức trình bày','Tổng hợp')]
     if tool=='Nội suy ngược':
-        v=[F('target','Giá trị y cần tìm ngược',1.3225)]
-        if method=='Hàm ngược':return v+[F('count','Số mốc trên nhánh (để trống: tất cả)','','Chọn nhánh đơn điệu trước khi nhập.')]
-        if method=='Chia đôi đa thức':return v+[F('a','Cận trái',1),F('b','Cận phải',1.4),F('tol','Dung sai vị trí',1e-10)]
-        if method=='Lặp có cận co':return v+[F('a','Đầu khoảng J',1.1),F('b','Cuối khoảng J',1.2),F('tol','Dung sai vị trí',1e-10),F('residual_tol','Dung sai phần dư',1e-10),F('direction','Hướng nội suy','Tiến')]
-        return v+[F('tol','Dung sai lặp',1e-10)]
+        direct=method.startswith('Hàm ngược')
+        target=6 if direct else 2 if method in ('Lặp lùi','Chia đôi đa thức') else 4
+        v=[F('target','Giá trị y cần tìm ngược',target,'Tập cặp nhập là các mốc đã chọn; bậc bằng số cặp trừ 1. Không tự đổi nhánh hoặc mốc. Lặp thực hành mặc định kiểm tra thêm phần dư 1e-6, tối đa 100 vòng.')]
+        if direct:v+=[F('count','Số mốc đã chọn (để trống: toàn tập nhập)','','Không tự lấy mốc gần mức. Muốn dùng ít mốc hơn, giữ đúng các cặp cần dùng trong bảng nhập.')]
+        elif method=='Chia đôi đa thức':v+=[F('a','Cận trái',1),F('b','Cận phải',2),F('tol','Dung sai vị trí',1e-3)]
+        elif method=='Lặp có cận co':v+=[F('a','Cận x trái của khoảng nghiệm',1.6),F('b','Cận x phải của khoảng nghiệm',1.8),F('tol','Dung sai vị trí',1e-6),F('residual_tol','Dung sai phần dư',1e-6),F('direction','Hướng nội suy','Tiến')]
+        else:v+=[F('a','Cận x trái (trống: khoảng đổi dấu duy nhất)',''),F('b','Cận x phải (trống: khoảng đổi dấu duy nhất)',''),F('tol','Dung sai vị trí/bước theo x',1e-6,'Giữ toàn bộ tập mốc và gốc đầu/cuối tập; khoảng nghiệm có thể ở giữa bảng.'),F('residual_tol','Dung sai phần dư',1e-6)]
+        v+=[F('selected_indices','Mốc dùng (JSON, trống: toàn bộ bảng)','','Ví dụ [9,10,11,12] dùng đúng bốn dòng đó, đánh số từ 0; dữ liệu nguồn vẫn được giữ.')]
+        if not direct and method!='Chia đôi đa thức':v+=[F('max_iter','Số vòng tối đa',100),F('initial_rule','Quy tắc khởi tạo','Tuyến tính tại gốc'),F('initial_t','t₀ khi khởi tạo thủ công','')]
+        return v+[F('detail_level','Mức trình bày','Tổng hợp','Bảng tổng hợp luôn hiện; có thể mở từng nhóm phép tính hoặc từng vòng. Bản xuất vẫn giữ đủ chi tiết.')]
     if tool=='Chọn mốc':
         if method=='Chebyshev': return [F('degree','Bậc đa thức n (sinh n+1 mốc)',4),F('a','Đầu đoạn a',-1),F('b','Cuối đoạn b',1)]
         return [F('target','Giá trị y' if method=='Mốc nội suy ngược' else 'Điểm x',1.5)]+([] if method=='Mốc nội suy ngược' else [F('count','Số mốc cần lấy',3)])
@@ -91,7 +103,7 @@ def fields(tool,method):
 def dispatch(tool,method,values,xtext,ytext):
     if not isinstance(values,dict):raise ValueError('values trong bài JSON phải là một đối tượng gồm tên ô và giá trị.')
     sequence_fields={'coef','weights','initial','rk_b','rk_c','derivatives','left','right'}
-    values={k: (' '.join(map(str,v)) if isinstance(v,(list,tuple)) and k in sequence_fields
+    values={k: ('; '.join(map(str,v)) if k=='basis' and isinstance(v,(list,tuple)) else ' '.join(map(str,v)) if isinstance(v,(list,tuple)) and k in sequence_fields
                 else json.dumps(v) if isinstance(v,(list,dict)) else '' if v is None else str(v))
             for k,v in values.items()}
     def num(k,default=0):
@@ -115,30 +127,36 @@ def dispatch(tool,method,values,xtext,ytext):
             method=('Newton lùi' if backward else 'Newton tiến') if equal_grid else ('Newton bất kỳ lùi' if backward else 'Newton bất kỳ')
         return ip.interpolate(*data(),method,optional('target'),integer('order'),integer('count') if values.get('count','').strip() else None)
     if tool=='Spline':
-        if method=='Bậc 4 — đạo hàm trái':
-            x,y=data();r=ch1.spline_degree(x,y,4,numbers(values['derivatives']))
-            if optional('target') is not None:
-                r.lines.append(f'S({fmt(num("target"))}) = {fmt(ch1.spline_at(r.value,num("target")))}')
-            return r
-        return ip.spline(*data(),method,num('left'),num('right'),optional('target'))
+        from .spline_worked import solve_spline
+        from .worked_report import input_failure
+        try:
+            solver={'Tự chọn':'auto','Thomas':'Thomas','Gauss':'Gauss'}.get(values.get('solver','Tự chọn'),values.get('solver','auto'))
+            return solve_spline(*data(),method,optional('left'),optional('right'),optional('target'),
+                order=integer('order',0),integral_a=optional('integral_a'),integral_b=optional('integral_b'),
+                derivatives=numbers(values['derivatives']) if values.get('derivatives','').strip() else None,
+                conditions=json.loads(values['conditions']) if values.get('conditions','').strip() else None,
+                degree=integer('degree',4),boundary_orders=(integer('left_order',1),integer('right_order',2)),
+                solver=solver,detail_level={'Tổng hợp':'summary','Chi tiết':'detailed'}.get(values.get('detail_level','summary'),values.get('detail_level','summary')),
+                display_digits=integer('display_digits',integer('digits',12)),
+                allow_extrapolation=values.get('allow_extrapolation','false').casefold()=='true')
+        except (ValueError,TypeError,KeyError,ArithmeticError) as exc:return input_failure('Spline — '+method,values,xtext,ytext,exc)
     if tool=='Bình phương tối thiểu':
-        if 'SSE thang y' in method:
-            original='Lũy thừa' if method.startswith('Lũy thừa') else 'Hàm mũ'
-            labels=[v.strip() for v in values.get('basis','x').split(';') if v.strip() and v.strip()!='1']
-            initial=numbers(values['initial']) if values.get('initial','').strip() else None
-            return ch1.original_scale_fit(*data(),original,labels,initial)
-        weights=numbers(values['weights']) if values.get('weights','').strip() else None
-        return ip.least_squares(*data(),method,[v.strip() for v in values.get('basis','1;x').split(';') if v.strip()],weights)
+        from .least_squares_worked import solve_least_squares
+        from .worked_report import input_failure
+        try:
+            solver_name=values.get('solver','Levenberg–Marquardt' if 'SSE thang y' in method else 'QR')
+            solver={'QR':'qr','Hệ chuẩn — Gauss':'normal_gauss','SVD':'svd','Levenberg–Marquardt':'lm'}.get(solver_name,solver_name)
+            policy={'Nghiệm duy nhất':'unique','Chuẩn nhỏ nhất':'minimum_norm'}.get(values.get('rank_policy','unique'),values.get('rank_policy','unique'))
+            return solve_least_squares(*data(),method,[v.strip() for v in values.get('basis','x' if method.startswith('Hàm mũ') else '1;x').split(';') if v.strip()],
+                numbers(values['weights']) if values.get('weights','').strip() else None,
+                solver=solver,rank_policy=policy,initial=numbers(values['initial']) if values.get('initial','').strip() else None,
+                max_iter=integer('max_iter',100),tolerance=num('tol',1e-10),target=optional('target'),
+                detail_level={'Tổng hợp':'summary','Chi tiết':'detailed'}.get(values.get('detail_level','summary'),values.get('detail_level','summary')),
+                display_digits=integer('display_digits',integer('digits',12)))
+        except (ValueError,TypeError,KeyError,ArithmeticError) as exc:return input_failure('Bình phương tối thiểu — '+method,values,xtext,ytext,exc)
     if tool=='Nội suy ngược':
-        x,y=data();target=num('target')
-        if method=='Hàm ngược':return ch1.inverse_by_swap(x,y,target,integer('count') if values.get('count','').strip() else None)
-        if method=='Chia đôi đa thức':
-            polynomial=ip.interpolate(x,y,'Newton bất kỳ').value
-            return ch1.bisect_model(polynomial,target,num('a'),num('b'),num('tol'))
-        if method=='Lặp có cận co':
-            return ch1.inverse_controlled(x,y,target,(num('a'),num('b')),
-                                          values.get('direction','Tiến')=='Lùi',num('tol'),num('residual_tol'))
-        return ip.inverse(x,y,target,method=='Lặp lùi',num('tol'))
+        from .inverse_solution import from_gui
+        return from_gui(method,values,xtext,ytext)
     if tool=='Chọn mốc':
         if method=='Chebyshev': return ip.chebyshev(integer('degree'),num('a'),num('b'))
         return ip.select_points(*data(),num('target'),integer('count',3),method=='Mốc nội suy ngược')
@@ -264,7 +282,8 @@ class App(tk.Tk):
 
     def snapshot(self):
         return {'tool':self.current_tool,'method':self.current_method,
-                'values':{**{k:v.get() for k,v in self.form.items()},'digits':self.digits.get()},
+                'values':{**(getattr(self,'inverse_options',{}) if self.current_tool in ('Nội suy ngược','Spline','Bình phương tối thiểu') else {}),
+                          **{k:v.get() for k,v in self.form.items()},'digits':self.digits.get()},
                 'x':self.xinput.get('1.0','end').strip() if hasattr(self,'xinput') and self.xinput.winfo_exists() else '',
                 'y':self.yinput.get('1.0','end').strip() if hasattr(self,'yinput') and self.yinput.winfo_exists() else ''}
 
@@ -275,10 +294,11 @@ class App(tk.Tk):
         if self.current_tool==name:return
         self.remember(); self.current_tool=name; self.current_method=None
         self.tool.set(name); self.combo.configure(values=TOOLS[name][0]); self.method.set(TOOLS[name][0][0]); self.title_label.configure(text='Thông số')
-        self.show_form(save=False)
+        self.show_form(save=False,carry_values=False)
 
-    def show_form(self,save=True,reset=False):
+    def show_form(self,save=True,reset=False,carry_values=True):
         previous={} if reset else self.snapshot()
+        if not carry_values:previous['values']={}
         if save:self.remember()
         self.current_method=self.method.get()
         saved=self.cache.get((self.current_tool,self.current_method),{})
@@ -288,18 +308,48 @@ class App(tk.Tk):
         self.tree.delete(*self.tree.get_children());self.math_table.canvas.delete('all')
         self.ax.clear();self.plot.draw_idle()
         self.set_output('Đã chọn '+self.current_method+'. Nhấn Tính kết quả để tạo lời giải mới.')
-        self.digits.set(saved.get('values',{}).get('digits',self.digits.get()))
+        self.digits.set(saved.get('values',{}).get('digits','12' if self.current_tool in ('Nội suy ngược','Spline','Bình phương tối thiểu') else self.digits.get()))
         for w in self.form_body.winfo_children():w.destroy()
         self.form={}
         for key,label,default,hint in fields(self.current_tool,self.current_method):
             ttk.Label(self.form_body,text=label,wraplength=355).pack(anchor='w',pady=(9,3))
-            var=tk.StringVar(value=saved.get('values',{}).get(key,previous.get('values',{}).get(key,default))); self.form[key]=var
+            value=saved.get('values',{}).get(key,previous.get('values',{}).get(key,default))
+            if isinstance(value,(list,dict)) and key in ('selected_indices','conditions','rk_a'):
+                value=json.dumps(value,ensure_ascii=False)
+            if isinstance(value,(list,tuple)) and key=='basis':value='; '.join(map(str,value))
+            var=tk.StringVar(value=value); self.form[key]=var
             if key=='direction':
                 ttk.Combobox(self.form_body,textvariable=var,values=['Tiến','Lùi'],state='readonly').pack(fill='x',padx=(0,8))
             elif key=='newton_nodes':
                 ttk.Combobox(self.form_body,textvariable=var,values=['Mốc cách đều','Mốc bất kỳ'],state='readonly').pack(fill='x',padx=(0,8))
+            elif key=='detail_level':
+                ttk.Combobox(self.form_body,textvariable=var,values=['Tổng hợp','Chi tiết'],state='readonly').pack(fill='x',padx=(0,8))
+            elif key=='solver':
+                options=['Tự chọn','Thomas','Gauss'] if self.current_tool=='Spline' else ['Levenberg–Marquardt'] if 'SSE thang y' in self.current_method else ['QR','Hệ chuẩn — Gauss','SVD']
+                if not saved.get('values',{}).get(key) and var.get() not in options:var.set(default)
+                ttk.Combobox(self.form_body,textvariable=var,values=options,state='readonly').pack(fill='x',padx=(0,8))
+            elif key=='rank_policy':
+                ttk.Combobox(self.form_body,textvariable=var,values=['Nghiệm duy nhất','Chuẩn nhỏ nhất'],state='readonly').pack(fill='x',padx=(0,8))
+            elif key in ('left_order','right_order'):
+                ttk.Combobox(self.form_body,textvariable=var,values=['1','2'],state='readonly').pack(fill='x',padx=(0,8))
+            elif key=='initial_rule':
+                ttk.Combobox(self.form_body,textvariable=var,values=['Tuyến tính tại gốc','Tuyến tính hai đầu khoảng','Thủ công'],state='readonly').pack(fill='x',padx=(0,8))
             else: ttk.Entry(self.form_body,textvariable=var).pack(fill='x',padx=(0,8))
             if hint:ttk.Label(self.form_body,text=hint,foreground='#4c626e',wraplength=350,font=('Segoe UI',9)).pack(anchor='w',pady=(2,0))
+        # Các lựa chọn toán học từ JSON không có ô riêng vẫn phải được giữ
+        # khi chạy/lưu; không âm thầm bỏ chúng rồi dùng mô hình mặc định.
+        self.inverse_options={k:v for k,v in saved.get('values',{}).items() if k not in self.form and k!='digits'} if self.current_tool in ('Nội suy ngược','Spline','Bình phương tối thiểu') else {}
+        if self.inverse_options:
+            labels={'inverse_form':'Dạng hàm ngược','interval':'Khoảng x','degree':'Bậc',
+                    'selected_indices':'Chỉ số mốc','branch_indices':'Chỉ số nhánh','bracket_indices':'Hai chỉ số khoảng',
+                    'max_iter':'Số vòng tối đa','residual_tol':'Ngưỡng phần dư','stop_mode':'Chế độ dừng',
+                    'grid_rtol':'Dung sai lưới tương đối','grid_atol':'Dung sai lưới tuyệt đối',
+                    'equality_atol_y':'Dung sai gần mức','error_data':'Dữ kiện cận sai số','assumptions':'Giả thiết',
+                    'allow_extrapolation':'Cho phép ngoại suy','certificate_interval':'Đoạn chứng nhận theo t',
+                    'initial_x':'Giá trị x khởi tạo','display_digits':'Chữ số trung gian','run_mode':'Chế độ chạy'}
+            settings='; '.join(labels.get(k,k)+' = '+str(v) for k,v in self.inverse_options.items())
+            ttk.Label(self.form_body,text='Lựa chọn thêm từ tệp: '+settings+'. Muốn thay các lựa chọn này, sửa tệp hoặc nạp lại ví dụ.',
+                      foreground='#4c626e',wraplength=355).pack(anchor='w',pady=(9,3))
         needs_data=TOOLS[self.current_tool][1]
         if self.current_method in ('Chebyshev','Horner'):needs_data=False
         if self.current_tool=='Tích phân' and self.current_method!='Tích phân kép':needs_data=True
@@ -325,9 +375,20 @@ class App(tk.Tk):
             if self.current_tool=='Bình phương tối thiểu' and self.current_method.startswith('Hàm mũ') and not saved and not previous.get('x'):
                 self.xinput.delete('1.0','end'); self.xinput.insert('1.0','0 1 2 3 4')
                 self.yinput.delete('1.0','end'); self.yinput.insert('1.0','1 2 4 8 16')
+            if self.current_tool=='Bình phương tối thiểu' and not saved and not previous.get('x'):
+                samples={'Log của tổ hợp cơ sở':('0 1 2 3 4','0 1.0986122886681098 1.6094379124341003 1.9459101490553132 2.1972245773362196'),
+                         '1/(a+b*x)':('0 1 2 3 4','0.5 0.3333333333333333 0.25 0.2 0.1666666666666667'),
+                         'x/(a+b*x)':('1 2 3 4 5','0.3333333333333333 0.5 0.6 0.6666666666666667 0.7142857142857143'),
+                         'a+b*ln(x)':('1 2 3 4 5','1 2.386294361119891 3.1972245773362196 3.772588722239781 4.218875824868201'),
+                         'A*b^x':('0 1 2 3 4','1 2 4 8 16')}
+                if self.current_method in samples:
+                    xx,yy=samples[self.current_method]
+                    self.xinput.delete('1.0','end');self.xinput.insert('1.0',xx)
+                    self.yinput.delete('1.0','end');self.yinput.insert('1.0',yy)
             if self.current_tool=='Nội suy ngược' and not saved and not previous.get('x'):
-                self.xinput.delete('1.0','end'); self.xinput.insert('1.0','1 1.1 1.2 1.3 1.4')
-                self.yinput.delete('1.0','end'); self.yinput.insert('1.0','1 1.21 1.44 1.69 1.96')
+                sample=('1 2 3','1 4 9') if self.current_method.startswith('Hàm ngược') else ('0 1 2','0 1 4') if self.current_method=='Chia đôi đa thức' else ('1.6 1.8 2 2.2','4.23 3.67 2.99 1.24')
+                self.xinput.delete('1.0','end'); self.xinput.insert('1.0',sample[0])
+                self.yinput.delete('1.0','end'); self.yinput.insert('1.0',sample[1])
         self.form_canvas.yview_moveto(0)
 
     def reset_example(self):
@@ -374,7 +435,11 @@ class App(tk.Tk):
         if report.curves or report.scatter is not None:self.ax.legend(fontsize=9)
         else:self.ax.text(.5,.5,'Phương pháp này không có đồ thị.',ha='center',transform=self.ax.transAxes)
         self.fig.tight_layout();self.plot.draw_idle()
-        self.status.set('Hoàn tất: '+report.title+f' · Hiển thị tối đa {self.digits.get()} chữ số thập phân; tính bằng độ chính xác đầy đủ.')
+        inverse=report.presentation.get('inverse_solution') or report.presentation.get('worked_solution')
+        if inverse and inverse.get('failure'):self.status.set('Chưa đạt — đã giữ lời giải và bước thất bại để xem hoặc xuất.')
+        elif inverse and inverse['status']=='outside_bracket':self.status.set('Đã tính mô hình — kết quả ngoài khoảng đang xét; xem cảnh báo trong lời giải.')
+        elif inverse and inverse['status']=='conditional_model_tolerance':self.status.set('Đạt theo cận/giả thiết được cung cấp — xem nguồn và phạm vi trong lời giải.')
+        else:self.status.set('Hoàn tất: '+report.title+(' · Bảng tổng hợp luôn hiện; mở từng vòng để xem phép tính.' if inverse else f' · Hiển thị tối đa {self.digits.get()} chữ số thập phân; tính bằng độ chính xác đầy đủ.'))
 
     def show_table(self):
         if not self.report or not self.report.tables:return
@@ -384,7 +449,12 @@ class App(tk.Tk):
         if self.table_mode.get()=='math':
             self.table_frame.pack_forget();self.math_table.pack(fill='both',expand=True)
             self.math_table.show(self.report,i)
+            inverse_table=self.report.presentation.get('worked_tables',self.report.presentation.get('inverse_tables',{})).get(i)
             self.table_note.configure(text='Sai phân cùng hàng với mốc bắt đầu, chụm lên trên; ô viền xanh là giá trị được lấy vào công thức. Cuộn ngang để xem các cấp bên phải.' if i==0 and self.report.presentation.get('difference') else 'Công thức và chỉ số được dựng từ LaTeX. Bảng hệ số: bậc cao bên trái, hệ số tự do bên phải.')
+            if inverse_table:
+                self.table_note.configure(text=('Sai phân lùi ∇ cùng hàng với mốc kết thúc; các hệ số dùng nằm tại gốc phải.' if inverse_table.get('kind')=='backward' else 'Các ô hệ số dùng được đánh dấu; ô trống không phải là số 0.')+' Dữ liệu đầy đủ vẫn có trong bảng lưới và bản xuất.')
+                if self.report.presentation.get('worked_solution'):
+                    self.table_note.configure(text='Bảng và các bước giải dùng cùng kết quả đã tính. Mở chi tiết trong lời giải để xem truy hồi, khử hoặc thế ngược; bản xuất giữ đủ dữ liệu.')
             if len(rows)>80 or len(headers)>12 or (i==0 and self.report.presentation.get('difference') and len(rows)>11):
                 self.table_note.configure(text=self.table_note.cget('text')+' Bản trình bày rút gọn; chọn Dữ liệu dạng lưới hoặc xuất Excel để xem đầy đủ.')
         else:
@@ -436,6 +506,8 @@ class App(tk.Tk):
                 state['tool']='Nội suy đa thức'
                 state['values']={**state.get('values',{}),'newton_nodes':state.get('method','Mốc cách đều')}
                 state['method']='Newton'
+            if state.get('tool')=='Nội suy ngược' and state.get('method')=='Hàm ngược':
+                state['method']='Hàm ngược — Lagrange' if state.get('values',{}).get('inverse_form')=='lagrange' else 'Hàm ngược — Newton'
             if state['tool'] not in TOOLS or state['method'] not in TOOLS[state['tool']][0] or not isinstance(state['values'],dict):raise ValueError('Tệp không đúng cấu trúc bài tính PPS.')
             self.remember();self.cache[(state['tool'],state['method'])]=state
             # Bypass remembering an older form over the imported state.

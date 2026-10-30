@@ -298,49 +298,14 @@ def _interpolate_expanded(x, y, method, target, derivative, model):
     return result
 
 
-def inverse(x, y, target, backward=False, tolerance=1e-10, max_steps=1000):
-    x,y,_ = points(x,y,2)
-    if not np.isfinite(target) or not np.isfinite(tolerance) or tolerance <= 0:
-        raise ValueError('Mức y phải hữu hạn; dung sai phải dương và hữu hạn.')
-    h = spacing(x)
-    if not (np.all(np.diff(y)>0) or np.all(np.diff(y)<0)):
-        raise ValueError('Chọn một đoạn dữ liệu đơn điệu nghiêm ngặt cho nội suy ngược.')
-    if not min(y) <= target <= max(y): raise ValueError('Giá trị y cần tìm nằm ngoài đoạn đã chọn.')
-    if tolerance <= 0: raise ValueError('Dung sai phải dương.')
-    max_steps=nonnegative_integer(max_steps,'Số bước lặp tối đa')
-    if not max_steps:raise ValueError('Số bước lặp tối đa phải dương.')
-    at_node=np.flatnonzero(y==target)
-    if len(at_node):return Report('Nội suy ngược — mức tại mốc',[f'Mức bằng tung độ tại mốc x = {fmt(x[at_node[0]])}.'],value=float(x[at_node[0]]))
-    from .inverse_model import InverseMap, evaluate
-    model=InverseMap(x,y,target,backward,precision=max(50,-Decimal(str(float(tolerance))).adjusted()+40))
-    rows=[]
-    with localcontext() as ctx:
-        ctx.prec=model.precision
-        dtol=Decimal(str(float(tolerance)))
-        lo=(Decimal(str(float(x[0])))-model.origin)/model.h
-        hi=(Decimal(str(float(x[-1])))-model.origin)/model.h
-        t=model.initial()
-        if not lo<=t<=hi:t=(lo+hi)/2
-        for k in range(1,max_steps+1):
-            next_t=model.step(t)
-            if not lo<=next_t<=hi:break
-            total=evaluate(model.polynomial,t)-model.y0-model.d1*t
-            rows.append([k,decimal_cell(t),decimal_cell(total),decimal_cell(next_t),decimal_cell(abs(next_t-t))])
-            residual=model.residual(next_t)
-            if abs(next_t-t)*model.h<=dtol and residual<=dtol*max(Decimal(1),abs(model.target)):
-                exact=model.location(next_t);result=float(exact)
-                if abs(Decimal.from_float(result)-exact)>dtol:
-                    raise ValueError('Dung sai vị trí nhỏ hơn độ phân giải float; đổi gốc/đơn vị hoặc tăng dung sai.')
-                report=Report('Nội suy ngược — lặp Newton '+('lùi' if backward else 'tiến'),
-                              [f'x ≈ {fmt(result)}; sai lệch P(x)-y = {fmt(decimal_cell(residual),12)}',
-                               'Dừng thực hành theo sai khác bước và phần dư; chưa có cận co/hội tụ được chứng minh.',
-                               'Nghiệm là của đa thức nội suy; sai số so với hàm thật cần cận mô hình.'],value=result).table(
-                                  'Lịch sử lặp',['k','t trước','tổng bậc cao','t sau','độ lệch'],rows)
-                report.presentation={'formulas':[('Nghiệm nội suy ngược',[rf'P(x)={fmt(target)},\qquad x\approx {fmt(result)}'])]}
-                return report
-            if next_t==t:break
-            t=next_t
-    raise ValueError('Phép lặp không hội tụ. Chọn ít mốc hơn gần giá trị y cần tìm hoặc đổi hướng tiến/lùi.')
+def inverse(x, y, target, backward=False, tolerance=1e-10, max_steps=1000, *,
+            interval=None, residual_tolerance=1e-6, **options):
+    """Lặp đơn theo đúng mốc/gốc đã chọn; không tự đổi t0 hoặc tập mốc."""
+    from .inverse_solution import solve_inverse, require_success
+    return require_success(solve_inverse(x,y,target,
+        'backward_iteration' if backward else 'forward_iteration',
+        interval=interval,eps_x=tolerance,eps_y=residual_tolerance,max_iter=max_steps,
+        stop_mode='practical',**options))
 
 
 def select_points(x,y,target,count=5,reverse=False):

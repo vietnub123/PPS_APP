@@ -1,0 +1,72 @@
+Nội suy hàm ngược — Newton tỉ sai phân
+
+================================================================
+
+1. Bài toán và lựa chọn
+
+Thông số của lượt chạy
+
+Phương pháp: Nội suy hàm ngược — Newton tỉ sai phân. Mức cần tìm: 2. Bậc tối đa: 1.
+
+Khoảng x: [0, 1]. Khoảng mục tiêu do người dùng cung cấp, độc lập với gốc và tập mốc tính.
+
+Chỉ số mốc dùng: [0, 1] (bắt đầu từ 0).
+
+Giữ số đầy đủ khi tính; bảng trung gian hiển thị 12 chữ số hoặc dạng khoa học.
+
+Các mốc đã chọn
+
+Các cặp dùng trong mô hình
+================================================================
+
+Các cặp dùng trong mô hình
+dòng gốc  x_i  y_i
+0         0    0
+1         1    1
+
+
+Bảng nguồn và ánh xạ dòng
+
+Toàn bộ dữ liệu đã nhập
+================================================================
+
+Toàn bộ dữ liệu đã nhập
+dòng gốc  x  y
+0         0  0
+1         1  1
+2         2  4
+
+
+Thứ tự dòng sau sắp tăng x: [0, 1, 2].
+
+Khảo sát mức và các nhánh trên mẫu
+
+Mốc đúng mức: []; khoảng đổi dấu: [(1, 2)]; nhánh trên mẫu: [[0, 1, 2]]; hai đầu cùng mức: [].
+
+Nếu hàm thật liên tục, mỗi khoảng đổi dấu có ít nhất một nghiệm. Phép quét có thể bỏ sót nghiệm tiếp xúc; đơn điệu trên mẫu không chứng minh đơn điệu giữa các mốc.
+
+2. Kiểm tra điều kiện
+
+✓ Đạt — Ghép cặp và giá trị hữu hạn: Hai dãy cùng độ dài, có ít nhất 2 cặp; mọi số hữu hạn.
+
+✓ Đạt — Hoành độ phân biệt: Sắp theo x tăng và giữ nguyên cặp cùng chỉ số hàng gốc.
+
+✓ Đạt — Số mốc và bậc đã chọn: Số mốc = bậc + 1; không tự chọn lại mốc.
+
+✓ Đạt — Nhánh mục tiêu trên các mốc: Hàm ngược cần nhánh một-một; lặp thuận được phép giữ nguyên toàn bảng qua nhiều nhánh.
+
+✓ Đạt — Độ tách biệt của tung độ: Ngưỡng chỉ phát cảnh báo; không gộp hoặc thay đổi mốc.
+
+✓ Đạt — Khoảng đang giải: Khoảng mục tiêu do người dùng cung cấp, độc lập với gốc và tập mốc tính.
+
+Chưa xác minh — Đối chiếu mức tại hai đầu khoảng: Hai đầu cùng dấu; phép đổi dấu chưa xác nhận khoảng, không suy ra hàm thật vô nghiệm.
+
+Chưa đạt — Kiểm tra nhánh và đảo bảng: Mức 2 nằm ngoài miền tung độ tập mốc đã chọn; ngoại suy ngược chưa được bật rõ. Không lấy miền của nhánh lớn thay cho miền của các mốc thực sự dùng.
+
+Giá trị quan sát: inverse_extrapolation.
+
+7. Kết luận đúng phạm vi
+
+Chưa có kết quả đạt yêu cầu. Kiểm tra nhánh và đảo bảng: Mức 2 nằm ngoài miền tung độ tập mốc đã chọn; ngoại suy ngược chưa được bật rõ. Không lấy miền của nhánh lớn thay cho miền của các mốc thực sự dùng.
+
+Giữ nguyên cấu hình và các bước đã tính. Chọn lại khoảng/mốc/bậc/phương pháp và chạy lượt riêng; không có kết quả thay thế ngầm.

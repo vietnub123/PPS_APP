@@ -1,6 +1,57 @@
 # Báo cáo kiểm định PPS_APP
 
+## Bản hiện hành: guide v2 và ba phần ngày 30/10/2026
+
+Phạm vi theo yêu cầu mới là **nội suy ngược, spline và bình phương tối thiểu**, cùng đường gọi GUI/JSON/CLI và phần trình bày/xuất. Đã đối chiếu guide nội suy ngược bản `(2)`, PDF nội suy ngược mới 25 trang, PDF spline 23 trang, PDF bình phương tối thiểu 23 trang trong `kienthuc/real`. Hai bản PDF spline/hồi quy không và có `(1)` giống nhau về nội dung. Đã đọc ảnh `20251_MI3042_GK.jpg` và chạy trực tiếp toàn bộ 104 cặp từ `20251GKtest2.xlsx` vừa cấp. [Kiểm định đề thật và các đáp số](Kiem_dinh_de_20251.md).
+
+- **Nội suy ngược:** bỏ điều kiện sai buộc gốc sát khoảng nghiệm; giữ gốc đầu/cuối tập dùng và đủ bậc/mốc. T là khoảng mục tiêu, J dùng chứng nhận riêng. Thực hành có thể ra ngoài T và tiếp tục; cuối cùng ngoài khoảng thì không nhận thành công. Có ô chọn tập con theo dòng gốc, ba quy tắc khởi tạo và giới hạn vòng độc lập. Bảng 36 mốc cả hai chiều trả 2.09; bảng thật 104 mốc thực sự tràn số được ghi đúng, không báo thiếu mốc hoặc tự thay mô hình. [Chi tiết bản sửa](Cap_nhat_noi_suy_nguoc.md).
+- **Spline:** hệ moment/truy hồi và bộ giải thực tạo ra nghiệm được giữ trong báo cáo. Có đầy đủ khử xuôi, pivot, thế ngược, hệ số theo từng u=x−x_i, kiểm ghép nút/biên, đạo hàm một phía và tích phân chia đoạn. Bổ sung biên hỗn hợp/tổng quát, phân biệt thiếu hạng và mâu thuẫn. Hệ chuẩn lớn dùng băng ba đường chéo, không dựng ma trận đặc chỉ để hiển thị. Hệ lớn tuần hoàn/not-a-knot tự động dùng SciPy được công bố đúng, không tạo trace Thomas giả.
+- **Bình phương tối thiểu:** bảng cơ sở, tổng có trọng số, hệ chuẩn và QR/Gauss/SVD thực tế; nghiệm chuẩn nhỏ nhất chỉ khi chọn rõ. Giữ x đo lặp, w=0, R² âm và phân biệt miền/mục tiêu biến đổi. LM giữ tham số, Jacobian, damping, bước thử nhận/từ chối và lý do dừng. Phần phi tuyến trình bày mục tiêu SSE và bước LM thực tế, không in hệ chuẩn tuyến tính của một bài khác. Phân biệt phần dư nội bộ LM với phần dư y−g dùng đánh giá.
+- **Trình bày:** nhóm bảng/công thức theo cột ở cửa sổ rộng, chuyển một cột khi hẹp, chi tiết mở riêng và không giải lại khi thay bố cục. HTML ngoại tuyến tự mở đầy đủ chi tiết khi in; TXT giữ đủ hàng. Đã xem ảnh đúng cửa sổ PPS và các trang in công thức/khử/vòng lặp/kết luận của cả ba phần.
+
+Các ca làm lộ lỗi quan trọng trong đợt này:
+
+| Vị trí | Đầu vào và hành vi sai | Cách sửa và tác động khi làm bài |
+|---|---|---|
+| `inverse_solution._interval`, chọn gốc | 36 mốc x_i=1+0.115i, mức 1.23 nằm giữa 2.035–2.15: chuyển gốc tới khoảng rồi đòi thêm 36 mốc | Giữ gốc 1 hoặc 5.025 và đủ 36 mốc, đổi T theo gốc thật; hai chiều trả 2.09. Lỗi nghiêm trọng vì từ chối bài hợp lệ ngay bước chuẩn bị. |
+| `inverse_solution._iterate` | x=[0,1,2], y=[0,1,8], mức0.5: t₁=1.25 ngoài T bị xem như lỗi không được tiếp tục | Trong thực hành chỉ cảnh báo và tiếp tục theo công thức; giới hạn 1 vòng thì báo hết vòng thật. Kết quả cuối ngoài khoảng không nhận thành công. T và J được kiểm riêng. |
+| `least_squares_worked._render`, tổng trọng số | x=[0,1,2], y=[1,2,2], w=[1,2,1]: bảng tổng không trọng số không khớp hệ chuẩn | In đúng Σw=4, Σwx=4, Σwy=7, Σwx²=6, Σwxy=8; hệ cho a=1.25,b=0.5. Trước sửa có thể tính đúng nhưng chép sai hệ trong bài tự luận. |
+| `least_squares_worked._render`, lời giải LM | Khớp A exp(bx) với y=[2,5,18]: in thêm Gc=b của cơ sở [1,x], dù bài phi tuyến | In F=Σw(g−y)², định nghĩa phần dư/Jacobian nội bộ và từng bước LM đúng. Không dùng hệ chuẩn của bài tuyến tính khác để giải thích kết quả. |
+| `least_squares_worked.solve_least_squares`, hạng phi tuyến | Chọn phần mũ [1,x] ngoài biên độ A, hoặc hai quan sát nhưng ba tham số | Báo thiếu hạng số và không nhận tham số duy nhất; giữ các cơ sở đã chọn. Không âm thầm xóa cột 1 để làm bài chạy qua. |
+| `least_squares_worked._nonlinear`, mô hình hằng | Chọn rõ phần mũ rỗng: A exp(0)=A, trước đây ghép mảng cơ sở rỗng làm lỗi dự đoán | Hỗ trợ đúng một tham số: x=[0,1,2], y=[2,5,8], w=[1,2,1] cho A=5, SSE có trọng số18; kiểm giá trị cả ngoài dải x. |
+
+Kiểm chứng bản cuối: `.venv\Scripts\python.exe -m unittest discover -s tests -q` chạy ngoài sandbox: **216 kiểm thử qua, không bỏ qua, 273.753 giây**, gồm 9 kiểm thử GUI thật và hai ca mới về hạng phi tuyến/mô hình hằng. Các lượt kiểm thử riêng trước đó không được cộng vào số 216 này. `compileall`, `git diff --check` và CSV sáu cột/79 dòng nội dung đã kiểm tra.
+
+Sau đó mở rộng kiểm thử GUI hiện có để mở trực tiếp hai JSON đề thật có x/y là mảng 104 phần tử, chạy qua đúng **Mở bài → Tính**: kiểm thử riêng qua trong 7.637 giây. Không thêm một số kiểm thử duy nhất vào tổng 216.
+
+Đã chạy **15 JSON đề mới/mô phỏng qua CLI**: 12 trả mã 0; ba ca lỗi có chủ đích (miền log, tiến/lùi nguyên 104 mốc) trả mã 1 đúng trạng thái. [Nhật ký](examples/de_20251/kiem_tra_cli.txt). Các JSON/HTML/TXT/PDF và ảnh giao diện nằm tại [examples/de_20251](examples/de_20251).
+
+Giới hạn cần đọc cùng đáp số: ảnh có hai đề và nhãn năm khác nhau, chưa có dữ liệu test1; test2 có y âm nên không áp dụng phép log trên nguyên bảng. LM tìm nghiệm dừng, chưa chứng nhận cực tiểu toàn cục. Cận lặp chỉ cho nghiệm đa thức mô hình, chưa bao gồm sai số với hàm thật và toàn bộ sai số máy. Các bằng chứng trên xác nhận những tình huống đã kiểm thử, không bảo đảm mọi dữ liệu đều hội tụ. Các phần môn học khác giữ hồ sơ kiểm định trước, không được suy là vừa được đối chiếu với giáo trình mới.
+
+Kết luận của bản hiện hành:
+
+1. **Bao phủ:** các phương pháp nội suy ngược, spline bậc1–4/biên tổng quát và mô hình bình phương tối thiểu trong ba tài liệu mới có đường gọi và lời giải; bảng CSV nêu từng yêu cầu và giới hạn.
+2. **Độ đúng:** đã đối chiếu bài tính hữu tỷ, đa thức biết trước, lưới không đều/ngẫu nhiên, công thức Lagrange độc lập, SciPy tối ưu/spline và dữ liệu workbook gốc. Có kiểm thử các đường thất bại, không chỉ đáp số thành công.
+3. **Khả năng làm bài:** GUI/JSON/CLI, bản xuất ngoại tuyến và công thức/phép thế số đã được chạy. Câu viết thuật toán/chứng minh vẫn cần chọn giả thiết và giải thích bằng tay; chương trình cung cấp các tham số và bước tính để trình bày.
+4. **Vấn đề còn lại:** không có lỗi khởi chạy hoặc lỗi tái hiện trong các ca hợp lệ đã kiểm thử còn để ngỏ. Những bài không đủ biên, log sai miền, thiếu hạng hoặc lặp không hội tụ phải được báo đúng và cần lựa chọn lại theo đề; không thể đảm bảo mọi tình huống có một đáp số hợp lệ.
+
+## Hồ sơ các đợt trước
+
+Các mục bên dưới ghi lại kiểm định ở thời điểm trước guide v2 và lần mở rộng ba phần. Khi có khác biệt về chọn gốc, khoảng T/J, khởi tạo, số kiểm thử hay đường lời giải, dùng bản hiện hành phía trên và hướng dẫn đã cập nhật.
+
 ## Phạm vi và nguồn
+
+Đợt **30/10/2026 chỉ tập trung nội suy ngược**, theo toàn bộ guide và PDF 23 trang trong `kienthuc/real`. Đã sửa lỗ hổng kiểm miền tung độ tập mốc, bổ sung tiền kiểm/căn cứ hội tụ và thay cách nối dọc 11 bảng bằng bảy khối có ba bảng chính, nhóm hai cột và chi tiết mở riêng. Bảng lùi ∇ đặt đúng hàng kết thúc; các lựa chọn Newton/Lagrange có trực tiếp trên GUI. [Bản cập nhật và ví dụ](Cap_nhat_noi_suy_nguoc.md) mô tả đầy đủ.
+
+Kiểm chứng đợt 30/10:
+
+- `.venv\Scripts\python.exe -m unittest discover -s tests -q`: **154 kiểm thử qua**, 159.907 giây, không bỏ qua; gồm 8 kiểm thử GUI thật và kiểm tra co giãn/mở chi tiết không giải lại bài toán.
+- Sau hoàn thiện cách nhóm phần kiểm tra khi in và hai ca trình bày mốc đúng mức/lỗi tiền kiểm: `python -m unittest tests.test_inverse_real_export tests.test_inverse_real_presentation tests.test_inverse_guide -q`: **40 kiểm thử qua**, 58.861 giây. Tổng số kiểm thử hiện có là 156; hai lệnh trên là hai lượt chạy riêng.
+- Ba bài `real` đã đối chiếu độc lập: hàm ngược 2.5; tiến mức 4 dừng vòng 5 tại 1.666001162884; lùi mức 2 dừng vòng 6 tại 2.133420489204. Chặn tự động q=11/24 và q=73/150 khác q=0.5 minh họa nhưng hợp lệ; ví dụ nhận q=0.5 giữ nhãn có điều kiện theo nguồn.
+- Đã chạy 13 JSON nội suy ngược bằng CLI: 11 bài trả mã 0; E rời đoạn và bài ngoại suy chưa bật trả mã 1 cùng lời giải lỗi. `compileall`, `git diff --check` và CSV sáu cột qua.
+- Đã xem ảnh đúng HWND cửa sổ PPS ở rộng/hẹp: ba nhóm chuyển 2→1 cột, bảng lùi giữ đúng ∇ và các ô hệ số. Đã xuất và xem bản in HTML/PDF A4 của tiến, lùi, hàm ngược và ngoại suy bị chặn; chi tiết đầy đủ, bảng dài lặp tiêu đề, kiểm tra/quyết định từng vòng được giữ cùng nhóm. Các bản HTML mẫu cũ cũng đã cập nhật theo bố cục mới.
+
+Đợt cập nhật nội suy ngược ngày 29/10 theo guide mới và cả hai PDF 26/36 trang được ghi trong [Cap_nhat_noi_suy_nguoc.md](Cap_nhat_noi_suy_nguoc.md). Quy tắc mới giữ nguyên t0, mốc, bậc và khoảng đã chọn; thay thế cách chọn tâm đoạn hoặc tự chọn mốc gần mức ở bản trước. Có lời giải 9 bước và các ví dụ HTML đầy đủ cho cả kết quả đạt/thất bại.
 
 Đợt rà soát tiếp theo cho các thuật toán còn lại được ghi riêng trong [Kiem_dinh_thuat_toan_khac.md](Kiem_dinh_thuat_toan_khac.md): nội suy ngược, toàn bộ biến thể spline/hồi quy đang có, đạo hàm–tích phân, Euler/RK/Adams, bài toán biên và trị riêng. Đã sửa thêm các lỗi tái hiện được và thêm 40 kiểm thử độc lập cho đợt này.
 
@@ -55,11 +106,15 @@ Giao diện có thêm lựa chọn hàm ngược, lặp có cận co, chia đôi
 
 Chạy `python -m unittest tests.test_chapter1_audit tests.test_numerics tests.test_math_view tests.test_regression_repeated -q`: bộ kiểm thử toán học qua. Chạy `python -m compileall -q pps tests exam_cli.py`: qua. Chạy `.venv\Scripts\python.exe exam_cli.py examples\02_bessel.json`: chạy tại máy này và in `P′(1.5)=3` khi không gọi Internet.
 
-Chạy toàn bộ `.venv\Scripts\python.exe -m unittest discover -s tests -q` **ngoài sandbox**: **103 kiểm thử qua, không có kiểm thử bị bỏ qua**. Có 5 kiểm thử GUI thực sự, gồm ví dụ từng phương pháp, hiển thị báo cáo, nhập/xuất Excel/CSV, lưu/mở JSON và chạy tính bất đồng bộ. Lỗi `_tkinter.TclError: Can't find a usable init.tcl` chỉ xuất hiện trong sandbox kiểm định; chạy ngoài sandbox đã xác nhận cửa sổ hoạt động trên môi trường hiện tại. Điều này không thay việc thử trên chính máy thi. `CHAY_CONSOLE.bat` vẫn cung cấp đường chạy ngoại tuyến dự phòng.
+Ngày 29/10 chạy `.venv\Scripts\python.exe -m unittest discover -s tests -q` **ngoài sandbox**: **131 kiểm thử qua, không có kiểm thử bị bỏ qua** (108.144 giây). Trong đó có 27 kiểm thử nội suy ngược mới: A–G, bài bậc 4 PDF 36 trang, bất biến đa thức, dữ liệu lỗi, cận sai số, giới hạn float, công thức và xuất toàn bộ hàng. Sau sửa cuối ở tuyến mở JSON để giữ lựa chọn Lagrange/khoảng riêng, chạy riêng `.venv\Scripts\python.exe -m unittest tests.test_gui -q`: **7 kiểm thử GUI thật qua** (67.893 giây), gồm kiểm thử mới cho giữ lựa chọn qua mở/chạy/chuyển phương pháp và nạp lại ví dụ. Đây là hai lượt chạy riêng; tổng số kiểm thử hiện tại là 132.
+
+Đã chạy cả 7 JSON mới qua `exam_cli.py`: A (hai biểu diễn), B, C, F và bậc 4 trả mã 0; E trả mã 1 với đầy đủ vòng thất bại. Đã xuất HTML/văn bản qua bộ dựng hiện có; render toàn bộ lời giải B, C, E và bài bậc 4 để xem. Đã in HTML B, C, E bằng Edge headless sang PDF (6, 6 và 4 trang), xem các công thức, bảng, dấu âm/số mũ và phần kết luận. Các bản in thử ở `examples/noi_suy_nguoc/`; không cần mạng để mở. `compileall` và `git diff --check` qua.
+
+Lỗi `_tkinter.TclError: Can't find a usable init.tcl` chỉ xuất hiện trong sandbox kiểm định; chạy ngoài sandbox đã xác nhận cửa sổ hoạt động trên môi trường hiện tại. Điều này không thay việc thử trên chính máy thi. `CHAY_CONSOLE.bat` vẫn cung cấp đường chạy ngoại tuyến dự phòng.
 
 ## Điều chưa được bảo đảm
 
-- `inverse()` vẫn chỉ dừng thực hành. `inverse_controlled()` kiểm tra `φ(J)⊆J` và `|φ′|≤q<1` bằng cận hệ số Decimal; nếu không xác nhận được thì báo lỗi và dùng chia đôi. Cận gồm `h q|t_{k+1}-t_k|/(1-q)` và phần làm tròn nghiệm trả về sang float, nhưng chưa chứng nhận làm tròn hệ số bằng số học khoảng. Cận so với nghiệm hàm thật còn cần sai số nội suy `E` và cận độ dốc `μ>0`.
+- `inverse()` dừng thực hành. `inverse_controlled()` giữ t0, kiểm tra `t0∈J`, `φ(J)⊆J`, `|φ′|≤q<1` bằng chặn hữu tỷ trên cả đoạn. Không xác nhận được thì giữ lời giải thất bại; chia đôi phải được chọn và chạy riêng. Báo cáo tách cận lặp `h q|t_{k+1}−t_k|/(1−q)`, phần chuyển sang float và phần làm tròn số in. Chưa chứng nhận toàn bộ sai số máy bằng số học khoảng. Cận hàm thật cần thêm `E,μ>0`, miền và nguồn giả thiết.
 - B03 nhận `p−1` điều kiện đạo hàm đơn hoặc tổ hợp tuyến tính ở hai đầu, giải hệ thưa sau chuẩn hóa và báo suy biến trong độ chính xác máy. Hồi quy dùng SVD đổi thang/QR Decimal; các hàm `thomas`/`gaussian_elimination` in bước khử sau đổi thang từng hàng và phần dư hệ gốc. Những câu yêu cầu **viết thuật toán/chứng minh** vẫn phải trình bày các bước và giả thiết bằng tay theo PDF.
 - Mô hình phi tuyến sau log/nghịch đảo tối ưu trên thang biến đổi. `original_scale_fit` giải trực tiếp SSE thang y cho mũ/lũy thừa bằng lặp phi tuyến và có thể đến cực tiểu cục bộ; chưa có lối tương ứng cho các dạng nghịch đảo.
 - Không thể lấy sai lệch tại mốc, sai khác hai lần chia lưới hoặc SSE làm cận bảo đảm cho hàm thật khi chưa có giả thiết về đạo hàm, độ dốc và sai số dữ liệu. Nội suy bậc cao có thể mất ổn định số, nhất là ngoại suy.

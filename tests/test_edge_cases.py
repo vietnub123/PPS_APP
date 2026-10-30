@@ -220,9 +220,19 @@ class OfflineDispatchExamples(unittest.TestCase):
                     if tool=='Bình phương tối thiểu' and method.startswith('Lũy thừa'):
                         x='1 2 3 4 5';y='1 4 9 16 25'
                     if tool=='Bình phương tối thiểu' and method.startswith('Hàm mũ'):y='1 2 4 8 16'
-                    if tool=='Nội suy ngược':x='1 1.1 1.2 1.3 1.4';y='1 1.21 1.44 1.69 1.96'
+                    if tool=='Bình phương tối thiểu':
+                        samples={'Log của tổ hợp cơ sở':('0 1 2 3 4','0 1.0986122886681098 1.6094379124341003 1.9459101490553132 2.1972245773362196'),
+                                 '1/(a+b*x)':('0 1 2 3 4','.5 .3333333333333333 .25 .2 .1666666666666667'),
+                                 'x/(a+b*x)':('1 2 3 4 5','.3333333333333333 .5 .6 .6666666666666667 .7142857142857143'),
+                                 'a+b*ln(x)':('1 2 3 4 5','1 2.386294361119891 3.1972245773362196 3.772588722239781 4.218875824868201'),
+                                 'A*b^x':('0 1 2 3 4','1 2 4 8 16')}
+                        x,y=samples.get(method,(x,y))
+                    if tool=='Nội suy ngược':
+                        x,y=('1 2 3','1 4 9') if method.startswith('Hàm ngược') else ('0 1 2','0 1 4') if method=='Chia đôi đa thức' else ('1.6 1.8 2 2.2','4.23 3.67 2.99 1.24')
                     report=dispatch(tool,method,values,x,y)
                     self.assertTrue(report.title)
+                    if tool=='Nội suy ngược':self.assertIsNone(report.presentation['inverse_solution']['failure'])
+                    if tool in ('Spline','Bình phương tối thiểu'):self.assertIsNone(report.presentation['worked_solution']['failure'])
                     for _, formulas in report.presentation.get('formulas',[]):
                         for formula in formulas:self.assertTrue(math_png(formula).startswith(b'\x89PNG'))
 

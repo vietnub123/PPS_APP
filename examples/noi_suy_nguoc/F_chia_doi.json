@@ -1,0 +1,12 @@
+{
+  "tool": "Nội suy ngược",
+  "method": "Chia đôi đa thức",
+  "values": {
+    "target": "2",
+    "a": "1",
+    "b": "2",
+    "tol": "1e-3"
+  },
+  "x": "0 1 2",
+  "y": "0 1 4"
+}

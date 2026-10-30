@@ -1,0 +1,11 @@
+{
+  "tool": "Nội suy ngược",
+  "method": "Lặp tiến",
+  "values": {
+    "target": ".5",
+    "tol": "1e-6",
+    "max_iter": "1"
+  },
+  "x": "0 1 2",
+  "y": "0 1 8"
+}

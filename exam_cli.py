@@ -17,6 +17,7 @@ def main(argv=None):
         report=dispatch(task['tool'],task['method'],task.get('values',{}),
                         task.get('x',''),task.get('y',''))
         print(report.text())
+        if report.presentation.get('inverse_solution',report.presentation.get('worked_solution',{})).get('failure'):return 1
         return 0
     except (OSError,UnicodeError,ValueError,KeyError,TypeError) as exc:
         print(f'Không tính được: {exc}',file=sys.stderr)

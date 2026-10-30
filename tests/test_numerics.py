@@ -50,7 +50,7 @@ class InterpolationTests(unittest.TestCase):
     def test_inverse(self):
         x=np.linspace(1,1.4,5)
         for backward in (False,True):
-            self.assertAlmostEqual(ip.inverse(x,x*x,1.3225,backward).value,1.15,places=8)
+            self.assertAlmostEqual(ip.inverse(x,x*x,1.3225,backward,interval=(1,1.4)).value,1.15,places=8)
         with self.assertRaises(ValueError):ip.inverse([0,1,2],[0,1,0],.5)
 
     def test_splines(self):

@@ -145,7 +145,7 @@ class ChapterOneAudit(unittest.TestCase):
                    {'basis':'1;x','weights':'1 2 1'},'0 1 2','1 2 2')
         self.assertAlmostEqual(r.value(0),1.25)
         r=dispatch('Bình phương tối thiểu','Hàm mũ — SSE thang y',
-                   {'basis':'1;x','initial':''},'0 1 2 3','2 3.1 5.2 8.9')
+                   {'basis':'x','initial':''},'0 1 2 3','2 3.1 5.2 8.9')
         self.assertTrue(np.isfinite(r.value(1.5)))
         r=dispatch('Bình phương tối thiểu','Lũy thừa — SSE thang y',
                    {'initial':''},'1 2 3','2 8 18')

@@ -198,7 +198,7 @@ class SplinesAndInverseAudit(unittest.TestCase):
         x=np.linspace(1,1.4,5)
         for sign in (1,-1):
             for backward in (False,True):
-                r=ip.inverse(x,sign*x*x,sign*1.3225,backward)
+                r=ip.inverse(x,sign*x*x,sign*1.3225,backward,interval=(1,1.4))
                 self.assertAlmostEqual(r.value,1.15,places=8)
                 r=ch1.inverse_controlled(x,sign*x*x,sign*1.3225,(1.1,1.2),backward)
                 self.assertAlmostEqual(r.value,1.15,places=8)
@@ -214,10 +214,11 @@ class SplinesAndInverseAudit(unittest.TestCase):
     def test_large_inverse_maps_and_small_certified_interval(self):
         x=np.arange(201.)
         for backward in (False,True):
-            self.assertAlmostEqual(ip.inverse(x,2*x+1,1.5,backward).value,.25)
+            self.assertAlmostEqual(ip.inverse(x,2*x+1,1.5,backward,interval=(0,1)).value,.25)
             self.assertAlmostEqual(ch1.inverse_controlled(x,2*x+1,1.5,(0,1),backward).value,.25)
         x=np.linspace(1,1.4,5)
-        self.assertAlmostEqual(ch1.inverse_controlled(x,x*x,1.3225,(1.149,1.151)).value,1.15,places=9)
+        # Guide 29/10: t0 ngoài J phải bị từ chối, không tự chuyển sang tâm.
+        with self.assertRaises(ValueError):ch1.inverse_controlled(x,x*x,1.3225,(1.149,1.151))
 
     def test_tiny_derivative_jump_is_not_hidden_by_absolute_tolerance(self):
         pp=ip.spline([0,1,2],[0,0,1e-12],'Tuyến tính').value

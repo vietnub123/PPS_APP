@@ -1,0 +1,211 @@
+Spline — Cubic tự nhiên
+
+================================================================
+
+1. Bài toán, dữ liệu và điều kiện biên
+
+Phương pháp: Cubic tự nhiên; bậc tối đa 3. Có 4 mốc và 3 đoạn. Mốc không đều là hợp lệ.
+
+Các cặp sau sắp tăng x
+================================================================
+
+Các cặp sau sắp tăng x
+dòng gốc  x_i  y_i
+0         0    0
+1         1    1
+2         2    0
+3         3    1
+
+
+Điều kiện đã chọn: ('trái', 2, Fraction(0, 1)).
+
+Điều kiện đã chọn: ('phải', 2, Fraction(0, 1)).
+
+Spline thông thường là phép dựng mảnh/giải hệ, không có vòng hội tụ t=Phi(t).
+
+2. Tiền kiểm và số điều kiện
+
+✓ Các cặp hữu hạn, hoành độ phân biệt; giữ nguyên tất cả mốc.
+
+Bậc p=3 cần 2 điều kiện bổ sung độc lập ngoài nội suy và ghép đạo hàm. Đếm đủ hàng chưa tự chứng minh độc lập.
+
+3. Các khoảng, hệ phương trình và hệ số
+
+Lưới và độ dốc
+
+Độ dài và độ dốc từng đoạn
+================================================================
+
+Độ dài và độ dốc từng đoạn
+i  x trái  x phải  h_i  δ_i
+0  0       1       1    1
+1  1       2       1    -1
+2  2       3       1    1
+
+
+Hệ số các mảnh
+
+u=x−x_i; hệ số theo bậc tăng từ trái sang phải.
+
+Hệ số theo u=x−x_i, bậc tăng
+================================================================
+
+Hệ số theo u=x−x_i, bậc tăng
+i  u^0  u^1   u^2  u^3
+0  0    5/3   0    -2/3
+1  1    -1/3  -2   4/3
+2  0    -1/3  2    -2/3
+
+
+Ẩn moment M_i=S″(x_i).
+
+Hàng trong: h_(i-1)M_(i-1)+2(h_(i-1)+h_i)M_i+h_i M_(i+1)=6(δ_i−δ_(i-1)).
+
+Hệ phương trình đầy đủ đã dùng
+
+Ma trận hệ và vế phải
+================================================================
+
+Ma trận hệ và vế phải
+M_0  M_1  M_2  M_3  vế phải
+1    0    0    0    0
+1    4    1    0    -12
+0    1    4    1    12
+0    0    0    1    0
+
+
+4. Truy hồi, khử và thế ngược thực tế
+
+Bộ giải đã dùng: Thomas hữu tỷ.
+
+Mọi bước khử đã dùng
+
+λ_i=l_i/b_tilde_(i−1); b_tilde_i=b_i−λ_i q_(i−1); r_tilde_i=r_i−λ_i r_tilde_(i−1).
+
+Khử xuôi Thomas
+================================================================
+
+Khử xuôi Thomas
+i  l_i  pivot trước  λ_i   b_i  b sau khử  r_i  r sau khử
+0  0    —            0     1    1          0    0
+1  1    1            1     4    4          -12  -12
+2  1    4            0.25  4    3.75       12   15
+3  0    3.75         0     1    1          0    0
+
+
+Các tỉ số sau khử
+================================================================
+
+Các tỉ số sau khử
+i  c′_i=q_i/b sau khử  d′_i=r sau khử/b sau khử
+0  0                   0
+1  0.25                -3
+2  4/15                4
+3  0                   0
+
+
+Thế ngược
+================================================================
+
+Thế ngược
+ẩn  vế phải sau khử  đóng góp ẩn sau  pivot  nghiệm
+3   0                0                1      0
+2   15               0                3.75   4
+1   -12              4                4      -4
+0   0                0                1      0
+
+
+M = [0, -4, 4, 0].
+
+5. Các mảnh và miền áp dụng
+
+Mỗi mảnh dùng u=x−mốc trái của chính đoạn đó. Không thay x toàn cục trực tiếp vào đa thức theo u.
+
+Mảnh 0: [0, 1]
+
+u=x−(0), 0≤u≤1.
+
+S_{0}(x_i+u) = 5/3*u-2/3*u^3
+
+Mảnh 1: [1, 2]
+
+u=x−(1), 0≤u≤1.
+
+S_{1}(x_i+u) = 1-1/3*u-2*u^2+4/3*u^3
+
+Mảnh 2: [2, 3]
+
+u=x−(2), 0≤u≤1.
+
+S_{2}(x_i+u) = -1/3*u+2*u^2-2/3*u^3
+
+6. Kiểm tra nút, biên và đánh giá
+
+21/21 kiểm tra nội suy, ghép đạo hàm, hệ và biên đạt ngưỡng công bố.
+
+Mọi phần dư và phép kiểm tra
+
+Kiểm tra điều kiện đã chọn
+================================================================
+
+Kiểm tra điều kiện đã chọn
+điều kiện                         phần dư  ngưỡng              đạt
+Phương trình moment hàng 0        0        0                   Đạt
+Phương trình moment hàng 1        0        1.600000000000e-9   Đạt
+Phương trình moment hàng 2        0        1.600000000000e-9   Đạt
+Phương trình moment hàng 3        0        0                   Đạt
+Nội suy đoạn 0, đầu trái          0        0                   Đạt
+Nội suy đoạn 0, đầu phải          0        1.000000000000e-10  Đạt
+Nội suy đoạn 1, đầu trái          0        1.000000000000e-10  Đạt
+Nội suy đoạn 1, đầu phải          0        0                   Đạt
+Nội suy đoạn 2, đầu trái          0        0                   Đạt
+Nội suy đoạn 2, đầu phải          0        1.000000000000e-10  Đạt
+Ghép cấp 0 tại nút 1              0        2.333333333333e-10  Đạt
+Ghép cấp 1 tại nút 1              0        3.666666666667e-10  Đạt
+Ghép cấp 2 tại nút 1              0        4.000000000000e-10  Đạt
+Ghép cấp 0 tại nút 2              0        4.666666666667e-10  Đạt
+Ghép cấp 1 tại nút 2              0        8.333333333333e-10  Đạt
+Ghép cấp 2 tại nút 2              0        1.200000000000e-9   Đạt
+Biên trái, đạo hàm cấp 2          0        0                   Đạt
+Biên phải, đạo hàm cấp 2          0        8.000000000000e-10  Đạt
+PPoly sau chuyển float tại mốc 1  0        2.333333333333e-10  Đạt
+PPoly sau chuyển float tại mốc 2  0        4.666666666667e-10  Đạt
+PPoly sau chuyển float tại mốc 3  0        3.000000000000e-10  Đạt
+
+
+Hai phía tại nút
+================================================================
+
+Hai phía tại nút
+nút  cấp  trái  phải  chênh
+1    0    1     1     0
+1    1    -1/3  -1/3  0
+1    2    -4    -4    0
+2    0    0     0     0
+2    1    -1/3  -1/3  0
+2    2    4     4     0
+
+
+z=1.5 dùng đoạn 1: [1, 2], u=z−x_i=0.5. Đầu mút phải cuối cùng dùng mảnh cuối.
+
+S^(1)(1.5)=-4/3.
+
+Đạo hàm theo x bằng đạo hàm theo u vì du/dx=1; không chia thêm h_i.
+
+Tích phân chia tại các nút
+================================================================
+
+Tích phân chia tại các nút
+đoạn  a  b  u trái  u phải  đóng góp  tổng tạm
+0     0  1  0       1       2/3       2/3
+1     1  2  0       1       0.5       7/6
+2     2  3  0       1       1/3       1.5
+
+
+Tích phân từ 0 tới 3 = 1.5.
+
+7. Kết luận đúng phạm vi
+
+Đã dựng 3 mảnh bậc không quá 3, giữ đúng dữ liệu và điều kiện biên.
+
+Phần dư nút/hệ và chênh đạo hàm kiểm tra việc giải mô hình; chúng không phải cận sai số với hàm thật giữa các mốc. Spline nội suy không tự làm trơn nhiễu hoặc bảo đảm giữ đơn điệu.

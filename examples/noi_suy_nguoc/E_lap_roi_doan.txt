@@ -1,0 +1,213 @@
+Nội suy ngược — Newton tiến
+
+================================================================
+
+1. Bài toán và lựa chọn
+
+Thông số của lượt chạy
+
+Phương pháp: Nội suy ngược — Newton tiến. Mức cần tìm: 0.5. Bậc tối đa: 2.
+
+Khoảng x: [0, 1]. Khoảng đổi dấu duy nhất trên tập đã nhập, được xác định từ mức cần tìm; không đổi mốc hoặc gốc.
+
+ε_x=1.000000000000e-6; ε_y=1.000000000000e-6; tối đa 1 vòng.
+
+Khởi tạo: Theo phần tuyến tính tại gốc. Chế độ: lặp thực hành, chưa bảo đảm sai số.
+
+Chỉ số mốc dùng: [0, 1, 2] (bắt đầu từ 0).
+
+Giữ số đầy đủ khi tính; bảng trung gian hiển thị 12 chữ số hoặc dạng khoa học.
+
+Các mốc đã chọn
+
+Các cặp dùng trong mô hình
+================================================================
+
+Các cặp dùng trong mô hình
+dòng gốc  x_i  y_i
+0         0    0
+1         1    1
+2         2    8
+
+
+Khảo sát mức và các nhánh trên mẫu
+
+Mốc đúng mức: []; khoảng đổi dấu: [(0, 1)]; nhánh trên mẫu: [[0, 1, 2]]; hai đầu cùng mức: [].
+
+Nếu hàm thật liên tục, mỗi khoảng đổi dấu có ít nhất một nghiệm. Phép quét có thể bỏ sót nghiệm tiếp xúc; đơn điệu trên mẫu không chứng minh đơn điệu giữa các mốc.
+
+2. Kiểm tra điều kiện
+
+✓ Đạt — Ghép cặp và giá trị hữu hạn: Hai dãy cùng độ dài, có ít nhất 2 cặp; mọi số hữu hạn.
+
+✓ Đạt — Hoành độ phân biệt: Sắp theo x tăng và giữ nguyên cặp cùng chỉ số hàng gốc.
+
+✓ Đạt — Số mốc và bậc đã chọn: Số mốc = bậc + 1; không tự chọn lại mốc.
+
+✓ Đạt — Độ tách biệt của tung độ: Ngưỡng chỉ phát cảnh báo; không gộp hoặc thay đổi mốc.
+
+✓ Đạt — Lưới x đều: Dung sai nhận dạng lưới độc lập với hai ngưỡng sai số nghiệm.
+
+✓ Đạt — Giữ nguyên tập mốc và gốc khai triển: Khoảng nghiệm ở giữa bảng không làm thiếu mốc; số vòng không làm tăng số mốc cần dùng.
+
+✓ Đạt — Khoảng đang giải: Khoảng đổi dấu duy nhất trên tập đã nhập, được xác định từ mức cần tìm; không đổi mốc hoặc gốc.
+
+✓ Đạt — Đối chiếu mức tại hai đầu khoảng: Hai đầu đổi dấu. Nếu hàm thật liên tục thì có ít nhất một nghiệm.
+
+✓ Đạt — Đơn điệu của tập mốc lặp: Không suy từ thứ tự mẫu ra tính đơn điệu của hàm thật giữa mọi mốc.
+
+✓ Đạt — Sai phân tuyến tính tại gốc: Không thay d bằng một số nhỏ tùy ý và không dùng ngưỡng cảnh báo làm ngưỡng sai số nghiệm.
+
+✓ Đạt — Khởi tạo so với khoảng mục tiêu: T được tính từ khoảng nghiệm và gốc thật. Khởi tạo ngoài T không chặn phép lặp thực hành.
+
+Chưa xác minh — Điều kiện co trên toàn J: Dừng thực hành không được gọi là cận sai số bảo đảm.
+
+Chưa đạt — Vòng lặp 1: Đã thực hiện 1 vòng; chưa đồng thời đạt ngưỡng vị trí và phần dư. Giữ lịch sử để người dùng quyết định lượt chạy tiếp theo.
+
+Giá trị quan sát: max_iter_reached.
+
+Lưới x: h=1; độ lệch lớn nhất=0; atol=0; rtol=1.000000000000e-10.
+
+Các bước lưới thực nhập
+
+Kiểm tra lưới x
+================================================================
+
+Kiểm tra lưới x
+i  h_i
+0  1
+1  1
+
+
+Vòng 1 rời khoảng mục tiêu T. Công thức đa thức vẫn xác định: giữ giá trị và tiếp tục; kết quả cuối phải được đối chiếu lại với khoảng x đã yêu cầu.
+
+3. Bảng tính trung gian
+
+Bảng sai phân tiến
+================================================================
+
+Bảng sai phân tiến
+i  x_i  y_i  Δy  Δ²y
+0  0    0    1   6
+1  1    1    7   —
+2  2    8    —   —
+
+
+Hệ số c = [0, 1, 6].
+
+Bậc tối đa 2; bậc thực tế của đa thức từ hệ số đang giữ: 2. Không tự cắt các hệ số nhỏ về 0.
+
+Các ô đánh dấu là hệ số được lấy, giữ đúng thứ tự mốc.
+
+Phép tính từng ô và cách lấy hệ số
+
+Các phép tính đã lưu
+================================================================
+
+Các phép tính đã lưu
+i  cấp  phải  trái  tử  mẫu  kết quả
+0  1    1     0     1   1    1
+1  1    8     1     7   1    7
+0  2    7     1     6   1    6
+
+
+Hệ số và mẫu giai thừa
+================================================================
+
+Hệ số và mẫu giai thừa
+r  dòng dùng  c_r  r!  c_r/r!
+0  0          0    1   0
+1  0          1    1   1
+2  0          6    2   3
+
+
+4. Thiết lập công thức
+
+Đổi biến và đa thức thuận
+
+t=(x-(0))/(1); x=0+(1)*t.
+
+Ảnh T của khoảng mục tiêu theo đúng gốc đang dùng: [0,1].
+
+p(t) = 0+(1)*t+(3)*t*(t-1)
+
+Phần hiệu chỉnh từ cấp 2 đến bậc đã chọn
+
+H(t) = (3)*t*(t-1)
+
+Phương trình cần giải: p(t)=0.5.
+
+Hàm lặp Phi(t)=(0.5-H(t))/(1).
+
+t_0=(0.5-(0))/(1)=0.5.
+
+x_0=0+(1)*(0.5)=0.5.
+
+Cơ sở và hàm lặp tổng quát
+
+B_r(t)=prod(t-s,s=0..r-1)/r!; p(t)=sum(c_r*B_r(t),r=0..m).
+
+Phi(t)=(Y*−c_0−H(t))/c_1.
+
+5. Hội tụ và tiêu chuẩn dừng
+
+Căn cứ hội tụ trên đoạn đang chạy
+
+T=[0, 1] là ảnh của khoảng mục tiêu theo gốc thật; t₀=0.5 thuộc T.
+
+Chưa có chứng nhận hội tụ
+
+Thiếu chứng nhận không tự chứng minh phân kỳ; không tự đổi t₀, khoảng hay phương pháp.
+
+Hai điều kiện dừng độc lập
+
+Độ thay đổi theo x: s_j=|h|*|t_j-t_(j-1)| ≤ eps_x; chưa phải cận sai số.
+
+Độ lệch tại giá trị mới: r_j=|p(t_j)−Y*| ≤ eps_y.
+
+ε_x=1.000000000000e-6; ε_y=1.000000000000e-6. Chỉ dừng đạt yêu cầu khi cả hai cùng đạt.
+
+6. Quá trình tính
+
+Bảng tổng hợp vòng lặp
+================================================================
+
+Bảng tổng hợp vòng lặp
+vòng  t_j             x_j             Độ thay đổi theo x  Độ lệch r_j     Trạng thái
+0     0.500000000000  0.500000000000  —                   —               Khởi tạo
+1     1.250000000000  1.250000000000  0.750000000000      1.687500000000  Tiếp tục — ngoài T
+
+
+Vòng 1 — Tiếp tục — ngoài T
+
+✓ Dùng giá trị cũ t_0=0.5.
+
+d=1; P(t cũ)=-0.25; H′(t cũ)=0; q dùng để dừng=—.
+
+T_2=(6)*(0.5)*(-0.5)/2! = -0.75.
+
+✓ Cộng H(t_0)=-0.75.
+
+✓ t_1=(0.5-(-0.75))/(1)=1.25.
+
+✓ x_1=0+(1)*(1.25)=1.25.
+
+So với khoảng mục tiêu T: đang ở ngoài; giữ nguyên giá trị để theo dõi quỹ đạo.
+
+Độ lệch tại giá trị mới: |2.1875-(0.5)|=1.6875.
+
+Độ thay đổi theo x s_1=0.75; chưa phải cận sai số.
+
+Vị trí: 0.75 ≤ ε_x=1.000000000000e-6 — Chưa đạt.
+
+Độ lệch: 1.6875 ≤ ε_y=1.000000000000e-6 — Chưa đạt.
+
+Quyết định: Tiếp tục — ngoài T.
+
+7. Kết luận đúng phạm vi
+
+Chưa có kết quả đạt yêu cầu. Vòng lặp 1: Đã thực hiện 1 vòng; chưa đồng thời đạt ngưỡng vị trí và phần dư. Giữ lịch sử để người dùng quyết định lượt chạy tiếp theo.
+
+Giá trị cuối để xem: t=1.25; x=1.25. Đây chưa phải nghiệm đạt yêu cầu.
+
+Giữ nguyên cấu hình và các bước đã tính. Chọn lại khoảng/mốc/bậc/phương pháp và chạy lượt riêng; không có kết quả thay thế ngầm.

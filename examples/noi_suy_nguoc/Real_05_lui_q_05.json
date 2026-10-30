@@ -1,0 +1,27 @@
+{
+  "tool": "Nội suy ngược",
+  "method": "Lặp có cận co",
+  "values": {
+    "target": "2",
+    "a": "2",
+    "b": "2.2",
+    "tol": "1e-6",
+    "residual_tol": "1e-6",
+    "direction": "Lùi",
+    "convergence_certificate": {
+      "kind": "user_supplied_bound",
+      "J": [
+        -1,
+        0
+      ],
+      "q": 0.5,
+      "invariant_image_bound": [
+        -0.434285715,
+        -0.312619047
+      ],
+      "source": "Theo phép chặn trong kienthuc/real, guide mục 13.4 và PDF trang 17; chọn q=0.5."
+    }
+  },
+  "x": "1.6 1.8 2 2.2",
+  "y": "4.23 3.67 2.99 1.24"
+}

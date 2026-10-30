@@ -1,0 +1,13 @@
+{
+  "tool": "Nội suy ngược",
+  "method": "Hàm ngược — Newton",
+  "values": {
+    "target": "6",
+    "interval": [
+      2,
+      3
+    ]
+  },
+  "x": "1 2 3",
+  "y": "1 4 9"
+}

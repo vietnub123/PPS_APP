@@ -1,0 +1,145 @@
+Chia đôi đa thức thuận
+
+================================================================
+
+1. Bài toán và lựa chọn
+
+Thông số của lượt chạy
+
+Phương pháp: Chia đôi đa thức thuận. Mức cần tìm: 2. Bậc tối đa: 2.
+
+Khoảng x: [1, 2]. Khoảng mục tiêu do người dùng cung cấp, độc lập với gốc và tập mốc tính.
+
+ε_x=0.001; ε_y=1.000000000000e-6; tối đa 100 vòng.
+
+Chỉ số mốc dùng: [0, 1, 2] (bắt đầu từ 0).
+
+Giữ số đầy đủ khi tính; bảng trung gian hiển thị 12 chữ số hoặc dạng khoa học.
+
+Các mốc đã chọn
+
+Các cặp dùng trong mô hình
+================================================================
+
+Các cặp dùng trong mô hình
+dòng gốc  x_i  y_i
+0         0    0
+1         1    1
+2         2    4
+
+
+Khảo sát mức và các nhánh trên mẫu
+
+Mốc đúng mức: []; khoảng đổi dấu: [(1, 2)]; nhánh trên mẫu: [[0, 1, 2]]; hai đầu cùng mức: [].
+
+Nếu hàm thật liên tục, mỗi khoảng đổi dấu có ít nhất một nghiệm. Phép quét có thể bỏ sót nghiệm tiếp xúc; đơn điệu trên mẫu không chứng minh đơn điệu giữa các mốc.
+
+2. Kiểm tra điều kiện
+
+✓ Đạt — Ghép cặp và giá trị hữu hạn: Hai dãy cùng độ dài, có ít nhất 2 cặp; mọi số hữu hạn.
+
+✓ Đạt — Hoành độ phân biệt: Sắp theo x tăng và giữ nguyên cặp cùng chỉ số hàng gốc.
+
+✓ Đạt — Số mốc và bậc đã chọn: Số mốc = bậc + 1; không tự chọn lại mốc.
+
+✓ Đạt — Độ tách biệt của tung độ: Ngưỡng chỉ phát cảnh báo; không gộp hoặc thay đổi mốc.
+
+✓ Đạt — Khoảng đang giải: Khoảng mục tiêu do người dùng cung cấp, độc lập với gốc và tập mốc tính.
+
+✓ Đạt — Đối chiếu mức tại hai đầu khoảng: Hai đầu đổi dấu. Nếu hàm thật liên tục thì có ít nhất một nghiệm.
+
+3. Bảng tính trung gian
+
+Tỉ sai phân đa thức thuận
+================================================================
+
+Tỉ sai phân đa thức thuận
+i  x_i  y_i  T_1  T_2
+0  0    0    1    1
+1  1    1    3    —
+2  2    4    —    —
+
+
+Hệ số c = [0, 1, 1].
+
+Các ô đánh dấu là hệ số được lấy, giữ đúng thứ tự mốc.
+
+Phép tính từng ô và cách lấy hệ số
+
+Các phép tính đã lưu
+================================================================
+
+Các phép tính đã lưu
+i  cấp  phải  trái  tử  mẫu  kết quả
+0  1    1     0     1   1    1
+1  1    4     1     3   1    3
+0  2    3     1     2   2    1
+
+
+4. Thiết lập công thức
+
+P_m(x) = 0+(1)*(x-(0))
+
+    +(1)*(x-(0))*(x-(1))
+
+F(x)=P_m(x)-(2).
+
+Giữ đúng đa thức đã chọn, không dựng một mô hình khác khi chia đôi.
+
+5. Hội tụ và tiêu chuẩn dừng
+
+Chia đôi cần hai đầu trái dấu hoặc một đầu đạt mức. Phần dư chỉ để đối chiếu, không tự thêm làm điều kiện dừng.
+
+Cận vị trí nghiệm mô hình: B_x=(b-a)/2 ≤ eps_x.
+
+6. Quá trình tính
+
+F(1)=-1; F(2)=2.
+
+Tổng hợp chia đôi
+================================================================
+
+Tổng hợp chia đôi
+lần  trung điểm c  F(c)             a mới      b mới        nửa độ rộng
+1    1.5           0.25             1          1.5          0.25
+2    1.25          -0.4375          1.25       1.5          0.125
+3    1.375         -0.109375        1.375      1.5          0.0625
+4    1.4375        0.06640625       1.375      1.4375       0.03125
+5    1.40625       -0.0224609375    1.40625    1.4375       0.015625
+6    1.421875      0.021728515625   1.40625    1.421875     0.0078125
+7    1.4140625     -0.000427246094  1.4140625  1.421875     0.00390625
+8    1.41796875    0.010635375977   1.4140625  1.41796875   0.001953125
+9    1.416015625   0.005100250244   1.4140625  1.416015625  0.0009765625
+
+
+Hai đầu trước mỗi lần chia
+
+Dấu trước cập nhật
+================================================================
+
+Dấu trước cập nhật
+lần  a cũ       b cũ        F(a)             F(b)
+1    1          2           -1               2
+2    1          1.5         -1               0.25
+3    1.25       1.5         -0.4375          0.25
+4    1.375      1.5         -0.109375        0.25
+5    1.375      1.4375      -0.109375        0.06640625
+6    1.40625    1.4375      -0.0224609375    0.06640625
+7    1.40625    1.421875    -0.0224609375    0.021728515625
+8    1.4140625  1.421875    -0.000427246094  0.021728515625
+9    1.4140625  1.41796875  -0.000427246094  0.010635375977
+
+
+Khoảng cuối [1.4140625, 1.416015625]; lấy trung điểm của chính khoảng này.
+
+7. Kết luận đúng phạm vi
+
+Đạt ngưỡng vị trí của nghiệm mô hình được giữ trong khoảng chia đôi.
+
+x gần đúng ≈ 1.415039062.
+
+Cận sai số lặp đối với nghiệm mô hình: 0.0009765625.
+
+Cận gồm chuyển sang float và làm tròn số đang in: 0.000976563; chưa gồm sai số nội suy hàm thật hoặc toàn bộ sai số số học máy.
+
+Chưa đủ dữ kiện chặn sai số so với nghiệm hàm thật. Sai số nội suy, sai số dữ liệu và sai số giải mô hình là các thành phần khác nhau.

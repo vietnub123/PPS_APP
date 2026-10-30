@@ -1,0 +1,238 @@
+[
+  {
+    "case": "01a_mu_x2_SSE_104",
+    "source": "Đề bên phải có b*x²+c/x, header in 20241; chạy đúng file được cấp 20251GKtest2.xlsx, không tự xác nhận nhãn năm trong ảnh.",
+    "status": "nonlinear_stationary",
+    "failure": null,
+    "method": "Hàm mũ — SSE thang y",
+    "parameters": [
+      "1.5172857551154062",
+      "-0.2524591562528406",
+      "1.9912315060358277"
+    ],
+    "metrics": {
+      "SSE_y": "0.00120033552602710634301602975179740804578771113547073414963342531525",
+      "MSE_y": "0.000011541687750260637913615670690359692747958760917987828361859858800480769230769230769231",
+      "RMSE_y": "0.0033973059547618960239568674919289311004406951203818346203132371553137203121450619699279",
+      "weighted_objective_y": "0.001200335526027106343016029751797408045787711135470734149633425315250",
+      "weighted_RMSE": "0.0033973059547618960239568674919289311004406951203818346203132371553137203121450619699279",
+      "R_squared": "0.99999344474161220372789674989549250793289630425199470681237266710838859598323148262166",
+      "TSS": "183.11032990884615384615384615384615384615384615384615384615384615384615384615384615384",
+      "statistical_sigma": "0.0034473917907142816101952679961261960640760249050800044191738455182093640960662737204696"
+    },
+    "trials": 20
+  },
+  {
+    "case": "01b_mu_x_SSE_104",
+    "source": "Mô hình đề bên trái, nhưng dữ liệu chạy là test2 được cấp; file test1 nhắc trong ảnh chưa có.",
+    "status": "nonlinear_stationary",
+    "failure": null,
+    "method": "Hàm mũ — SSE thang y",
+    "parameters": [
+      "11.672734856419826",
+      "-1.2907311570281963",
+      "0.9812819159980427"
+    ],
+    "metrics": {
+      "SSE_y": "0.06192566716981614754308680860307837289613749",
+      "MSE_y": "0.0005954391074020783417604500827219074316936297115384615384615384615384615384615384615385",
+      "RMSE_y": "0.02440162099947620983376833298459283574498313771218282543442818763965363357700399471489",
+      "weighted_objective_y": "0.061925667169816147543086808603078372896137490",
+      "weighted_RMSE": "0.02440162099947620983376833298459283574498313771218282543442818763965363357700399471489",
+      "R_squared": "0.9996618122680427518205388195762792857223717636041155077928560996886557528672875348085",
+      "TSS": "183.1103299088461538461538461538461538461538461538461538461538461538461538461538461545",
+      "statistical_sigma": "0.02476136945976397634777452435916420204517421454395605727031374974700096033507794139346"
+    },
+    "trials": 53
+  },
+  {
+    "case": "01c_log_khong_ap_dung",
+    "source": "Ca lỗi miền log trên nguyên 104 quan sát test2, có y âm; không xóa hay dịch dữ liệu.",
+    "status": "transform_domain_error",
+    "failure": {
+      "phase": "Đọc quan sát và kiểm tra miền mô hình",
+      "message": "Khớp log cần y khác 0 và cùng dấu. Phép biến đổi này không dùng được; không kết luận mọi cách khớp đều vô nghiệm."
+    },
+    "method": "Hàm mũ"
+  },
+  {
+    "case": "02a_lap_tien_cuc_bo",
+    "source": "kienthuc/20251GKtest2.xlsx; 104 cặp, x_bar=2.55, y_bar=1.23",
+    "status": "certified_model_tolerance",
+    "failure": null,
+    "method": "Lặp có cận co",
+    "value": 2.1308272733685856,
+    "iterations": 5,
+    "count": 4,
+    "anchor": "407/200",
+    "T": [
+      "0",
+      "1"
+    ]
+  },
+  {
+    "case": "02b_lap_lui_cuc_bo",
+    "source": "kienthuc/20251GKtest2.xlsx; 104 cặp, x_bar=2.55, y_bar=1.23",
+    "status": "certified_model_tolerance",
+    "failure": null,
+    "method": "Lặp có cận co",
+    "value": 2.13089127901493,
+    "iterations": 5,
+    "count": 4,
+    "anchor": "43/20",
+    "T": [
+      "-1",
+      "0"
+    ]
+  },
+  {
+    "case": "02c_lap_tien_du_104",
+    "source": "Ca kiểm tra lỗi: nguyên 104 mốc, không đổi gốc/cắt bậc; phép lặp có thể tràn số. Tối đa 3 vòng, không phải giới hạn mốc.",
+    "status": "nonfinite_iteration",
+    "failure": {
+      "step": "Vòng lặp 3",
+      "message": "Vòng 3: phép tính không hữu hạn hoặc tràn số khi đánh giá/cập nhật: [<class 'decimal.Overflow'>]. Giữ quỹ đạo đã tính; đây không phải lỗi thiếu mốc."
+    },
+    "method": "Lặp tiến",
+    "value": null,
+    "iterations": 3,
+    "count": 104,
+    "anchor": "1",
+    "T": [
+      "9",
+      "10"
+    ]
+  },
+  {
+    "case": "02d_lap_lui_du_104",
+    "source": "Ca kiểm tra lỗi: nguyên 104 mốc, không đổi gốc/cắt bậc; phép lặp có thể tràn số. Tối đa 3 vòng, không phải giới hạn mốc.",
+    "status": "nonfinite_iteration",
+    "failure": {
+      "step": "Vòng lặp 2",
+      "message": "Vòng 2: phép tính không hữu hạn hoặc tràn số khi đánh giá/cập nhật: [<class 'decimal.Overflow'>]. Giữ quỹ đạo đã tính; đây không phải lỗi thiếu mốc."
+    },
+    "method": "Lặp lùi",
+    "value": null,
+    "iterations": 2,
+    "count": 104,
+    "anchor": "2569/200",
+    "T": [
+      "-94",
+      "-93"
+    ]
+  },
+  {
+    "case": "03a_Stirling_7",
+    "source": "kienthuc/20251GKtest2.xlsx; 104 cặp, x_bar=2.55, y_bar=1.23",
+    "status": "polynomial_built",
+    "failure": null,
+    "method": "Stirling",
+    "value": 0.6436027148241059,
+    "derivative": -0.9878215414529198
+  },
+  {
+    "case": "03b_Bessel_8",
+    "source": "kienthuc/20251GKtest2.xlsx; 104 cặp, x_bar=2.55, y_bar=1.23",
+    "status": "polynomial_built",
+    "failure": null,
+    "method": "Bessel",
+    "value": 0.6440331622320021,
+    "derivative": -0.9859948454131918
+  },
+  {
+    "case": "04_spline_104",
+    "source": "Bài tự đặt trên dữ liệu thật 104 mốc; ảnh đề không yêu cầu spline. Điều kiện tự nhiên do ca kiểm thử chọn rõ.",
+    "status": "spline_constructed",
+    "failure": null,
+    "method": "Cubic tự nhiên",
+    "value": 0.6440194959813048,
+    "derivative": -0.9814239127317268,
+    "integral": 0.6967134402627215
+  },
+  {
+    "case": "05_spline_bai_mau",
+    "source": "Dữ liệu mô phỏng/đối chiếu tài liệu real, không phải đề gốc 20251.",
+    "status": "spline_constructed",
+    "failure": null,
+    "method": "Cubic tự nhiên",
+    "value": 0.5,
+    "derivative": -1.3333333333333335,
+    "integral": 1.5
+  },
+  {
+    "case": "06_he_chuan_Gauss",
+    "source": "Dữ liệu mô phỏng/đối chiếu tài liệu real, không phải đề gốc 20251.",
+    "status": "unique_fit",
+    "failure": null,
+    "method": "Tuyến tính theo cơ sở",
+    "parameters": [
+      "1.25",
+      "0.5"
+    ],
+    "metrics": {
+      "SSE_y": "0.187500",
+      "MSE_y": "0.062500",
+      "RMSE_y": "0.250",
+      "weighted_objective_y": "0.2500000",
+      "weighted_RMSE": "0.250",
+      "R_squared": "0.71875000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "TSS": "0.66666666666666666666666666666666666666666666666666666666666666666666666666666667",
+      "statistical_sigma": "None",
+      "SSE_transformed": "0.187500",
+      "weighted_objective_transformed": "0.2500000"
+    },
+    "trials": 0
+  },
+  {
+    "case": "07_LM_day_du_vong",
+    "source": "Dữ liệu mô phỏng/đối chiếu tài liệu real, không phải đề gốc 20251.",
+    "status": "nonlinear_stationary",
+    "failure": null,
+    "method": "Hàm mũ — SSE thang y",
+    "parameters": [
+      "1.5445997787789898",
+      "1.2267143988574192"
+    ],
+    "metrics": {
+      "SSE_y": "0.28026360771219107470470337150136",
+      "MSE_y": "0.0934212025707303582349011238337866666666666666666666666666666666666666666666666667",
+      "RMSE_y": "0.305648822295670490343784287468401937908192738527845530042569138479745776020504126",
+      "weighted_objective_y": "0.280263607712191074704703371501360",
+      "weighted_RMSE": "0.305648822295670490343784287468401937908192738527845530042569138479745776020504126",
+      "R_squared": "0.998062693955906513308492833837548202764976958525345622119815668202764976958525346",
+      "TSS": "144.666666666666666666666666666666666666666666666666666666666666666666666666666667",
+      "statistical_sigma": "0.529399289489692340203449709815750121846703994658266218089491076653087008202753954"
+    },
+    "trials": 18
+  },
+  {
+    "case": "08a_36_moc_tien",
+    "source": "Dữ liệu mô phỏng/đối chiếu tài liệu real, không phải đề gốc 20251. Kiểm hồi quy 36 mốc trong guide v2.",
+    "status": "linear_model_value",
+    "failure": null,
+    "method": "Lặp tiến",
+    "value": 2.09,
+    "iterations": 0,
+    "count": 36,
+    "anchor": "1",
+    "T": [
+      "9",
+      "10"
+    ]
+  },
+  {
+    "case": "08b_36_moc_lui",
+    "source": "Dữ liệu mô phỏng/đối chiếu tài liệu real, không phải đề gốc 20251. Kiểm hồi quy 36 mốc trong guide v2.",
+    "status": "linear_model_value",
+    "failure": null,
+    "method": "Lặp lùi",
+    "value": 2.09,
+    "iterations": 0,
+    "count": 36,
+    "anchor": "201/40",
+    "T": [
+      "-26",
+      "-25"
+    ]
+  }
+]

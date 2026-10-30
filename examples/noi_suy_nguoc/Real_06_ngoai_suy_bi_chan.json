@@ -1,0 +1,22 @@
+{
+  "tool": "Nội suy ngược",
+  "method": "Hàm ngược — Newton",
+  "values": {
+    "target": "2",
+    "selected_indices": [
+      0,
+      1
+    ],
+    "branch_indices": [
+      0,
+      1,
+      2
+    ],
+    "interval": [
+      0,
+      1
+    ]
+  },
+  "x": "0 1 2",
+  "y": "0 1 4"
+}

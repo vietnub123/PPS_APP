@@ -1,0 +1,10 @@
+{
+  "tool": "Nội suy ngược",
+  "method": "Hàm ngược",
+  "values": {
+    "target": "3",
+    "interval": "[1,1.5]"
+  },
+  "x": "1 1.5 2",
+  "y": "2 3.75 6"
+}

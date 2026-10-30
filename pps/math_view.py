@@ -325,6 +325,11 @@ def table_display(report,index):
 
 
 def table_image(report,index,limit=80):
+    if index in report.presentation.get('inverse_tables',{}) or index in report.presentation.get('worked_tables',{}):
+        from .inverse_document import inverse_table_image
+        return inverse_table_image(report,index,limit)
+    if index in report.presentation.get('difference_tables',{}):
+        return difference_image(report.presentation['difference_tables'][index])
     if index==0 and report.presentation.get('difference'):
         return difference_image(report.presentation['difference'])
     name,headers,rows=table_display(report,index);headers=headers[:12];rows=[r[:12] for r in rows[:limit]]
@@ -357,6 +362,7 @@ class MathDocument(ttk.Frame):
         super().__init__(parent)
         self.text=tk.Text(self,wrap='none',bg='white',fg='#162d39',font=('Segoe UI',11),padx=20,pady=18,borderwidth=0)
         vs=ttk.Scrollbar(self,command=self.text.yview);hs=ttk.Scrollbar(self,orient='horizontal',command=self.text.xview)
+        self.legacy_scrollbars=(vs,hs);self.inverse_document=None
         self.text.configure(yscrollcommand=vs.set,xscrollcommand=hs.set)
         self.text.grid(row=0,column=0,sticky='nsew');vs.grid(row=0,column=1,sticky='ns');hs.grid(row=1,column=0,sticky='ew')
         self.rowconfigure(0,weight=1);self.columnconfigure(0,weight=1);self.images=[]
@@ -365,6 +371,10 @@ class MathDocument(ttk.Frame):
         self.text.tag_configure('body',spacing3=6)
 
     def begin(self):
+        if self.inverse_document is not None:
+            self.inverse_document.clear();self.inverse_document.grid_remove()
+        self.text.grid()
+        for scrollbar in self.legacy_scrollbars:scrollbar.grid()
         self.text.configure(state='normal');self.text.delete('1.0','end');self.images=[]
 
     def picture(self,im):
@@ -375,6 +385,15 @@ class MathDocument(ttk.Frame):
         self.begin();self.text.insert('end',message,'body');self.text.configure(state='disabled')
 
     def show(self,report):
+        if report.presentation.get('inverse_layout') or report.presentation.get('worked_layout'):
+            self.begin();self.text.grid_remove()
+            for scrollbar in self.legacy_scrollbars:scrollbar.grid_remove()
+            if self.inverse_document is None:
+                from .inverse_document import InverseDocument
+                self.inverse_document=InverseDocument(self)
+            self.inverse_document.grid(row=0,column=0,rowspan=2,columnspan=2,sticky='nsew')
+            self.inverse_document.show(report)
+            return
         self.begin();self.text.insert('end',report.title+'\n','title')
         if report.presentation.get('blocks'):
             for kind,value in report.presentation['blocks']:
@@ -426,16 +445,34 @@ class MathTable(ttk.Frame):
 
 
 def export_html(report,path):
+    if report.presentation.get('inverse_layout') or report.presentation.get('worked_layout'):
+        from .inverse_export import export_inverse_html
+        return export_inverse_html(report,path)
     def embed(im):
         out=io.BytesIO();im.save(out,format='PNG')
         return '<img alt="Bảng hoặc công thức toán" src="data:image/png;base64,'+base64.b64encode(out.getvalue()).decode()+'">'
+    def inverse_table(index):
+        name,headers,rows=table_display(report,index)
+        # Chia bảng rộng thành nhóm cột; giữ cột chỉ số và đầy đủ mọi hàng.
+        chunks=[list(range(len(headers)))] if len(headers)<=7 else [[0]+list(range(start,min(start+6,len(headers)))) for start in range(1,len(headers),6)]
+        result=[]
+        for columns in chunks:
+            result.append('<table><thead><tr>'+''.join('<th>'+html.escape(str(headers[j]))+'</th>' for j in columns)+'</tr></thead><tbody>')
+            for row in rows:
+                result.append('<tr>'+''.join('<td>'+html.escape(fmt(row[j]) if j<len(row) else '')+'</td>' for j in columns)+'</tr>')
+            result.append('</tbody></table>')
+        return '\n'.join(result)
     parts=['<!doctype html><html lang="vi"><meta charset="utf-8"><title>'+html.escape(report.title)+'</title>',
            '<style>body{font:17px Segoe UI,sans-serif;color:#162d39;max-width:1200px;margin:40px auto;padding:20px}h2{margin-top:28px}img{display:block;margin:12px 0}section{overflow:auto} @media print{img{max-width:100%;height:auto}section{overflow:visible}}</style>',
            '<h1>'+html.escape(report.title)+'</h1>']
     if report.presentation.get('blocks'):
+        if report.presentation.get('inverse_solution'):
+            parts.append('<style>table{border-collapse:collapse;width:100%;margin:12px 0 24px}th,td{border:1px solid #b7cbd0;padding:6px;text-align:right;overflow-wrap:anywhere}th{background:#e2eef0}thead{display:table-header-group}tr,img{break-inside:avoid} @media print{body{font-size:11pt;margin:0;padding:0}h2{break-after:avoid}section{break-inside:avoid}table{font-size:10pt}}</style>')
         for kind,value in report.presentation['blocks']:
             if kind=='formula':parts.append('<section>'+embed(math_image(value))+'</section>')
-            elif kind=='table':parts.append('<h2>'+html.escape(report.tables[value][0])+'</h2><section>'+embed(table_image(report,value))+'</section>')
+            elif kind=='table':
+                parts.append('<h2>'+html.escape(report.tables[value][0])+'</h2>')
+                parts.append(inverse_table(value) if report.presentation.get('inverse_solution') else '<section>'+embed(table_image(report,value))+'</section>')
             else:
                 tag='h2' if kind=='heading' else 'p'
                 parts.append('<'+tag+'>'+html.escape(value)+'</'+tag+'>')

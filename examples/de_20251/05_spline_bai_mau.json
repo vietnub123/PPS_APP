@@ -1,0 +1,25 @@
+{
+  "tool": "Spline",
+  "method": "Cubic tự nhiên",
+  "values": {
+    "display_digits": "12",
+    "target": "1.5",
+    "order": "1",
+    "integral_a": "0",
+    "integral_b": "3",
+    "solver": "Thomas"
+  },
+  "x": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "y": [
+    0,
+    1,
+    0,
+    1
+  ],
+  "_source": "Dữ liệu mô phỏng/đối chiếu tài liệu real, không phải đề gốc 20251."
+}

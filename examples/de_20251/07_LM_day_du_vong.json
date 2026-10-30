@@ -1,0 +1,23 @@
+{
+  "tool": "Bình phương tối thiểu",
+  "method": "Hàm mũ — SSE thang y",
+  "values": {
+    "display_digits": "12",
+    "basis": "x",
+    "solver": "Levenberg–Marquardt",
+    "initial": "1 0",
+    "max_iter": "100",
+    "tol": "1e-10"
+  },
+  "x": [
+    0,
+    1,
+    2
+  ],
+  "y": [
+    2,
+    5,
+    18
+  ],
+  "_source": "Dữ liệu mô phỏng/đối chiếu tài liệu real, không phải đề gốc 20251."
+}
