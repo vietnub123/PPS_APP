@@ -24,7 +24,7 @@ class ChapterOneAudit(unittest.TestCase):
         assert_allclose(nodes,[0,1,2]); assert_allclose(coeffs,[1,1,1])
         self.assertAlmostEqual(newton_horner(nodes,coeffs,1.5),3.25)
         horner_report=ip.horner([3,0,-2,-1],2,3)
-        assert_allclose([table[2][-1][1] for table in horner_report.tables],[19,34,18,3])
+        assert_allclose([float(row['remainder']) for row in horner_report.presentation['worked_solution']['passes']],[19,34,18,3])
         self.assertIn('P^(2)(2) = 36',horner_report.lines)
         self.assertAlmostEqual(interpolation_error_bound([0,.5,1],.25,math.e).value,math.e/128)
         p=ip.interpolate([0,.5,1],[1,math.exp(.5),math.e]).value

@@ -29,7 +29,7 @@ class MathViewTests(unittest.TestCase):
 
     def test_lagrange_table_follows_the_original_app_workflow(self):
         r=interpolate([0,1,2],[1,2,5],'Lagrange')
-        self.assertEqual(len(r.tables),1)
+        self.assertTrue(r.presentation['worked_layout'])
         name,headers,rows=table_display(r,0)
         self.assertEqual(name,'Các bước lập đa thức Lagrange')
         self.assertEqual(headers,['Cột 0','Cột 1','Cột 2','Cột 3','Ghi chú'])
@@ -39,12 +39,13 @@ class MathViewTests(unittest.TestCase):
         self.assertIn('Bảng thương W_i = w_(n+1)/(x-x_i)',notes)
         self.assertIn('Hệ số đa thức nội suy P(x)',notes)
 
-    def test_two_tables_all_polynomial_methods(self):
+    def test_original_basis_tables_remain_available_with_worked_steps(self):
         from pps.interpolation import METHODS
         for method in METHODS:
             x=np.arange(6. if method=='Bessel' else 5.)
             r=interpolate(x,x**3,method)
-            self.assertEqual(len(r.tables),1 if method=='Lagrange' else 2,method)
+            self.assertTrue(r.presentation['worked_layout'],method)
+            self.assertEqual(len(r.presentation['worked_solution']['terms']),len(x))
             self.assertNotIn('Các hệ số và tích phụ',r.text())
             if method!='Lagrange':
                 self.assertIn('bậc giảm dần',r.text())
@@ -66,7 +67,7 @@ class MathViewTests(unittest.TestCase):
                 for k,f in enumerate(formulas):
                     self.assertIn(str(k)+'!',f)
                     self.assertTrue(math_png(f).startswith(b'\x89PNG'))
-            self.assertIn('/2!',r.text())
+            self.assertIn('k!',r.text())
             if method=='Gauss I':
                 self.assertEqual(rows[4][1:],[1,-2,-1,2,0])
                 a=r.presentation['difference']['a'];c=2
@@ -81,7 +82,8 @@ class MathViewTests(unittest.TestCase):
             path=Path(folder)/'loi_giai.html';export_html(r,path)
             text=path.read_text(encoding='utf-8')
             self.assertIn('data:image/png;base64,',text)
-            self.assertNotIn('<script',text)
+            self.assertIn('beforeprint',text)
+            self.assertIn('<details',text)
             self.assertNotIn('src="http',text)
 
 

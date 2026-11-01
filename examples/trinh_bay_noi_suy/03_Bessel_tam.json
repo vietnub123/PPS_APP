@@ -1,0 +1,21 @@
+{
+  "tool": "Nội suy đa thức",
+  "method": "Bessel",
+  "values": {
+    "digits": "12",
+    "target": "0.5",
+    "order": "1"
+  },
+  "x": [
+    -1,
+    0,
+    1,
+    2
+  ],
+  "y": [
+    0,
+    1,
+    2,
+    9
+  ]
+}

@@ -41,9 +41,9 @@ def fields(tool,method):
             return [F('newton_nodes','Loại mốc','Mốc cách đều','Mốc cách đều dùng sai phân tiến; mốc bất kỳ dùng tỷ sai phân.'),
                     F('direction','Hướng nội suy','Tiến'),
                     F('target','Điểm cần tính x',1.5),
-                    F('order','Cấp đạo hàm (0 = giá trị hàm)',0),
+                    F('order','Cấp đạo hàm (0 = giá trị hàm)',0,'Khi cấp > 0, lời giải trình bày cả giá trị hàm và đạo hàm yêu cầu trên cùng tập mốc.'),
                     F('count','Số mốc dùng (để trống: toàn bảng)','','Nhập điểm tính khi chọn ít mốc hơn. Không tự thay bậc đề yêu cầu.')]
-        return [F('target','Điểm cần tính x',1.5),F('order','Cấp đạo hàm (0 = giá trị hàm)',0),
+        return [F('target','Điểm cần tính x',1.5),F('order','Cấp đạo hàm (0 = giá trị hàm)',0,'Khi cấp > 0, lời giải trình bày cả giá trị hàm và đạo hàm yêu cầu trên cùng tập mốc.'),
                 F('count','Số mốc dùng (để trống: toàn bảng)','','Stirling: số lẻ; Bessel: số chẵn; Gauss dùng được cả hai. Ví dụ nhập 9 để chọn 9 mốc gần điểm tính từ bảng lớn.')]
     if tool=='Spline':
         v=[F('target','Điểm cần tính x (có thể để trống)',1.5),F('order','Cấp đạo hàm (0 = giá trị)',0)]
@@ -116,6 +116,8 @@ def dispatch(tool,method,values,xtext,ytext):
         return int(v)
     def optional(k): return num(k) if values.get(k,'').strip() else None
     def data(): return numbers(xtext),numbers(ytext)
+    if tool in ('Nội suy đa thức','Newton','Đạo hàm & Horner','Chọn mốc') and ('digits' in values or 'display_digits' in values):
+        set_display_digits(integer('display_digits',integer('digits',7)))
     if tool=='Newton':  # Tương thích bài tính JSON từ các bản ứng dụng trước.
         backward=values.get('direction','Tiến')=='Lùi'
         method=('Newton lùi' if backward else 'Newton tiến') if method=='Mốc cách đều' else ('Newton bất kỳ lùi' if backward else 'Newton bất kỳ')
@@ -424,7 +426,9 @@ class App(tk.Tk):
         self.report=report; self.set_output(report.text()); self.notebook.select(0)
         self.math_document.show(report)
         self.table_select.configure(values=[v[0] for v in report.tables])
-        if report.tables:self.table_select.current(0);self.show_table()
+        if report.tables:
+            first_table=next((value for kind,value in report.presentation.get('blocks',[]) if kind=='table'),0)
+            self.table_select.current(first_table);self.show_table()
         else:
             self.table_select.set('');self.tree.delete(*self.tree.get_children());self.math_table.canvas.delete('all')
         self.ax.clear()
@@ -439,7 +443,8 @@ class App(tk.Tk):
         if inverse and inverse.get('failure'):self.status.set('Chưa đạt — đã giữ lời giải và bước thất bại để xem hoặc xuất.')
         elif inverse and inverse['status']=='outside_bracket':self.status.set('Đã tính mô hình — kết quả ngoài khoảng đang xét; xem cảnh báo trong lời giải.')
         elif inverse and inverse['status']=='conditional_model_tolerance':self.status.set('Đạt theo cận/giả thiết được cung cấp — xem nguồn và phạm vi trong lời giải.')
-        else:self.status.set('Hoàn tất: '+report.title+(' · Bảng tổng hợp luôn hiện; mở từng vòng để xem phép tính.' if inverse else f' · Hiển thị tối đa {self.digits.get()} chữ số thập phân; tính bằng độ chính xác đầy đủ.'))
+        elif inverse and inverse['status']=='numerical_warning':self.status.set('Đã tính nhưng có chênh lệch số học — xem phần đối chiếu trước khi dùng đáp số.')
+        else:self.status.set('Hoàn tất: '+report.title+(' · Lời giải có bảng tổng hợp; mở Chi tiết để xem thêm các bước tính.' if inverse else f' · Hiển thị tối đa {self.digits.get()} chữ số thập phân; tính bằng độ chính xác đầy đủ.'))
 
     def show_table(self):
         if not self.report or not self.report.tables:return

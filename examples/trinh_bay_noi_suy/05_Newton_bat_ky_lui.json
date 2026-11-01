@@ -1,0 +1,21 @@
+{
+  "tool": "Nội suy đa thức",
+  "method": "Newton",
+  "values": {
+    "digits": "12",
+    "target": "2",
+    "order": "1",
+    "newton_nodes": "Mốc bất kỳ",
+    "direction": "Lùi"
+  },
+  "x": [
+    0,
+    1,
+    3
+  ],
+  "y": [
+    1,
+    3,
+    13
+  ]
+}

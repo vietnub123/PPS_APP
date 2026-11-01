@@ -8,6 +8,8 @@
 
 ## 1. Đề cho bảng, hỏi f(x̄), đa thức hoặc đạo hàm
 
+Xem [lời giải mẫu xuất trực tiếp từ app](examples/trinh_bay_noi_suy/README.md): Stirling/Horner đề 20241, Bessel, Newton mốc bất kỳ và đạo hàm từ bảng, có đầy đủ bảng từng bước.
+
 Vào **Nội suy đa thức**. Kiểm tra x có cách đều không: các hiệu x_(i+1)−x_i có cùng h.
 
 | Gặp dữ liệu/yêu cầu | Chọn gì | Lưu ý khi nhập |

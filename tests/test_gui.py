@@ -106,7 +106,10 @@ class GuiTests(unittest.TestCase):
             self.assertIsNone(report.presentation['inverse_solution']['failure'])
         for tool,method,values,x,y in [
             ('Spline','Cubic tự nhiên',{'target':'2'},'0 1 3','0 1 0'),
-            ('Bình phương tối thiểu','Tuyến tính theo cơ sở',{'basis':'1;x','solver':'Hệ chuẩn — Gauss'},'0 1 2 3','1 2 2 4')]:
+            ('Bình phương tối thiểu','Tuyến tính theo cơ sở',{'basis':'1;x','solver':'Hệ chuẩn — Gauss'},'0 1 2 3','1 2 2 4'),
+            ('Nội suy đa thức','Stirling',{'target':'.25','order':'1'},'-2 -1 0 1 2','17 1 1 5 25'),
+            ('Đạo hàm & Horner','Horner',{'coef':'3 0 -2 -1','target':'2','order':'3'},'',''),
+            ('Đạo hàm & Horner','Đạo hàm từ bảng',{'target':'1','degree':'2','order':'1'},'0 1 3','1 3 13')]:
             with self.subTest(tool=tool):
                 report=dispatch(tool,method,values,x,y)
                 self.assertIsNone(report.presentation['worked_solution']['failure'])

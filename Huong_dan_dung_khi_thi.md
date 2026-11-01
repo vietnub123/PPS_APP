@@ -166,7 +166,7 @@ print(report.text())
 | 20231 a–b | File dữ liệu + k → chọn 8 mốc đều gần `5+k·10⁻²`, dựng Bessel, đạo hàm; quét mức `(-1)^k(3+k·10⁻²)` | File đề riêng và k chưa có. Nếu 8 mốc không đều thì Bessel không hợp lệ; phải chuyển Lagrange/Newton tỷ sai phân. |
 | 20231 c–d | 5 điểm để suy công thức đạo hàm; Simpson và Newton–Cotes 5 khoảng cho `f(x)ln(2x+k)` trên `[1,6.08]` | `ca.differentiate` và `ca.integrate` tính số khi đã có mẫu hàm trên lưới. Cận sai số đạo hàm/tích phân cần giả thiết và tài liệu chương 2; không lấy phần dư nội suy tại mốc làm cận. |
 | 20241 a | `ip.horner([3.5,-2.78,5.63,0,-15.28,1.54],2.57,3)` | `P″=1054.696646`, `P‴=1249.3386`. Bảng có từng lượt chia Horner; khi viết bài cần nêu số dư cấp k nhân `k!`. |
-| 20241 b–d | Chọn 9 mốc đều quanh `x̄`; dựng Stirling; dùng `inverse_controlled` với J phù hợp hoặc chia đôi đa thức thuận cho mức `ȳ` | File `20241GKtest2` và giá trị `x̄,ȳ` chưa có. Phải nêu đoạn J và kiểm tra co; nếu không có chứng nhận thì dùng chia đôi hoặc ghi chỉ dừng thực hành. |
+| 20241 b–d | Chọn 9 mốc đều quanh `x̄`; dựng Stirling; dùng `inverse_controlled` với J phù hợp hoặc chia đôi đa thức thuận cho mức `ȳ` | Đã có `kienthuc/20241GKtest2.xlsx`: Sheet3, 106 cặp, h=0.117, x̄=4,ȳ=6. [Mẫu Stirling từ app](examples/trinh_bay_noi_suy/01_Stirling_20241.html) có cả giá trị và đạo hàm. Khi tìm ngược phải xét từng nhánh, nêu J và kiểm tra co; thiếu chứng nhận thì ghi rõ chế độ thực hành hoặc chọn phương pháp khác theo đề. |
 
 ## Quy tắc kiểm tra trước khi chép đáp án
 

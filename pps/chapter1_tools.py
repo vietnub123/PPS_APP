@@ -169,10 +169,12 @@ def fill_missing(x, y, degree, tolerance=1e-9):
         raise ValueError('Dữ liệu đã biết mâu thuẫn với giả thiết bậc đa thức.')
     result = yy.copy()
     result[~known] = predicted[~known]
-    return Report('Điền dữ liệu theo giả thiết bậc đa thức',
+    report=Report('Điền dữ liệu theo giả thiết bậc đa thức',
                   [f'Đã điền {np.sum(~known)} ô; giả thiết bậc ≤ {degree}.',
                    'Kết quả phụ thuộc vào giả thiết bậc được cho.'], value=result).table(
                        'Bảng hoàn chỉnh', ['x', 'y'], zip(x, result))
+    from .polynomial_worked import present_fill_missing
+    return present_fill_missing(report,x,yy,result,selected,predicted,degree,tolerance,scale,interpolant)
 
 
 def scan_level(x, y, target):

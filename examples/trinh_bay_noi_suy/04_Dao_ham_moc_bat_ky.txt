@@ -1,0 +1,110 @@
+Đạo hàm bằng công thức p+1 điểm
+
+================================================================
+
+Kết quả đạo hàm từ bảng
+
+f^(1)(1) ≈ P^(1)(1) = 3.
+
+Đây là đạo hàm của đa thức nội suy trên tập mốc được chọn. Chưa có cận sai số với hàm thật nếu thiếu giả thiết đạo hàm cao hơn.
+
+1. Chọn mốc và xác định bài toán
+
+Thông số và quy tắc chọn
+
+Bậc p=2, dùng p+1=3 mốc, cấp đạo hàm s=1, điểm z=1.
+
+Tìm mốc gần z nhất, hòa chọn bên trái; lấy cửa sổ liên tiếp p+1 mốc quanh hàng đó và dịch vào bảng nếu chạm biên. Trên lưới không đều, đây không nhất thiết là các mốc gần nhất.
+
+Hàng gần nhất trong dãy x đã sắp: 1; cửa sổ bắt đầu 0; ID nguồn: [0, 1, 2].
+
+Trọng số Lagrange dùng được cho mốc bất kỳ; không ép lưới đều.
+
+Các cặp dùng trong công thức
+
+Tập mốc đạo hàm
+================================================================
+
+Tập mốc đạo hàm
+i  ID nguồn  x_i  y_i
+0  0         0    1
+1  1         1    3
+2  2         3    13
+
+
+2. Dẫn công thức từ nội suy Lagrange
+
+L_i(x)=∏_(j≠i)(x−x_j)/(x_i−x_j); w_i=L_i^(s)(z).
+
+Lấy đạo hàm từng đa thức cơ sở rồi cộng w_i·y_i.
+
+Đặt x=z+u. a_l là hệ số u^l của ∏_(j≠i)(z−x_j+u), chưa nhân l!. Khi nhân (v+u), cập nhật l từ s xuống 1: a_l←v·a_l+a_(l−1), rồi a_0←v·a_0. Mẫu d_i=∏_(j≠i)(x_i−x_j).
+
+w_i=s!·a_s/d_i. Không chia cho z−x_j nên dùng được khi điểm tính trùng mốc.
+
+3. Dựng từng trọng số
+
+Ví dụ i=0: d_0=3; hệ số a_1=-2; 1!=1; w_0=-0.666666666667.
+
+Từng phép nhân cơ sở để tạo trọng số — đầy đủ các mốc
+
+Lập trọng số i=0
+================================================================
+
+Lập trọng số i=0
+j  v=z−x_j  mẫu tích lũy  a_0  a_1
+1  0        -1            0    1
+2  -2       3             0    -2
+
+
+Lập trọng số i=1
+================================================================
+
+Lập trọng số i=1
+j  v=z−x_j  mẫu tích lũy  a_0  a_1
+0  1        1             1    1
+2  -2       -2            -2   -1
+
+
+Lập trọng số i=2
+================================================================
+
+Lập trọng số i=2
+j  v=z−x_j  mẫu tích lũy  a_0  a_1
+0  1        3             1    1
+1  0        6             0    1
+
+
+4. Nhân trọng số với tung độ và cộng
+
+Trọng số và đóng góp đạo hàm
+================================================================
+
+Trọng số và đóng góp đạo hàm
+i  x_i  y_i  d_i  a_s  w_i              w_i y_i          tổng
+0  0    1    3    -2   -0.666666666667  -0.666666666667  -0.666666666667
+1  1    3    -2   -1   0.5              1.5              0.833333333333
+2  3    13   6    1    0.166666666667   2.166666666667   3
+
+
+Thế số: (-0.666666666667)·(1) + (0.5)·(3) + (0.166666666667)·(13) = 3.
+
+5. Kiểm tra moment và kết luận sai số
+
+Moment quanh z: tổng w_i(x_i−z)^r bằng s! khi r=s, bằng 0 với các r khác từ 0 đến p.
+
+Đối chiếu độ chính xác trên đa thức bậc ≤p
+================================================================
+
+Đối chiếu độ chính xác trên đa thức bậc ≤p
+r  moment tính         giá trị cần  độ lệch             đạt
+0  0                   0            0                   Đạt
+1  1                   1            0                   Đạt
+2  1.000000000000e-50  0            1.000000000000e-50  Đạt
+
+
+Độ lệch moment được so với thang của các hạng ở độ chính xác trung gian; không dùng một ngưỡng tuyệt đối cho mọi đơn vị. Kiểm tra này không chứng minh dữ liệu không nhiễu.
+
+Nếu f đủ trơn và |f^(p+1)|≤M_(p+1) trên đoạn chứa z và các mốc, cận Taylor: |f^(s)(z)−Σw_i f(x_i)|≤M_(p+1)/(p+1)!·Σ|w_i|·|x_i−z|^(p+1). Đây có thể là cận thô; chưa biết M thì chưa có cận số.
+
+Nếu |δy_i|≤η_i thì sai số do dữ liệu ≤Σ|w_i|η_i. Không đạo hàm phần dư chứa ξ như hằng số; giảm bước có thể khuếch đại nhiễu.

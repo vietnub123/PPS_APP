@@ -1,0 +1,12 @@
+{
+  "tool": "Đạo hàm & Horner",
+  "method": "Horner",
+  "values": {
+    "digits": "12",
+    "coef": "3.5 -2.78 5.63 0 -15.28 1.54",
+    "target": "2.57",
+    "order": "3"
+  },
+  "x": "",
+  "y": ""
+}

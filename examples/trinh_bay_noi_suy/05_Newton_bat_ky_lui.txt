@@ -1,0 +1,170 @@
+Newton bất kỳ lùi
+
+================================================================
+
+Kết quả của lượt tính
+
+P(2)=7.
+
+P^(1)(2)=5.
+
+Kết quả của đa thức nội suy trên tập mốc công bố dưới đây. Chưa có cận sai số với hàm thật nếu chưa biết đạo hàm cao hơn.
+
+1. Đọc dữ liệu, chọn mốc và kiểm tra điều kiện
+
+Yêu cầu và điều kiện áp dụng
+
+Phương pháp Newton bất kỳ lùi; dùng 3/3 mốc, bậc tối đa 2; cấp đạo hàm yêu cầu 1.
+
+Các cặp hữu hạn, x phân biệt và được sắp tăng; ID dòng nguồn bắt đầu từ 0. Không tự bỏ hoặc gộp mốc.
+
+Dùng toàn bộ tập mốc đã nhập; không tự giảm bậc.
+
+Mốc bất kỳ: không yêu cầu cách đều.
+
+Tập mốc thực sự sử dụng
+
+Mốc tính và ánh xạ nguồn
+================================================================
+
+Mốc tính và ánh xạ nguồn
+ID nguồn  j  x_j  y_j  |x_j−z|
+0         0  0    1    2
+1         1  1    3    1
+2         2  3    13   1
+
+
+2. Ký hiệu, đổi biến và công thức
+
+P(x)=Σ f[x_(n−k),…,x_n]·∏_(j=0)^(k−1)(x−x_(n−j)); không chia k!.
+
+Tích rỗng bằng 1. Mỗi hạng được lấy đủ đến bậc tối đa; hệ số bằng 0 vẫn được giữ trong bảng.
+
+3. Lập bảng trung gian theo từng cấp
+
+Tỉ sai phân: cấp k lấy hiệu hai ô cấp k−1 rồi chia (x_(i+k)−x_i). Không chia thêm k!.
+
+Mỗi ô cùng hàng mốc bắt đầu. Ô trống ngoài tam giác không phải số 0; các ô dùng trong công thức được đánh dấu.
+
+Bảng tỉ sai phân
+================================================================
+
+Bảng tỉ sai phân
+j  xⱼ  yⱼ  D¹  D²
+0  0   1   2   1
+1  1   3   5   —
+2  3   13  —   —
+
+
+Từng phép tính trong các cấp của bảng
+
+Lập từng ô
+================================================================
+
+Lập từng ô
+k  i bắt đầu  ô phải cấp k−1  ô trái cấp k−1  hiệu  mẫu chia  ô cấp k
+1  0          3               1               2     1         2
+1  1          13              3               10    2         5
+2  0          5               2               3     3         1
+
+
+4. Lấy hệ số, ghép từng hạng và dựng đa thức
+
+Duyệt hạng k=0,…,n, lấy đúng ô nguồn, chia đúng mẫu một lần, nhân cơ sở rồi cộng. Đây là các bước tính hữu hạn, không phải vòng hội tụ.
+
+Các hạng của công thức đã chọn
+================================================================
+
+Các hạng của công thức đã chọn
+k  nguồn σₖ    các ô nguồn  σₖ  mẫu chia  βₖ  Bₖ
+0  y₂          13           13  1         13  1
+1  f[x₁,…,x₂]  5            5   1         5   (x−3)
+2  f[x₀,…,x₂]  1            1   1         1   (x−3)·(x−1)
+
+
+P(x) = (13)·1 + (5)·(x−3) + (1)·(x−3)·(x−1)
+
+Bảng tích khai triển — hệ số theo bậc giảm dần
+
+Các tích cơ sở chưa chia giai thừa và chưa nhân sai phân; không chia k! thêm lần nữa khi đã dùng β_k.
+
+Bảng tích: đa thức cơ sở Newton — hệ số theo bậc giảm dần
+================================================================
+
+Bảng tích: đa thức cơ sở Newton — hệ số theo bậc giảm dần
+k  bậc 2  bậc 1  bậc 0
+0  0      0      1
+1  0      1      -3
+2  1      -4     3
+
+
+5. Thế số và cộng kết quả
+
+Giá trị của đa thức
+
+Đóng góp từng hạng vào P(z)
+================================================================
+
+Đóng góp từng hạng vào P(z)
+k  Bₖ tại điểm tính  βₖ Bₖ  tổng
+0  1                 13     13
+1  -1                -5     8
+2  -1                -1     7
+
+
+P(2)=7.
+
+Đạo hàm cấp 1 theo x
+
+Đóng góp từng hạng vào đạo hàm
+================================================================
+
+Đóng góp từng hạng vào đạo hàm
+k  Bₖ′  βₖ·Bₖ′  đóng góp theo x  tổng
+0  0    0       0                0
+1  1    5       5                5
+2  0    0       0                5
+
+
+P^(1)(2)=5.
+
+Thuật toán đạo hàm cơ sở tích, kể cả tại nghiệm của tích
+
+Khởi tạo g_0=1, g_l=0 (l>0). Khi nhân (t−r), cập nhật từ cấp cao xuống thấp: g_l←(t_z−r)g_l+l·g_(l−1), rồi g_0←(t_z−r)g_0. Không chia cho t_z−r nên không lỗi khi trùng mốc.
+
+k=0: 1; đạo hàm cơ sở cấp 1 = 0.
+
+k=1: (x−3); đạo hàm cơ sở cấp 1 = 1.
+
+k=2: (x−3)·(x−1); đạo hàm cơ sở cấp 1 = 0.
+
+6. Đối chiếu và phạm vi kết luận
+
+Sai lệch lớn nhất P(x_i)−y_i theo chính công thức đã chọn: 0.
+
+Kiểm tra đa thức tại từng mốc đã chọn
+
+Đối chiếu điều kiện nội suy
+================================================================
+
+Đối chiếu điều kiện nội suy
+x_i  y_i  P(x_i)  |P(x_i)−y_i|
+0    1    1       0
+1    3    3       0
+3    13   13      0
+
+
+Công thức đã chọn và Horner Newton ổn định trên các mốc nhập
+================================================================
+
+Công thức đã chọn và Horner Newton ổn định trên các mốc nhập
+cấp  tổng theo công thức  Horner Newton  độ chênh  đối chiếu
+0    7                    7              0         Đạt
+1    5                    5              0         Đạt
+
+
+Tính trung gian với 50 chữ số; số trong bảng chỉ làm tròn khi hiển thị. Dạng tích là mô hình chính, không bắt buộc khai triển theo x.
+
+Nếu dữ liệu chính xác và |f^(m)|≤M_m trên đoạn chứa m mốc và điểm tính: |f(z)−P(z)|≤M_m·|∏(z−x_i)|/m!. Chưa được cho M_m thì chưa có cận sai số hàm thật.
+
+Sai lệch tại mốc chỉ kiểm tra nội suy; không là cận giữa mốc. Đạo hàm cần cận riêng, không đạo hàm phần dư chứa ξ như hằng số. Nhiều mốc/bậc cao có thể khuếch đại nhiễu.

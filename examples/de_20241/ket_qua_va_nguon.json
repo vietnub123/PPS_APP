@@ -1,0 +1,128 @@
+{
+  "sources": {
+    "Guide_di_thi_nhanh.md": "09137daa5e8fd9e4d2f11fe79a5cd40a98f9b20d2464c962a7623fe84b40c6ea",
+    "Huong_dan_dung_khi_thi.md": "69efb6b4699a22f55d37603f5cc28f2b378ec678c0e3c4e19f40a0566fcf34e8",
+    "kienthuc/20241_MI3042_GK.jpg": "674228ebb5512205299236c93b94df5a56cf08fbddaca4e32dd5e47e5d655cab",
+    "kienthuc/20241GKtest2.xlsx": "0bfd870ef32f569b2fbc91a29075b8a237b1943f68946b7cf6d63889ce3c0ca6",
+    "pps/interpolation.py": "73c68d7d8f2d62744dfdeb37f5980b39fa3cc301a167e156d51ac0d81288f8aa",
+    "pps/inverse_solution.py": "0111757236970dd535c957c71e64cc2616bcf1c8c34f454180609de1468e7248",
+    "pps/inverse_model.py": "3d018c846b83f615164fadf882a45a60cdc4826d03c5d68cfd8da56761462edd",
+    "pps/worked_report.py": "19f497034f88becebdb294c3cece514ae424d782f02dc160d3a82c26027f5b27",
+    "pps/inverse_export.py": "153d920f53b6d6281ac32bc1496164b4236e42e6caee2b407b39c35cb111ce09"
+  },
+  "sheet": "Sheet3",
+  "count": 106,
+  "xbar": 4,
+  "ybar": 6,
+  "h": "0.117",
+  "c_indices": [
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30
+  ],
+  "horner_second": "527348323/500000",
+  "horner_third": "6246693/5000",
+  "stirling_value": "873927412381188829/160560277814430000",
+  "stirling_derivative": "-15022798856893007/5619609723505050",
+  "roots": [
+    {
+      "indices": [
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ],
+      "method": "Tiến",
+      "value": 2.7287329703355185,
+      "q": "453609/1087240",
+      "iterations": 13,
+      "last_B": "2.9743496425683183345773001019027451992479379885418E-7",
+      "last_residual": "5.343626131867263141425982550582811123173747E-7"
+    },
+    {
+      "indices": [
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30
+      ],
+      "method": "Tiến",
+      "value": 3.760763188337928,
+      "q": "24456/61985",
+      "iterations": 9,
+      "last_B": "7.1226165789942682208001372772024222387801634998462E-7",
+      "last_residual": "4.845348246716589881582446283465305314455605E-7"
+    },
+    {
+      "indices": [
+        58,
+        59,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66
+      ],
+      "method": "Tiến",
+      "value": 8.352578825687841,
+      "q": "51935/417732",
+      "iterations": 6,
+      "last_B": "4.8592054017408977669667055323931821594827020379698E-8",
+      "last_residual": "1.684175205457030497272519545157008846440608E-7"
+    },
+    {
+      "indices": [
+        78,
+        79,
+        80,
+        81,
+        82,
+        83,
+        84,
+        85,
+        86
+      ],
+      "method": "Lùi",
+      "value": 10.641567176922276,
+      "q": "20987/247968",
+      "iterations": 4,
+      "last_B": "1.8738410358904646709701402653742416183343990482253E-7",
+      "last_residual": "5.059648096103909930516732179451849496407680E-7"
+    }
+  ],
+  "checks": [
+    "Đúng Sheet3 đang chọn và ghi chú ảnh; D1=4,F1=6.",
+    "106 cặp hữu hạn; h=0.117 bằng số hữu tỷ tại mọi bước; Sheet1 B:C lặp lại Sheet3 A:B.",
+    "Horner hữu tỷ trùng các lượt Horner của app; đạo hàm cấp2/cấp3 đúng giá trị thập phân ở câu a.",
+    "Stirling hữu tỷ cộng theo công thức đối xứng trùng giá trị/đạo hàm của bộ tính repo (<1e-11).",
+    "Đa thức Newton nhánh2 bằng chính xác Q_Stirling(t−4), kiểm bằng toàn bộ hệ số hữu tỷ.",
+    "Bốn nhánh đều có chứng nhận q<1 và đạt đồng thời hai ngưỡng; không dùng bộ giải ngoài repo."
+  ],
+  "cli": [
+    "A_Horner.json: exit=0, expected=0, OK",
+    "C_Stirling_9.json: exit=0, expected=0, OK",
+    "D1_Lap_tien.json: exit=0, expected=0, OK",
+    "D2_Lap_tien.json: exit=0, expected=0, OK",
+    "D3_Lap_tien.json: exit=0, expected=0, OK",
+    "D4_Lap_lui.json: exit=0, expected=0, OK",
+    "D4_Thu_tien_chua_du_chung_nhan.json: exit=1, expected=1, OK"
+  ]
+}

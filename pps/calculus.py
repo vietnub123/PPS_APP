@@ -44,7 +44,9 @@ def _bound_constant(method, order, length, bound):
 
 
 def differentiate(x,y,target,degree=2,order=1):
+    source_x=np.asarray(x,dtype=float)
     x,y,_=points(x,y,2)
+    source_ids=np.argsort(source_x,kind='stable')
     degree=nonnegative_integer(degree,'Bậc đa thức')
     order=nonnegative_integer(order,'Cấp đạo hàm')
     if not np.isfinite(target): raise ValueError('Điểm tính đạo hàm phải hữu hạn.')
@@ -53,17 +55,19 @@ def differentiate(x,y,target,degree=2,order=1):
     center=int(np.argmin(abs(x-target)))
     start=max(0,min(center-degree//2,len(x)-degree-1))
     xx,yy=x[start:start+degree+1],y[start:start+degree+1]
-    weights=[];contributions=[]
+    weights=[];contributions=[];weights_trace=[]
     with localcontext() as ctx:
         ctx.prec=working_precision(xx)
         nodes=[Decimal(str(float(v))) for v in xx]
         z=Decimal(str(float(target)))
         factorial=Decimal(math.factorial(order))
+        cumulative=Decimal(0)
         for i,node in enumerate(nodes):
             # Chỉ sinh hệ số tới cấp cần lấy của L_i(target+u).
             # Không khai triển toàn bộ đa thức theo x bằng float.
             coefficients=[Decimal(1)]+[Decimal(0)]*order
             denominator=Decimal(1)
+            steps=[]
             for j,other in enumerate(nodes):
                 if i==j:continue
                 factor=z-other
@@ -71,10 +75,23 @@ def differentiate(x,y,target,degree=2,order=1):
                     coefficients[k]=factor*coefficients[k]+coefficients[k-1]
                 coefficients[0]*=factor
                 denominator*=node-other
+                steps.append({'j':j,'factor':factor,'denominator':denominator,'coefficients':coefficients[:]})
             weight=coefficients[order]*factorial/denominator
             weights.append(weight)
             contributions.append(weight*Decimal(str(float(yy[i]))))
+            cumulative+=contributions[-1]
+            weights_trace.append({'i':i,'steps':steps,'denominator':denominator,'coefficient':coefficients[order],
+                                  'factorial':factorial,'weight':weight,'contribution':contributions[-1],'total':cumulative})
         result=float(sum(contributions,Decimal(0)))
+        moments=[]
+        for power in range(degree+1):
+            terms=[w*((node-z)**power if power else Decimal(1)) for w,node in zip(weights,nodes)]
+            value=sum(terms,Decimal(0))
+            expected=factorial if power==order else Decimal(0)
+            gap=abs(value-expected)
+            scale=max(sum(map(abs,terms),Decimal(0)),abs(expected),Decimal('1e-1000'))
+            moments.append({'r':power,'value':value,'expected':expected,'gap':gap,
+                            'passed':gap<=scale*Decimal(10)**(-max(20,ctx.prec//2))})
     if not np.isfinite(result):
         raise ValueError('Giá trị đạo hàm vượt miền float; đổi đơn vị dữ liệu.')
     r=Report('Đạo hàm bằng công thức p+1 điểm',[
@@ -87,7 +104,12 @@ def differentiate(x,y,target,degree=2,order=1):
         rf'f^{{({order})}}(\bar{{x}})\approx\sum_{{i=0}}^{{{degree}}}w_i y_i',
         rf'f^{{({order})}}({fmt(target)})\approx {fmt(result)}'])],'omit_prefixes':('f^(',)}
     if target<xx[0] or target>xx[-1]: r.lines.append('Điểm tính ngoài đoạn mốc đã chọn: ngoại suy.')
-    return r
+    from .polynomial_worked import present_derivative
+    data={'kind':'table_derivative','status':'completed','failure':None,'target':z,'degree':degree,'order':order,
+          'nearest':center,'start':start,'used_ids':list(map(int,source_ids[start:start+degree+1])),
+          'x':nodes,'y':[Decimal(str(float(v))) for v in yy],'value':cumulative,
+          'weights_trace':weights_trace,'moments':moments,'precision':ctx.prec}
+    return present_derivative(r,data)
 
 
 def quadrature_weights(n,method,order=4):

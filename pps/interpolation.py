@@ -39,7 +39,11 @@ def interpolate(x, y, method='Lagrange', target=None, derivative=0, count=None):
     Bảng lớn dùng dạng tích/Newton lồng thay vì ép khai triển theo x.
     Không tự bỏ mốc hay tự thay bậc đa thức của đề.
     """
+    raw_x, raw_y = np.asarray(x, dtype=float), np.asarray(y, dtype=float)
     x, y, dropped = points(x, y)
+    original_rows = [(i, float(xv), float(yv)) for i, (xv, yv) in enumerate(zip(raw_x, raw_y))]
+    sorted_ids = np.argsort(raw_x, kind='stable')
+    sorted_x = x.copy()
     derivative = nonnegative_integer(derivative, 'Cấp đạo hàm')
     if target is not None and not np.isfinite(target):
         raise ValueError('Điểm tính phải hữu hạn.')
@@ -75,7 +79,9 @@ def interpolate(x, y, method='Lagrange', target=None, derivative=0, count=None):
     if n != original_count:
         result.lines.insert(0, f'Đã chọn {n}/{original_count} mốc quanh x = {fmt(target)}; đa thức bậc không quá {n-1} chỉ đi qua nhóm mốc này.')
         result.table('Mốc được sử dụng', ['x', 'y'], zip(x, y))
-    return result
+    from .polynomial_worked import present_interpolation
+    used_ids = [int(sorted_ids[int(np.searchsorted(sorted_x, xi))]) for xi in x]
+    return present_interpolation(result, x, y, method, target, derivative, original_rows, used_ids)
 
 
 def _interpolate_compact(x, y, method, target, derivative, model):
@@ -309,6 +315,7 @@ def inverse(x, y, target, backward=False, tolerance=1e-10, max_steps=1000, *,
 
 
 def select_points(x,y,target,count=5,reverse=False):
+    raw_x,raw_y=np.asarray(x,dtype=float),np.asarray(y,dtype=float)
     x,y,_ = points(x,y,2 if reverse else 1)
     if not np.isfinite(target): raise ValueError('Điểm/mức cần chọn phải hữu hạn.')
     if not reverse: count = nonnegative_integer(count, 'Số mốc')
@@ -340,18 +347,23 @@ def select_points(x,y,target,count=5,reverse=False):
         if not equal:r.lines.append('Mốc không đều: dùng Lagrange hoặc Newton tỷ sai phân.')
         if target<x[0] or target>x[-1]:r.lines.append('Điểm cần tính ngoài bảng: ngoại suy.')
         r.value=(xx,yy)
+        from .polynomial_worked import present_selection
+        return present_selection(r,x,y,target,count,equal,chosen,np.argsort(raw_x,kind='stable'))
     return r
 
 
 def chebyshev(degree,a,b):
     degree=nonnegative_integer(degree, 'Bậc Chebyshev')
     if not np.all(np.isfinite([a,b])) or not a<b: raise ValueError('Cần a < b và hai đầu hữu hạn.')
-    x=np.sort((a/2+b/2)+(b/2-a/2)*np.cos((2*np.arange(degree+1)+1)*np.pi/(2*(degree+1))))
+    angles=(2*np.arange(degree+1)+1)*np.pi/(2*(degree+1))
+    raw=(a/2+b/2)+(b/2-a/2)*np.cos(angles)
+    order=np.argsort(raw,kind='stable');x=raw[order]
     if np.any(np.diff(x)==0):
         raise ValueError('Mốc Chebyshev bị trùng trong độ chính xác float; giảm bậc hoặc đổi gốc/đơn vị trước khi nhập dữ liệu.')
     report=Report('Mốc Chebyshev',value=x).table('Mốc tối ưu',['i','x'],enumerate(x))
     report.presentation={'formulas':[('Công thức mốc Chebyshev',[r'x_i=\frac{a+b}{2}+\frac{b-a}{2}\cos\frac{(2i+1)\pi}{2(n+1)}'])]}
-    return report
+    from .polynomial_worked import present_chebyshev
+    return present_chebyshev(report,degree,a,b,angles,raw,order)
 
 
 def horner(coefficients,target,order=0):
@@ -365,13 +377,20 @@ def horner(coefficients,target,order=0):
     r.presentation={'formulas':[('Đa thức',split_equation('P(x)',poly_latex(p)))],'omit_prefixes':('P(x) =','P^(')}
     # Decimal tránh tràn giai thừa trung gian và triệt tiêu trong chia lặp.
     working=[Decimal(str(float(v))) for v in coefficients];factorial=Decimal(1)
+    while len(working)>1 and working[0]==0:
+        working.pop(0)
+    degree=len(working)-1
+    passes=[]
     with localcontext() as context:
         context.prec=max(50,2*len(coefficients)+30)
-        for k in range(min(order,len(coefficients)-1)+1):
-            row=[];remainder=Decimal(0)
-            for v in working:
-                remainder=remainder*Decimal(str(float(target)))+v
+        for k in range(min(order,degree)+1):
+            row=[];remainder=Decimal(0);steps=[]
+            for j,v in enumerate(working):
+                previous=remainder if j else None
+                product=remainder*Decimal(str(float(target))) if j else None
+                remainder=(product if product is not None else Decimal(0))+v
                 row.append(remainder)
+                steps.append({'j':j,'input':v,'previous':previous,'product':product,'accumulated':remainder})
             derivative_value=float(factorial*remainder)
             if not np.isfinite(derivative_value): raise ValueError('Giá trị Horner/đạo hàm vượt miền float; đổi đơn vị hoặc dùng ít bậc hơn.')
             if k==0:r.value=derivative_value
@@ -380,11 +399,14 @@ def horner(coefficients,target,order=0):
             r.lines.append(f'P^({k})({fmt(target)}) = {fmt(derivative_value)}')
             label='P' if k==0 else rf'P^{{({k})}}'
             r.presentation['formulas'].append((f'Giá trị — cấp {k}',[rf'{label}({fmt(target)})={fmt(derivative_value)}']))
+            passes.append({'r':k,'input':working[:],'steps':steps,'quotient':row[:-1],
+                           'remainder':remainder,'factorial':factorial,'derivative':factorial*remainder})
             working=row[:-1] if len(row)>1 else [Decimal(0)]
             factorial*=k+1
-    if order>=len(coefficients):
-        r.lines += [f'Mọi đạo hàm từ cấp {len(coefficients)} trở lên đều bằng 0.',f'P^({order})({fmt(target)}) = 0']
-    return r
+    if order>degree:
+        r.lines += [f'Mọi đạo hàm từ cấp {degree+1} trở lên đều bằng 0.',f'P^({order})({fmt(target)}) = 0']
+    from .polynomial_worked import present_horner
+    return present_horner(r,coefficients,target,order,passes)
 
 
 def spline(x,y,kind='Cubic tự nhiên',left=0.,right=0.,target=None):

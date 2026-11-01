@@ -1,0 +1,20 @@
+{
+  "tool": "Đạo hàm & Horner",
+  "method": "Đạo hàm từ bảng",
+  "values": {
+    "digits": "12",
+    "target": "0",
+    "degree": "2",
+    "order": "1"
+  },
+  "x": [
+    0,
+    1,
+    2
+  ],
+  "y": [
+    1,
+    2,
+    5
+  ]
+}
