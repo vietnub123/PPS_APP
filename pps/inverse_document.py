@@ -44,13 +44,20 @@ def _wrap(text, font, width):
 def inverse_table_image(report, index, limit=80, font_size=15, column_limit=16):
     """Vẽ đúng các ô đã lưu; đánh dấu theo chỉ số ô của bảng hiển thị."""
     _, headers, source_rows = report.tables[index]
-    headers = headers if column_limit is None else headers[:column_limit]
     rows = source_rows if limit is None else source_rows[:limit]
     metadata = report.presentation.get('worked_tables', report.presentation.get('inverse_tables', {})).get(index, {})
-    selected = {tuple(cell) for cell in metadata.get('used_cells', [])}
-    text_columns = set(metadata.get('text_columns', []))
+    columns=list(range(len(headers)))
+    if column_limit is not None and len(columns)>column_limit:
+        if metadata.get('kind')=='horner':
+            half=column_limit//2
+            columns=columns[:half]+columns[-(column_limit-half):]
+        else:columns=columns[:column_limit]
+    headers=[headers[j] for j in columns]
+    source_selected={tuple(cell) for cell in metadata.get('used_cells', [])}
+    selected={(i,k) for i,j in source_selected for k,column in enumerate(columns) if column==j}
+    text_columns={k for k,j in enumerate(columns) if j in metadata.get('text_columns', [])}
     regular, bold = _font(font_size), _font(font_size, True)
-    strings = [[fmt(value) for value in row[:len(headers)]] for row in rows]
+    strings = [[fmt(row[j]) if j<len(row) else '' for j in columns] for row in rows]
     widths = []
     for column, header in enumerate(headers):
         measures = [bold.getlength(str(header))]
@@ -232,12 +239,12 @@ class InverseDocument(ttk.Frame):
     def show(self, report):
         self.clear()
         self.report = report
-        title = self._label(self.body, report.title, font=('Segoe UI', 18, 'bold'))
+        title = self._label(self.body, report.title, font=('Times New Roman', 19, 'bold'))
         title.grid(row=0, column=0, sticky='ew', pady=(0, 12))
         self._render_nodes(self.body, report.presentation.get('worked_layout', report.presentation.get('inverse_layout', [])), start=1)
         self.canvas.yview_moveto(0)
 
-    def _label(self, parent, text, *, font=('Segoe UI', 11), tone=None):
+    def _label(self, parent, text, *, font=('Times New Roman', 12), tone=None):
         color = COLORS.get(tone, COLORS['ink'])
         label = ttk.Label(parent, text=str(text), font=font, foreground=color, style='Inverse.TLabel',
                           anchor='w', justify='left', wraplength=600, width=1)
@@ -252,7 +259,7 @@ class InverseDocument(ttk.Frame):
                 widget = ttk.Frame(parent, style='Inverse.TFrame')
                 widget.columnconfigure(0, weight=1)
                 if node.get('title'):
-                    heading = self._label(widget, node['title'], font=('Segoe UI', 13 if kind == 'section' else 11, 'bold'))
+                    heading = self._label(widget, node['title'], font=('Times New Roman', 14 if kind == 'section' else 12, 'bold'))
                     heading.grid(row=0, column=0, sticky='ew', pady=(0, 7))
                 self._render_nodes(widget, node.get('children', []), start=1)
             elif kind == 'columns':
@@ -275,12 +282,17 @@ class InverseDocument(ttk.Frame):
                 # Toàn bộ bảng thường gặp được giữ trong viewport. Bảng rất lớn
                 # xem trong tab dữ liệu/xuất; không tạo ảnh hàng trăm nghìn pixel.
                 limit = None if len(rows) <= 500 else 80
-                picture = _ImageViewport(widget, inverse_table_image(self.report, index, limit), max_height=520,
+                metadata=self.report.presentation.get('worked_tables',self.report.presentation.get('inverse_tables',{})).get(index,{})
+                column_limit=(None if len(headers)<=64 else 32) if metadata.get('kind')=='horner' else 16
+                picture = _ImageViewport(widget, inverse_table_image(self.report, index, limit,column_limit=column_limit), max_height=520,
                                          on_page_wheel=self._wheel)
                 picture.grid(row=1, column=0, sticky='ew')
-                if (limit is not None and len(rows) > limit) or len(headers) > 16:
+                if (limit is not None and len(rows) > limit) or (column_limit is not None and len(headers) > column_limit):
                     shown_rows = len(rows) if limit is None else min(limit, len(rows))
-                    label = self._label(widget, f'Bản xem hiển thị {shown_rows}/{len(rows)} hàng, {min(16, len(headers))}/{len(headers)} cột. Tab bảng dữ liệu và bản xuất giữ đầy đủ.', tone='muted')
+                    shown_columns=len(headers) if column_limit is None else min(column_limit,len(headers))
+                    label = self._label(widget, f'Bản xem hiển thị {shown_rows}/{len(rows)} hàng, {shown_columns}/{len(headers)} cột. Tab bảng dữ liệu và bản xuất giữ đầy đủ.', tone='muted')
+                    if metadata.get('kind')=='horner' and column_limit is not None and len(headers)>column_limit:
+                        label.configure(text=f'Horner rất rộng: xem {shown_columns} cột đầu và cuối theo nhãn bậc, giữ ô số dư cuối. Các cột giữa xem trong tab bảng dữ liệu hoặc bản xuất đầy đủ.')
                     label.grid(row=2, column=0, sticky='ew', pady=(4, 0))
             elif kind == 'text':
                 widget = self._label(parent, node.get('text', ''), tone=node.get('tone'))

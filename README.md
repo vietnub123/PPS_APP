@@ -2,6 +2,8 @@
 
 **PPS_APP** là phần mềm tính toán khoa học và giải bài toán số học chuyên sâu viết bằng **Python** kết hợp giao diện đồ họa trực quan (**Tkinter**). Ứng dụng hỗ trợ trình bày lời giải toán học bằng công thức LaTeX sắc nét (MathText), vẽ đồ thị tương tác, lập bảng sai phân / bảng tích chuẩn mực và xuất báo cáo đa định dạng (HTML, Excel, CSV, JSON).
 
+Tài liệu theo cách trình bày bài thi: [sổ tay PDF](kienthuc/final/So_tay_PPS.pdf), [58 bài giải HTML ngoại tuyến](kienthuc/final/examples/presentation/index.html), [đối chiếu với mẫu 20251](kienthuc/final/Doi_chieu_mau_20251.md). Tiền xử lý tách riêng trong [hướng dẫn Excel](kienthuc/final/Tien_xu_ly_Excel.pdf), kèm [workbook công thức](kienthuc/final/Tien_xu_ly_Excel.xlsx). Trình bày giữ đúng dữ liệu, bộ giải, các bước đã tính và trạng thái chưa đạt; không tự lọc điểm, đổi gốc hoặc hạ bậc.
+
 ---
 
 ## 🌟 Tính năng chính

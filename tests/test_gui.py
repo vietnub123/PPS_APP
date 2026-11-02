@@ -1,4 +1,5 @@
 """Desktop integration tests; Tk window stays withdrawn during tests."""
+import csv
 import json
 import tempfile
 import time
@@ -139,10 +140,18 @@ class GuiTests(unittest.TestCase):
             self.app.display(dispatch(s['tool'],s['method'],s['values'],s['x'],s['y']))
             out=tmp/'output.xlsx'
             with patch('pps.gui.filedialog.asksaveasfilename',return_value=str(out)):self.app.export_tables()
-            wb=load_workbook(out);self.assertEqual(len(wb.sheetnames),2);self.assertEqual(wb.worksheets[0]['A2'].value,0);wb.close()
+            wb=load_workbook(out)
+            self.assertEqual(len(wb.sheetnames),len(self.app.report.tables))
+            for sheet,(_,headers,rows) in zip(wb.worksheets,self.app.report.tables):
+                self.assertEqual(list(next(sheet.values)),headers)
+                self.assertEqual(sheet.max_row,len(rows)+1)
+            self.assertEqual(wb.worksheets[0]['A2'].value,0);wb.close()
             out=tmp/'output.csv'
+            selected=next(i for i,(title,_,_) in enumerate(self.app.report.tables) if title=='Mốc tính và ánh xạ nguồn')
+            self.app.table_select.current(selected)
             with patch('pps.gui.filedialog.asksaveasfilename',return_value=str(out)):self.app.export_tables()
-            self.assertIn('0.0',out.read_text(encoding='utf-8-sig'))
+            with out.open(encoding='utf-8-sig',newline='') as stream:exported=list(csv.reader(stream))
+            self.assertEqual(exported,[['đại lượng','0','1','2'],['ID nguồn','0','1','2'],['x_j','0','1','2'],['y_j','0','1','4']])
             project=tmp/'project.json'
             with patch('pps.gui.filedialog.asksaveasfilename',return_value=str(project)):self.app.save_project()
             self.app.select_tool('Bài toán biên')

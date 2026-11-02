@@ -14,11 +14,13 @@ Nguồn quyết định hành vi thực tế là `pps/gui.py` cùng các mô-đu
 - Các đặc tả `00_Dac_ta...`, `01_Noi_suy...`, `02_Dao_ham...`, `03_Horner...` trong `kienthuc/real`.
 - Ảnh đề, workbook `20241GKtest2.xlsx`, `20251GKtest2.xlsx`; đầu vào và nhật ký ở `examples/de_20241`, `examples/de_20251`; `Kiem_dinh_de_20251.md`.
 
-Không dùng lời giải trên mạng. Các bảng tầng RK hoặc phép giải tay BVP/trị riêng được ghi là phép tính từ công thức và kiểm kết quả với app. Không nhận chúng là log nội bộ của SciPy/LAPACK. Hash SHA-256 của mã, chương, script và tài liệu nguồn được lưu trong [source_sha256.json](verification/source_sha256.json).
+Không dùng lời giải trên mạng. Các ví dụ tay được ghi rõ là suy ra từ công thức. Tool hiện lưu trực tiếp các tầng RK, dự báo/hiệu chỉnh Adams, lưới tích phân kép và toán tử trị riêng; không nhận các bảng tay là nhật ký vòng nội bộ của SciPy/LAPACK. Hash SHA-256 của mã, chương, script và tài liệu nguồn được lưu trong [source_sha256.json](verification/source_sha256.json).
 
 ## Kết quả kiểm tra
 
-Bản viết lại tổ chức nội dung theo **input cụ thể → bảng/quá trình tổng quát → output**. Tên trường được lấy lại từ `pps/gui.py`; chương bình phương tối thiểu tách từng mô hình. **Phần giải thích Gauss/QR/SVD và ví dụ số được khôi phục đầy đủ** trong [nguồn riêng](chapters/04a_Gauss_QR_SVD.tex), được đưa trực tiếp vào Chương 4; phần Gauss ở Phụ lục A cũng được giữ. Thay đổi trong đợt này là nội dung và công cụ kiểm tra tài liệu.
+Bản viết lại tổ chức nội dung theo **input cụ thể → bảng/quá trình tổng quát → output**. Tên trường lấy từ `pps/gui.py`; bình phương tối thiểu tách từng mô hình. **Gauss/QR/SVD và ví dụ số được giữ đầy đủ** trong [nguồn riêng](chapters/04a_Gauss_QR_SVD.tex) ở Chương 4; Gauss ở Phụ lục A cũng được giữ. Đợt theo mẫu bổ sung trình bày trong app, các nhật ký thực tính và tài liệu tiền xử lý Excel; không thay bộ giải số hoặc tự lọc/đổi dữ liệu.
+
+Đọc [đối chiếu mẫu 20251](Doi_chieu_mau_20251.md): loại hai điểm để lấy log, lựa chọn mốc/gốc/bậc và tiêu chí dừng trên ảnh khác tool; giá trị Stirling trên ảnh thiếu hạng. Chỉ kiểm tra độc lập được bảy mốc nhìn thấy và hệ chuẩn từ các tổng đã in, chưa xác nhận RMSE của toàn bảng test1.
 
 | Kiểm tra | Kết quả và dữ liệu đối chiếu |
 |---|---|
@@ -26,9 +28,10 @@ Bản viết lại tổ chức nội dung theo **input cụ thể → bảng/qu�
 | Chương 01, 02, 07, helper và đề thật | **43 phép đối chiếu số/lịch sử** qua [manual_examples.py](verification/manual_examples.py); có đủ 3 vòng tiến, 5 vòng lùi, 5 lần chia đôi; chạy lại 4 nhánh đề 20241 và Stirling/Bessel đề 20251. [Kết quả](verification/manual_examples.json). |
 | Spline và bình phương tối thiểu | **16 bài spline, 15 bài hồi quy**; biên trái/phải/trộn/tổ hợp, lưới không đều, các biến đổi, QR/Gauss/SVD và các bước LM. [Script](verification/spline_ls_examples.py), [dữ liệu trung gian](verification/spline_ls_examples.json). |
 | Giải tích số và ODE | Kiểm trọng số Newton–Cotes 1–10 bằng hệ moment hữu tỷ; đạo hàm, quadrature, các RK, Adams 2–5, BVP/Robin và giảm lưới trị riêng. [Script](verification/calculus_verification.py), [kết quả](verification/calculus_examples.json). |
-| Công thức thật sinh từ tool | **78 trường hợp, 1.354 lượt công thức, 360 công thức khác nhau; 0 lỗi phân tích cú pháp hoặc cảnh báo thiếu glyph** ở bộ kiểm đã chạy. [Audit](verification/latex_audit.json), [script](verification/audit_latex.py). |
-| Kiểm thử hồi quy repo trước đợt viết lại hướng dẫn | `Ran 223 tests`; kết quả `OK (skipped=1)`. Nhóm `test_gui.GuiTests` bị bỏ qua do môi trường không có Tcl/Tk dùng được. Các test số học, xuất báo cáo và ba test xử lý cuộn Combobox chạy được. [Log](verification/test_suite.txt), [tóm tắt có cấu trúc](verification/test_summary.json). |
-| PDF hiện tại | **109 trang, 111 bookmark**; mục lục/tham chiếu biên dịch ba lượt. Log cuối không có lỗi, tham chiếu chưa xác định, thiếu ký tự hay hộp tràn. Kiểm biên trang toàn PDF; xem trực tiếp các trang Gauss/QR/SVD đã khôi phục và các trang bảng tổng quát Horner, BPTT, lũy thừa, phân thức, LM, spline, tích phân, ODE và đề thật. [Kết quả kiểm PDF](verification/pdf_inspection.json). |
+| Công thức thật sinh từ tool | **78 trường hợp, 1.637 lượt công thức, 385 công thức khác nhau; 0 lỗi phân tích cú pháp hoặc cảnh báo thiếu glyph**. [Audit](verification/latex_audit.json), [script](verification/audit_latex.py). |
+| Không đổi số/trạng thái | **58 đường tính** khớp ảnh chụp số liệu trước sửa; adapter không đổi bảng số của thuật toán. **Workbook 10 sheet, 197 công thức**, kiểm công thức đổi mục tiêu/đạo hàm, cờ sai miền và ba sheet nhập x,y. [Kết quả](verification/exam_style_verification.json). |
+| Kiểm thử hồi quy repo | `Ran 234 tests`; `OK`, lớp GUI bị bỏ qua trong sandbox. Đã chạy riêng **9 test GUI ngoài sandbox: 9 đạt, 0 bỏ qua**, gồm hiển thị các lựa chọn và xuất Excel/CSV. [Log repo](verification/test_suite.txt), [tóm tắt](verification/test_summary.json), [GUI](verification/gui_exam_style_summary.json). |
+| PDF hiện tại | **141 trang, 118 bookmark**; thêm PDF tiền xử lý Excel riêng. Biên dịch ba lượt; không có tham chiếu chưa xác định, thiếu ký tự hay hộp tràn. Kiểm biên trang và xem các trang công thức/bảng, kể cả đối chiếu Stirling mới. [Kết quả kiểm PDF](verification/pdf_inspection.json). |
 
 Script [run_regression.py](verification/run_regression.py) ghi log UTF-8 và trả mã thoát từ kết quả unittest. Cách này tránh PowerShell cũ biến dòng tiến độ ghi ra stderr thành `NativeCommandError`; dòng tiến độ đó tự nó không phải lỗi thuật toán.
 
@@ -45,7 +48,7 @@ Script [run_regression.py](verification/run_regression.py) ghi log UTF-8 và tr�
 - Spline bậc 4 đầu phải/trộn có thể nhập qua **Biên tổng quát**. Nhánh này hiện dùng Gauss trên hệ hệ số; lựa chọn Thomas ở nhánh đó bị bỏ qua trong mã hiện tại. Sổ tay công khai giới hạn này; đợt viết tài liệu không thay thuật toán để che sự khác biệt.
 - QR/SVD và giải hệ chuẩn cùng giải bài hồi quy tuyến tính nhưng đi qua các phép toán khác nhau. Tuyến tính hóa log tối ưu thang biến đổi; LM tối ưu SSE thang y và không chứng nhận cực tiểu toàn cục.
 - ODE/BVP/trị riêng dùng bộ giải thư viện ở một số bước. Báo cáo không lưu toàn bộ vòng nội bộ. Dung sai bước ẩn hoặc phần dư ma trận không phải sai số toàn cục của bài liên tục.
-- GUI chưa được kiểm trực quan trong phiên làm việc này vì Tcl/Tk không khởi tạo được. PDF đã được render và xem trực tiếp; các HTML mẫu đã được xuất từ báo cáo thật. Bộ audit công thức là một tập trường hợp cụ thể, không phải chứng minh mọi biểu thức người dùng có thể nhập đều hiển thị đúng.
+- GUI được chạy với Tk thật ngoài sandbox; trong sandbox Tcl/Tk không khởi tạo được. PDF và bảng Horner mới đã được render và xem trực tiếp; 58 HTML mẫu xuất từ báo cáo thật. Bộ audit là tập trường hợp cụ thể, không phải chứng minh mọi biểu thức tùy ý đều hiển thị đúng.
 
 ## Cập nhật sau khi sửa mã
 

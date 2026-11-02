@@ -1,0 +1,1289 @@
+\section{Dàn ý trình bày của đủ 58 lựa chọn}
+
+Các dàn ý sau lấy từ cùng danh mục mà GUI và HTML sử dụng. Đây là đường đi của bài giải; các bảng tổng quát, phép khử, công thức và ví dụ chi tiết vẫn được giữ trong các chương trước. Không thay lời giải số bằng một đoạn mã giả.
+
+Trong tool, nhóm Chi tiết có thể mở ra; bản HTML in ra mở toàn bộ chi tiết. Bản sao chép và các bảng xuất giữ mọi bước đã lưu.
+
+\subsection{Nội suy đa thức}
+
+\examplebreak\subsubsection*{1. Lagrange}
+
+\textbf{Input:} Điểm cần tính x;\allowbreak{} Cấp đạo hàm (\allowbreak{}0 =\allowbreak{} giá trị hàm);\allowbreak{} Số mốc dùng (\allowbreak{}để trống: toàn bảng).
+
+Bảng cặp $x,y$ là đầu vào riêng của lượt chạy; giữ ánh xạ nguồn nếu chọn một phần bảng.
+
+\begin{enumerate}
+
+\item Công bố tập mốc thực dùng và ID nguồn;\allowbreak{} kiểm tra x phân biệt,\allowbreak{} điều kiện lưới và số mốc của phương pháp.
+
+\item Đặt biến và gốc: với mốc cách đều dùng t=\allowbreak{}(\allowbreak{}x\ensuremath{-}x\_gốc)/\allowbreak{}h;\allowbreak{} với Lagrange/\allowbreak{}Newton bất kỳ giữ biến x.
+
+\item Lập các tích W\_i và mẫu d\_i;\allowbreak{} lấy hệ số y\_i/\allowbreak{}d\_i. Ghi rõ nguồn của từng hệ số và mẫu chia.
+
+\item Viết đa thức dưới dạng tổng các hệ số nhân cơ sở;\allowbreak{} khai triển từng tích và cộng theo cột khi cần dạng chính tắc.
+
+\item Thế điểm tính,\allowbreak{} cộng đủ các hạng;\allowbreak{} tính đạo hàm trên cùng đa thức. Nếu đổi biến,\allowbreak{} P\textasciicircum{}(\allowbreak{}r)(\allowbreak{}x)=\allowbreak{}Q\textasciicircum{}(\allowbreak{}r)(\allowbreak{}t)/\allowbreak{}h\textasciicircum{}r.
+
+\item Thế lại các mốc và đối chiếu cách đánh giá;\allowbreak{} kết luận giá trị,\allowbreak{} đạo hàm và phạm vi sai số.
+
+\end{enumerate}
+
+\textbf{Output:} Tập mốc,\allowbreak{} bảng hệ số,\allowbreak{} đa thức,\allowbreak{} giá trị tại điểm tính và đạo hàm được yêu cầu;\allowbreak{} cận sai số chỉ khi có giả thiết bổ sung.
+
+\examplebreak\subsubsection*{2. Newton}
+
+\textbf{Input:} Loại mốc;\allowbreak{} Hướng nội suy;\allowbreak{} Điểm cần tính x;\allowbreak{} Cấp đạo hàm (\allowbreak{}0 =\allowbreak{} giá trị hàm);\allowbreak{} Số mốc dùng (\allowbreak{}để trống: toàn bảng).
+
+Bảng cặp $x,y$ là đầu vào riêng của lượt chạy; giữ ánh xạ nguồn nếu chọn một phần bảng.
+
+\begin{enumerate}
+
+\item Công bố tập mốc thực dùng và ID nguồn;\allowbreak{} kiểm tra x phân biệt,\allowbreak{} điều kiện lưới và số mốc của phương pháp.
+
+\item Đặt biến và gốc: với mốc cách đều dùng t=\allowbreak{}(\allowbreak{}x\ensuremath{-}x\_gốc)/\allowbreak{}h;\allowbreak{} với Lagrange/\allowbreak{}Newton bất kỳ giữ biến x.
+
+\item Lập sai phân;\allowbreak{} lấy đường hệ số Newton tiến. Ghi rõ nguồn của từng hệ số và mẫu chia.
+
+\item Viết đa thức dưới dạng tổng các hệ số nhân cơ sở;\allowbreak{} khai triển từng tích và cộng theo cột khi cần dạng chính tắc.
+
+\item Thế điểm tính,\allowbreak{} cộng đủ các hạng;\allowbreak{} tính đạo hàm trên cùng đa thức. Nếu đổi biến,\allowbreak{} P\textasciicircum{}(\allowbreak{}r)(\allowbreak{}x)=\allowbreak{}Q\textasciicircum{}(\allowbreak{}r)(\allowbreak{}t)/\allowbreak{}h\textasciicircum{}r.
+
+\item Thế lại các mốc và đối chiếu cách đánh giá;\allowbreak{} kết luận giá trị,\allowbreak{} đạo hàm và phạm vi sai số.
+
+\end{enumerate}
+
+\textbf{Output:} Tập mốc,\allowbreak{} bảng hệ số,\allowbreak{} đa thức,\allowbreak{} giá trị tại điểm tính và đạo hàm được yêu cầu;\allowbreak{} cận sai số chỉ khi có giả thiết bổ sung.
+
+\examplebreak\subsubsection*{3. Gauss I}
+
+\textbf{Input:} Điểm cần tính x;\allowbreak{} Cấp đạo hàm (\allowbreak{}0 =\allowbreak{} giá trị hàm);\allowbreak{} Số mốc dùng (\allowbreak{}để trống: toàn bảng).
+
+Bảng cặp $x,y$ là đầu vào riêng của lượt chạy; giữ ánh xạ nguồn nếu chọn một phần bảng.
+
+\begin{enumerate}
+
+\item Công bố tập mốc thực dùng và ID nguồn;\allowbreak{} kiểm tra x phân biệt,\allowbreak{} điều kiện lưới và số mốc của phương pháp.
+
+\item Đặt biến và gốc: với mốc cách đều dùng t=\allowbreak{}(\allowbreak{}x\ensuremath{-}x\_gốc)/\allowbreak{}h;\allowbreak{} với Lagrange/\allowbreak{}Newton bất kỳ giữ biến x.
+
+\item Lập bảng sai phân;\allowbreak{} kết nạp mốc quanh tâm theo thứ tự 0,\allowbreak{} +\allowbreak{}1,\allowbreak{} \ensuremath{-}1,\allowbreak{} +\allowbreak{}2,\allowbreak{} \ensuremath{-}2,\allowbreak{} …. Ghi rõ nguồn của từng hệ số và mẫu chia.
+
+\item Viết đa thức dưới dạng tổng các hệ số nhân cơ sở;\allowbreak{} khai triển từng tích và cộng theo cột khi cần dạng chính tắc.
+
+\item Thế điểm tính,\allowbreak{} cộng đủ các hạng;\allowbreak{} tính đạo hàm trên cùng đa thức. Nếu đổi biến,\allowbreak{} P\textasciicircum{}(\allowbreak{}r)(\allowbreak{}x)=\allowbreak{}Q\textasciicircum{}(\allowbreak{}r)(\allowbreak{}t)/\allowbreak{}h\textasciicircum{}r.
+
+\item Thế lại các mốc và đối chiếu cách đánh giá;\allowbreak{} kết luận giá trị,\allowbreak{} đạo hàm và phạm vi sai số.
+
+\end{enumerate}
+
+\textbf{Output:} Tập mốc,\allowbreak{} bảng hệ số,\allowbreak{} đa thức,\allowbreak{} giá trị tại điểm tính và đạo hàm được yêu cầu;\allowbreak{} cận sai số chỉ khi có giả thiết bổ sung.
+
+\examplebreak\subsubsection*{4. Gauss II}
+
+\textbf{Input:} Điểm cần tính x;\allowbreak{} Cấp đạo hàm (\allowbreak{}0 =\allowbreak{} giá trị hàm);\allowbreak{} Số mốc dùng (\allowbreak{}để trống: toàn bảng).
+
+Bảng cặp $x,y$ là đầu vào riêng của lượt chạy; giữ ánh xạ nguồn nếu chọn một phần bảng.
+
+\begin{enumerate}
+
+\item Công bố tập mốc thực dùng và ID nguồn;\allowbreak{} kiểm tra x phân biệt,\allowbreak{} điều kiện lưới và số mốc của phương pháp.
+
+\item Đặt biến và gốc: với mốc cách đều dùng t=\allowbreak{}(\allowbreak{}x\ensuremath{-}x\_gốc)/\allowbreak{}h;\allowbreak{} với Lagrange/\allowbreak{}Newton bất kỳ giữ biến x.
+
+\item Lập bảng sai phân;\allowbreak{} kết nạp mốc quanh tâm theo thứ tự 0,\allowbreak{} \ensuremath{-}1,\allowbreak{} +\allowbreak{}1,\allowbreak{} \ensuremath{-}2,\allowbreak{} +\allowbreak{}2,\allowbreak{} …. Ghi rõ nguồn của từng hệ số và mẫu chia.
+
+\item Viết đa thức dưới dạng tổng các hệ số nhân cơ sở;\allowbreak{} khai triển từng tích và cộng theo cột khi cần dạng chính tắc.
+
+\item Thế điểm tính,\allowbreak{} cộng đủ các hạng;\allowbreak{} tính đạo hàm trên cùng đa thức. Nếu đổi biến,\allowbreak{} P\textasciicircum{}(\allowbreak{}r)(\allowbreak{}x)=\allowbreak{}Q\textasciicircum{}(\allowbreak{}r)(\allowbreak{}t)/\allowbreak{}h\textasciicircum{}r.
+
+\item Thế lại các mốc và đối chiếu cách đánh giá;\allowbreak{} kết luận giá trị,\allowbreak{} đạo hàm và phạm vi sai số.
+
+\end{enumerate}
+
+\textbf{Output:} Tập mốc,\allowbreak{} bảng hệ số,\allowbreak{} đa thức,\allowbreak{} giá trị tại điểm tính và đạo hàm được yêu cầu;\allowbreak{} cận sai số chỉ khi có giả thiết bổ sung.
+
+\examplebreak\subsubsection*{5. Stirling}
+
+\textbf{Input:} Điểm cần tính x;\allowbreak{} Cấp đạo hàm (\allowbreak{}0 =\allowbreak{} giá trị hàm);\allowbreak{} Số mốc dùng (\allowbreak{}để trống: toàn bảng).
+
+Bảng cặp $x,y$ là đầu vào riêng của lượt chạy; giữ ánh xạ nguồn nếu chọn một phần bảng.
+
+\begin{enumerate}
+
+\item Công bố tập mốc thực dùng và ID nguồn;\allowbreak{} kiểm tra x phân biệt,\allowbreak{} điều kiện lưới và số mốc của phương pháp.
+
+\item Đặt biến và gốc: với mốc cách đều dùng t=\allowbreak{}(\allowbreak{}x\ensuremath{-}x\_gốc)/\allowbreak{}h;\allowbreak{} với Lagrange/\allowbreak{}Newton bất kỳ giữ biến x.
+
+\item Lập bảng sai phân;\allowbreak{} cấp lẻ lấy trung bình hai ô kề tâm,\allowbreak{} cấp chẵn lấy một ô giữa. Ghi rõ nguồn của từng hệ số và mẫu chia.
+
+\item Viết đa thức dưới dạng tổng các hệ số nhân cơ sở;\allowbreak{} khai triển từng tích và cộng theo cột khi cần dạng chính tắc.
+
+\item Thế điểm tính,\allowbreak{} cộng đủ các hạng;\allowbreak{} tính đạo hàm trên cùng đa thức. Nếu đổi biến,\allowbreak{} P\textasciicircum{}(\allowbreak{}r)(\allowbreak{}x)=\allowbreak{}Q\textasciicircum{}(\allowbreak{}r)(\allowbreak{}t)/\allowbreak{}h\textasciicircum{}r.
+
+\item Thế lại các mốc và đối chiếu cách đánh giá;\allowbreak{} kết luận giá trị,\allowbreak{} đạo hàm và phạm vi sai số.
+
+\end{enumerate}
+
+\textbf{Output:} Tập mốc,\allowbreak{} bảng hệ số,\allowbreak{} đa thức,\allowbreak{} giá trị tại điểm tính và đạo hàm được yêu cầu;\allowbreak{} cận sai số chỉ khi có giả thiết bổ sung.
+
+\examplebreak\subsubsection*{6. Bessel}
+
+\textbf{Input:} Điểm cần tính x;\allowbreak{} Cấp đạo hàm (\allowbreak{}0 =\allowbreak{} giá trị hàm);\allowbreak{} Số mốc dùng (\allowbreak{}để trống: toàn bảng).
+
+Bảng cặp $x,y$ là đầu vào riêng của lượt chạy; giữ ánh xạ nguồn nếu chọn một phần bảng.
+
+\begin{enumerate}
+
+\item Công bố tập mốc thực dùng và ID nguồn;\allowbreak{} kiểm tra x phân biệt,\allowbreak{} điều kiện lưới và số mốc của phương pháp.
+
+\item Đặt biến và gốc: với mốc cách đều dùng t=\allowbreak{}(\allowbreak{}x\ensuremath{-}x\_gốc)/\allowbreak{}h;\allowbreak{} với Lagrange/\allowbreak{}Newton bất kỳ giữ biến x.
+
+\item Lập bảng sai phân;\allowbreak{} ghép hai mốc giữa,\allowbreak{} cấp chẵn lấy trung bình hai ô đối xứng. Ghi rõ nguồn của từng hệ số và mẫu chia.
+
+\item Viết đa thức dưới dạng tổng các hệ số nhân cơ sở;\allowbreak{} khai triển từng tích và cộng theo cột khi cần dạng chính tắc.
+
+\item Thế điểm tính,\allowbreak{} cộng đủ các hạng;\allowbreak{} tính đạo hàm trên cùng đa thức. Nếu đổi biến,\allowbreak{} P\textasciicircum{}(\allowbreak{}r)(\allowbreak{}x)=\allowbreak{}Q\textasciicircum{}(\allowbreak{}r)(\allowbreak{}t)/\allowbreak{}h\textasciicircum{}r.
+
+\item Thế lại các mốc và đối chiếu cách đánh giá;\allowbreak{} kết luận giá trị,\allowbreak{} đạo hàm và phạm vi sai số.
+
+\end{enumerate}
+
+\textbf{Output:} Tập mốc,\allowbreak{} bảng hệ số,\allowbreak{} đa thức,\allowbreak{} giá trị tại điểm tính và đạo hàm được yêu cầu;\allowbreak{} cận sai số chỉ khi có giả thiết bổ sung.
+
+\subsection{Spline}
+
+\examplebreak\subsubsection*{7. Tuyến tính}
+
+\textbf{Input:} Điểm cần tính x (\allowbreak{}có thể để trống);\allowbreak{} Cấp đạo hàm (\allowbreak{}0 =\allowbreak{} giá trị);\allowbreak{} Cận tích phân a (\allowbreak{}không bắt buộc);\allowbreak{} Cận tích phân b (\allowbreak{}không bắt buộc);\allowbreak{} Cách giải hệ biên;\allowbreak{} Mức trình bày.
+
+Bảng cặp $x,y$ là đầu vào riêng của lượt chạy; giữ ánh xạ nguồn nếu chọn một phần bảng.
+
+\begin{enumerate}
+
+\item Sắp cặp theo x,\allowbreak{} giữ ID nguồn;\allowbreak{} đặt h\_i=\allowbreak{}x\_(\allowbreak{}i+\allowbreak{}1)\ensuremath{-}x\_i và \ensuremath{\delta}\_i=\allowbreak{}(\allowbreak{}y\_(\allowbreak{}i+\allowbreak{}1)\ensuremath{-}y\_i)/\allowbreak{}h\_i.
+
+\item Công bố bậc spline và điều kiện biên: không cần điều kiện biên bổ sung.
+
+\item Đặt u=\allowbreak{}x\ensuremath{-}x\_i trên từng đoạn;\allowbreak{} lập điều kiện nội suy,\allowbreak{} ghép đạo hàm đến cấp p\ensuremath{-}1 và điều kiện biên.
+
+\item Thực hiện truy hồi hoặc giải đúng hệ đã lập. Với cubic moment,\allowbreak{} tìm M\_i=\allowbreak{}S\ensuremath{\prime\prime}(\allowbreak{}x\_i) rồi khôi phục từng mảnh.
+
+\item Viết S\_i(\allowbreak{}x) cùng miền [x\_i,\allowbreak{}x\_(\allowbreak{}i+\allowbreak{}1)];\allowbreak{} xác định mảnh chứa điểm tính trước khi thế số,\allowbreak{} đạo hàm hoặc tích phân.
+
+\item Kiểm tra giá trị tại mốc,\allowbreak{} độ khớp đạo hàm và điều kiện biên;\allowbreak{} kết luận đúng miền nội suy đã nhập.
+
+\end{enumerate}
+
+\textbf{Output:} Điều kiện biên,\allowbreak{} hệ/\allowbreak{}truy hồi,\allowbreak{} hệ số và công thức mọi mảnh,\allowbreak{} giá trị/\allowbreak{}đạo hàm/\allowbreak{}tích phân được yêu cầu,\allowbreak{} phần dư kiểm tra.
+
+\examplebreak\subsubsection*{8. Bậc hai — biên trái}
+
+\textbf{Input:} Điểm cần tính x (\allowbreak{}có thể để trống);\allowbreak{} Cấp đạo hàm (\allowbreak{}0 =\allowbreak{} giá trị);\allowbreak{} Giá trị đạo hàm tại biên trái;\allowbreak{} Cận tích phân a (\allowbreak{}không bắt buộc);\allowbreak{} Cận tích phân b (\allowbreak{}không bắt buộc);\allowbreak{} Cách giải hệ biên;\allowbreak{} Mức trình bày.
+
+Bảng cặp $x,y$ là đầu vào riêng của lượt chạy; giữ ánh xạ nguồn nếu chọn một phần bảng.
+
+\begin{enumerate}
+
+\item Sắp cặp theo x,\allowbreak{} giữ ID nguồn;\allowbreak{} đặt h\_i=\allowbreak{}x\_(\allowbreak{}i+\allowbreak{}1)\ensuremath{-}x\_i và \ensuremath{\delta}\_i=\allowbreak{}(\allowbreak{}y\_(\allowbreak{}i+\allowbreak{}1)\ensuremath{-}y\_i)/\allowbreak{}h\_i.
+
+\item Công bố bậc spline và điều kiện biên: một đạo hàm đầu trái;\allowbreak{} truyền đạo hàm sang phải.
+
+\item Đặt u=\allowbreak{}x\ensuremath{-}x\_i trên từng đoạn;\allowbreak{} lập điều kiện nội suy,\allowbreak{} ghép đạo hàm đến cấp p\ensuremath{-}1 và điều kiện biên.
+
+\item Thực hiện truy hồi hoặc giải đúng hệ đã lập. Với cubic moment,\allowbreak{} tìm M\_i=\allowbreak{}S\ensuremath{\prime\prime}(\allowbreak{}x\_i) rồi khôi phục từng mảnh.
+
+\item Viết S\_i(\allowbreak{}x) cùng miền [x\_i,\allowbreak{}x\_(\allowbreak{}i+\allowbreak{}1)];\allowbreak{} xác định mảnh chứa điểm tính trước khi thế số,\allowbreak{} đạo hàm hoặc tích phân.
+
+\item Kiểm tra giá trị tại mốc,\allowbreak{} độ khớp đạo hàm và điều kiện biên;\allowbreak{} kết luận đúng miền nội suy đã nhập.
+
+\end{enumerate}
+
+\textbf{Output:} Điều kiện biên,\allowbreak{} hệ/\allowbreak{}truy hồi,\allowbreak{} hệ số và công thức mọi mảnh,\allowbreak{} giá trị/\allowbreak{}đạo hàm/\allowbreak{}tích phân được yêu cầu,\allowbreak{} phần dư kiểm tra.
+
+\examplebreak\subsubsection*{9. Bậc hai — biên phải}
+
+\textbf{Input:} Điểm cần tính x (\allowbreak{}có thể để trống);\allowbreak{} Cấp đạo hàm (\allowbreak{}0 =\allowbreak{} giá trị);\allowbreak{} Giá trị đạo hàm tại biên phải;\allowbreak{} Cận tích phân a (\allowbreak{}không bắt buộc);\allowbreak{} Cận tích phân b (\allowbreak{}không bắt buộc);\allowbreak{} Cách giải hệ biên;\allowbreak{} Mức trình bày.
+
+Bảng cặp $x,y$ là đầu vào riêng của lượt chạy; giữ ánh xạ nguồn nếu chọn một phần bảng.
+
+\begin{enumerate}
+
+\item Sắp cặp theo x,\allowbreak{} giữ ID nguồn;\allowbreak{} đặt h\_i=\allowbreak{}x\_(\allowbreak{}i+\allowbreak{}1)\ensuremath{-}x\_i và \ensuremath{\delta}\_i=\allowbreak{}(\allowbreak{}y\_(\allowbreak{}i+\allowbreak{}1)\ensuremath{-}y\_i)/\allowbreak{}h\_i.
+
+\item Công bố bậc spline và điều kiện biên: một đạo hàm đầu phải;\allowbreak{} truyền đạo hàm sang trái.
+
+\item Đặt u=\allowbreak{}x\ensuremath{-}x\_i trên từng đoạn;\allowbreak{} lập điều kiện nội suy,\allowbreak{} ghép đạo hàm đến cấp p\ensuremath{-}1 và điều kiện biên.
+
+\item Thực hiện truy hồi hoặc giải đúng hệ đã lập. Với cubic moment,\allowbreak{} tìm M\_i=\allowbreak{}S\ensuremath{\prime\prime}(\allowbreak{}x\_i) rồi khôi phục từng mảnh.
+
+\item Viết S\_i(\allowbreak{}x) cùng miền [x\_i,\allowbreak{}x\_(\allowbreak{}i+\allowbreak{}1)];\allowbreak{} xác định mảnh chứa điểm tính trước khi thế số,\allowbreak{} đạo hàm hoặc tích phân.
+
+\item Kiểm tra giá trị tại mốc,\allowbreak{} độ khớp đạo hàm và điều kiện biên;\allowbreak{} kết luận đúng miền nội suy đã nhập.
+
+\end{enumerate}
+
+\textbf{Output:} Điều kiện biên,\allowbreak{} hệ/\allowbreak{}truy hồi,\allowbreak{} hệ số và công thức mọi mảnh,\allowbreak{} giá trị/\allowbreak{}đạo hàm/\allowbreak{}tích phân được yêu cầu,\allowbreak{} phần dư kiểm tra.
+
+\examplebreak\subsubsection*{10. Cubic tự nhiên}
+
+\textbf{Input:} Điểm cần tính x (\allowbreak{}có thể để trống);\allowbreak{} Cấp đạo hàm (\allowbreak{}0 =\allowbreak{} giá trị);\allowbreak{} Cận tích phân a (\allowbreak{}không bắt buộc);\allowbreak{} Cận tích phân b (\allowbreak{}không bắt buộc);\allowbreak{} Cách giải hệ biên;\allowbreak{} Mức trình bày.
+
+Bảng cặp $x,y$ là đầu vào riêng của lượt chạy; giữ ánh xạ nguồn nếu chọn một phần bảng.
+
+\begin{enumerate}
+
+\item Sắp cặp theo x,\allowbreak{} giữ ID nguồn;\allowbreak{} đặt h\_i=\allowbreak{}x\_(\allowbreak{}i+\allowbreak{}1)\ensuremath{-}x\_i và \ensuremath{\delta}\_i=\allowbreak{}(\allowbreak{}y\_(\allowbreak{}i+\allowbreak{}1)\ensuremath{-}y\_i)/\allowbreak{}h\_i.
+
+\item Công bố bậc spline và điều kiện biên: S\ensuremath{\prime\prime}(\allowbreak{}a)=\allowbreak{}S\ensuremath{\prime\prime}(\allowbreak{}b)=\allowbreak{}0.
+
+\item Đặt u=\allowbreak{}x\ensuremath{-}x\_i trên từng đoạn;\allowbreak{} lập điều kiện nội suy,\allowbreak{} ghép đạo hàm đến cấp p\ensuremath{-}1 và điều kiện biên.
+
+\item Thực hiện truy hồi hoặc giải đúng hệ đã lập. Với cubic moment,\allowbreak{} tìm M\_i=\allowbreak{}S\ensuremath{\prime\prime}(\allowbreak{}x\_i) rồi khôi phục từng mảnh.
+
+\item Viết S\_i(\allowbreak{}x) cùng miền [x\_i,\allowbreak{}x\_(\allowbreak{}i+\allowbreak{}1)];\allowbreak{} xác định mảnh chứa điểm tính trước khi thế số,\allowbreak{} đạo hàm hoặc tích phân.
+
+\item Kiểm tra giá trị tại mốc,\allowbreak{} độ khớp đạo hàm và điều kiện biên;\allowbreak{} kết luận đúng miền nội suy đã nhập.
+
+\end{enumerate}
+
+\textbf{Output:} Điều kiện biên,\allowbreak{} hệ/\allowbreak{}truy hồi,\allowbreak{} hệ số và công thức mọi mảnh,\allowbreak{} giá trị/\allowbreak{}đạo hàm/\allowbreak{}tích phân được yêu cầu,\allowbreak{} phần dư kiểm tra.
+
+\examplebreak\subsubsection*{11. Cubic kẹp}
+
+\textbf{Input:} Điểm cần tính x (\allowbreak{}có thể để trống);\allowbreak{} Cấp đạo hàm (\allowbreak{}0 =\allowbreak{} giá trị);\allowbreak{} Giá trị đạo hàm tại biên trái;\allowbreak{} Giá trị đạo hàm tại biên phải;\allowbreak{} Cận tích phân a (\allowbreak{}không bắt buộc);\allowbreak{} Cận tích phân b (\allowbreak{}không bắt buộc);\allowbreak{} Cách giải hệ biên;\allowbreak{} Mức trình bày.
+
+Bảng cặp $x,y$ là đầu vào riêng của lượt chạy; giữ ánh xạ nguồn nếu chọn một phần bảng.
+
+\begin{enumerate}
+
+\item Sắp cặp theo x,\allowbreak{} giữ ID nguồn;\allowbreak{} đặt h\_i=\allowbreak{}x\_(\allowbreak{}i+\allowbreak{}1)\ensuremath{-}x\_i và \ensuremath{\delta}\_i=\allowbreak{}(\allowbreak{}y\_(\allowbreak{}i+\allowbreak{}1)\ensuremath{-}y\_i)/\allowbreak{}h\_i.
+
+\item Công bố bậc spline và điều kiện biên: hai giá trị S\ensuremath{\prime}(\allowbreak{}a),\allowbreak{} S\ensuremath{\prime}(\allowbreak{}b) được nhập.
+
+\item Đặt u=\allowbreak{}x\ensuremath{-}x\_i trên từng đoạn;\allowbreak{} lập điều kiện nội suy,\allowbreak{} ghép đạo hàm đến cấp p\ensuremath{-}1 và điều kiện biên.
+
+\item Thực hiện truy hồi hoặc giải đúng hệ đã lập. Với cubic moment,\allowbreak{} tìm M\_i=\allowbreak{}S\ensuremath{\prime\prime}(\allowbreak{}x\_i) rồi khôi phục từng mảnh.
+
+\item Viết S\_i(\allowbreak{}x) cùng miền [x\_i,\allowbreak{}x\_(\allowbreak{}i+\allowbreak{}1)];\allowbreak{} xác định mảnh chứa điểm tính trước khi thế số,\allowbreak{} đạo hàm hoặc tích phân.
+
+\item Kiểm tra giá trị tại mốc,\allowbreak{} độ khớp đạo hàm và điều kiện biên;\allowbreak{} kết luận đúng miền nội suy đã nhập.
+
+\end{enumerate}
+
+\textbf{Output:} Điều kiện biên,\allowbreak{} hệ/\allowbreak{}truy hồi,\allowbreak{} hệ số và công thức mọi mảnh,\allowbreak{} giá trị/\allowbreak{}đạo hàm/\allowbreak{}tích phân được yêu cầu,\allowbreak{} phần dư kiểm tra.
+
+\examplebreak\subsubsection*{12. Cubic đạo hàm bậc hai}
+
+\textbf{Input:} Điểm cần tính x (\allowbreak{}có thể để trống);\allowbreak{} Cấp đạo hàm (\allowbreak{}0 =\allowbreak{} giá trị);\allowbreak{} Giá trị đạo hàm tại biên trái;\allowbreak{} Giá trị đạo hàm tại biên phải;\allowbreak{} Cận tích phân a (\allowbreak{}không bắt buộc);\allowbreak{} Cận tích phân b (\allowbreak{}không bắt buộc);\allowbreak{} Cách giải hệ biên;\allowbreak{} Mức trình bày.
+
+Bảng cặp $x,y$ là đầu vào riêng của lượt chạy; giữ ánh xạ nguồn nếu chọn một phần bảng.
+
+\begin{enumerate}
+
+\item Sắp cặp theo x,\allowbreak{} giữ ID nguồn;\allowbreak{} đặt h\_i=\allowbreak{}x\_(\allowbreak{}i+\allowbreak{}1)\ensuremath{-}x\_i và \ensuremath{\delta}\_i=\allowbreak{}(\allowbreak{}y\_(\allowbreak{}i+\allowbreak{}1)\ensuremath{-}y\_i)/\allowbreak{}h\_i.
+
+\item Công bố bậc spline và điều kiện biên: hai giá trị S\ensuremath{\prime\prime}(\allowbreak{}a),\allowbreak{} S\ensuremath{\prime\prime}(\allowbreak{}b) được nhập.
+
+\item Đặt u=\allowbreak{}x\ensuremath{-}x\_i trên từng đoạn;\allowbreak{} lập điều kiện nội suy,\allowbreak{} ghép đạo hàm đến cấp p\ensuremath{-}1 và điều kiện biên.
+
+\item Thực hiện truy hồi hoặc giải đúng hệ đã lập. Với cubic moment,\allowbreak{} tìm M\_i=\allowbreak{}S\ensuremath{\prime\prime}(\allowbreak{}x\_i) rồi khôi phục từng mảnh.
+
+\item Viết S\_i(\allowbreak{}x) cùng miền [x\_i,\allowbreak{}x\_(\allowbreak{}i+\allowbreak{}1)];\allowbreak{} xác định mảnh chứa điểm tính trước khi thế số,\allowbreak{} đạo hàm hoặc tích phân.
+
+\item Kiểm tra giá trị tại mốc,\allowbreak{} độ khớp đạo hàm và điều kiện biên;\allowbreak{} kết luận đúng miền nội suy đã nhập.
+
+\end{enumerate}
+
+\textbf{Output:} Điều kiện biên,\allowbreak{} hệ/\allowbreak{}truy hồi,\allowbreak{} hệ số và công thức mọi mảnh,\allowbreak{} giá trị/\allowbreak{}đạo hàm/\allowbreak{}tích phân được yêu cầu,\allowbreak{} phần dư kiểm tra.
+
+\examplebreak\subsubsection*{13. Cubic hỗn hợp}
+
+\textbf{Input:} Điểm cần tính x (\allowbreak{}có thể để trống);\allowbreak{} Cấp đạo hàm (\allowbreak{}0 =\allowbreak{} giá trị);\allowbreak{} Cấp đạo hàm biên trái;\allowbreak{} Cấp đạo hàm biên phải;\allowbreak{} Giá trị tại biên trái;\allowbreak{} Giá trị tại biên phải;\allowbreak{} Cận tích phân a (\allowbreak{}không bắt buộc);\allowbreak{} Cận tích phân b (\allowbreak{}không bắt buộc);\allowbreak{} Cách giải hệ biên;\allowbreak{} Mức trình bày.
+
+Bảng cặp $x,y$ là đầu vào riêng của lượt chạy; giữ ánh xạ nguồn nếu chọn một phần bảng.
+
+\begin{enumerate}
+
+\item Sắp cặp theo x,\allowbreak{} giữ ID nguồn;\allowbreak{} đặt h\_i=\allowbreak{}x\_(\allowbreak{}i+\allowbreak{}1)\ensuremath{-}x\_i và \ensuremath{\delta}\_i=\allowbreak{}(\allowbreak{}y\_(\allowbreak{}i+\allowbreak{}1)\ensuremath{-}y\_i)/\allowbreak{}h\_i.
+
+\item Công bố bậc spline và điều kiện biên: đúng phía,\allowbreak{} cấp và giá trị đạo hàm đã chọn ở mỗi đầu.
+
+\item Đặt u=\allowbreak{}x\ensuremath{-}x\_i trên từng đoạn;\allowbreak{} lập điều kiện nội suy,\allowbreak{} ghép đạo hàm đến cấp p\ensuremath{-}1 và điều kiện biên.
+
+\item Thực hiện truy hồi hoặc giải đúng hệ đã lập. Với cubic moment,\allowbreak{} tìm M\_i=\allowbreak{}S\ensuremath{\prime\prime}(\allowbreak{}x\_i) rồi khôi phục từng mảnh.
+
+\item Viết S\_i(\allowbreak{}x) cùng miền [x\_i,\allowbreak{}x\_(\allowbreak{}i+\allowbreak{}1)];\allowbreak{} xác định mảnh chứa điểm tính trước khi thế số,\allowbreak{} đạo hàm hoặc tích phân.
+
+\item Kiểm tra giá trị tại mốc,\allowbreak{} độ khớp đạo hàm và điều kiện biên;\allowbreak{} kết luận đúng miền nội suy đã nhập.
+
+\end{enumerate}
+
+\textbf{Output:} Điều kiện biên,\allowbreak{} hệ/\allowbreak{}truy hồi,\allowbreak{} hệ số và công thức mọi mảnh,\allowbreak{} giá trị/\allowbreak{}đạo hàm/\allowbreak{}tích phân được yêu cầu,\allowbreak{} phần dư kiểm tra.
+
+\examplebreak\subsubsection*{14. Cubic tuần hoàn}
+
+\textbf{Input:} Điểm cần tính x (\allowbreak{}có thể để trống);\allowbreak{} Cấp đạo hàm (\allowbreak{}0 =\allowbreak{} giá trị);\allowbreak{} Cận tích phân a (\allowbreak{}không bắt buộc);\allowbreak{} Cận tích phân b (\allowbreak{}không bắt buộc);\allowbreak{} Cách giải hệ biên;\allowbreak{} Mức trình bày.
+
+Bảng cặp $x,y$ là đầu vào riêng của lượt chạy; giữ ánh xạ nguồn nếu chọn một phần bảng.
+
+\begin{enumerate}
+
+\item Sắp cặp theo x,\allowbreak{} giữ ID nguồn;\allowbreak{} đặt h\_i=\allowbreak{}x\_(\allowbreak{}i+\allowbreak{}1)\ensuremath{-}x\_i và \ensuremath{\delta}\_i=\allowbreak{}(\allowbreak{}y\_(\allowbreak{}i+\allowbreak{}1)\ensuremath{-}y\_i)/\allowbreak{}h\_i.
+
+\item Công bố bậc spline và điều kiện biên: giá trị hai đầu bằng nhau;\allowbreak{} ghép S\ensuremath{\prime} và S\ensuremath{\prime\prime} ở hai đầu.
+
+\item Đặt u=\allowbreak{}x\ensuremath{-}x\_i trên từng đoạn;\allowbreak{} lập điều kiện nội suy,\allowbreak{} ghép đạo hàm đến cấp p\ensuremath{-}1 và điều kiện biên.
+
+\item Thực hiện truy hồi hoặc giải đúng hệ đã lập. Với cubic moment,\allowbreak{} tìm M\_i=\allowbreak{}S\ensuremath{\prime\prime}(\allowbreak{}x\_i) rồi khôi phục từng mảnh.
+
+\item Viết S\_i(\allowbreak{}x) cùng miền [x\_i,\allowbreak{}x\_(\allowbreak{}i+\allowbreak{}1)];\allowbreak{} xác định mảnh chứa điểm tính trước khi thế số,\allowbreak{} đạo hàm hoặc tích phân.
+
+\item Kiểm tra giá trị tại mốc,\allowbreak{} độ khớp đạo hàm và điều kiện biên;\allowbreak{} kết luận đúng miền nội suy đã nhập.
+
+\end{enumerate}
+
+\textbf{Output:} Điều kiện biên,\allowbreak{} hệ/\allowbreak{}truy hồi,\allowbreak{} hệ số và công thức mọi mảnh,\allowbreak{} giá trị/\allowbreak{}đạo hàm/\allowbreak{}tích phân được yêu cầu,\allowbreak{} phần dư kiểm tra.
+
+\examplebreak\subsubsection*{15. Cubic not-a-knot}
+
+\textbf{Input:} Điểm cần tính x (\allowbreak{}có thể để trống);\allowbreak{} Cấp đạo hàm (\allowbreak{}0 =\allowbreak{} giá trị);\allowbreak{} Cận tích phân a (\allowbreak{}không bắt buộc);\allowbreak{} Cận tích phân b (\allowbreak{}không bắt buộc);\allowbreak{} Cách giải hệ biên;\allowbreak{} Mức trình bày.
+
+Bảng cặp $x,y$ là đầu vào riêng của lượt chạy; giữ ánh xạ nguồn nếu chọn một phần bảng.
+
+\begin{enumerate}
+
+\item Sắp cặp theo x,\allowbreak{} giữ ID nguồn;\allowbreak{} đặt h\_i=\allowbreak{}x\_(\allowbreak{}i+\allowbreak{}1)\ensuremath{-}x\_i và \ensuremath{\delta}\_i=\allowbreak{}(\allowbreak{}y\_(\allowbreak{}i+\allowbreak{}1)\ensuremath{-}y\_i)/\allowbreak{}h\_i.
+
+\item Công bố bậc spline và điều kiện biên: đạo hàm bậc ba liên tục tại mốc thứ hai và áp chót;\allowbreak{} xử lý riêng bảng ít mốc.
+
+\item Đặt u=\allowbreak{}x\ensuremath{-}x\_i trên từng đoạn;\allowbreak{} lập điều kiện nội suy,\allowbreak{} ghép đạo hàm đến cấp p\ensuremath{-}1 và điều kiện biên.
+
+\item Thực hiện truy hồi hoặc giải đúng hệ đã lập. Với cubic moment,\allowbreak{} tìm M\_i=\allowbreak{}S\ensuremath{\prime\prime}(\allowbreak{}x\_i) rồi khôi phục từng mảnh.
+
+\item Viết S\_i(\allowbreak{}x) cùng miền [x\_i,\allowbreak{}x\_(\allowbreak{}i+\allowbreak{}1)];\allowbreak{} xác định mảnh chứa điểm tính trước khi thế số,\allowbreak{} đạo hàm hoặc tích phân.
+
+\item Kiểm tra giá trị tại mốc,\allowbreak{} độ khớp đạo hàm và điều kiện biên;\allowbreak{} kết luận đúng miền nội suy đã nhập.
+
+\end{enumerate}
+
+\textbf{Output:} Điều kiện biên,\allowbreak{} hệ/\allowbreak{}truy hồi,\allowbreak{} hệ số và công thức mọi mảnh,\allowbreak{} giá trị/\allowbreak{}đạo hàm/\allowbreak{}tích phân được yêu cầu,\allowbreak{} phần dư kiểm tra.
+
+\examplebreak\subsubsection*{16. Bậc 4 — đạo hàm trái}
+
+\textbf{Input:} Điểm cần tính x (\allowbreak{}có thể để trống);\allowbreak{} Cấp đạo hàm (\allowbreak{}0 =\allowbreak{} giá trị);\allowbreak{} S\ensuremath{\prime} S\ensuremath{\prime}\ensuremath{\prime} S\ensuremath{\prime}\ensuremath{\prime}\ensuremath{\prime} ở đầu trái;\allowbreak{} Cận tích phân a (\allowbreak{}không bắt buộc);\allowbreak{} Cận tích phân b (\allowbreak{}không bắt buộc);\allowbreak{} Cách giải hệ biên;\allowbreak{} Mức trình bày.
+
+Bảng cặp $x,y$ là đầu vào riêng của lượt chạy; giữ ánh xạ nguồn nếu chọn một phần bảng.
+
+\begin{enumerate}
+
+\item Sắp cặp theo x,\allowbreak{} giữ ID nguồn;\allowbreak{} đặt h\_i=\allowbreak{}x\_(\allowbreak{}i+\allowbreak{}1)\ensuremath{-}x\_i và \ensuremath{\delta}\_i=\allowbreak{}(\allowbreak{}y\_(\allowbreak{}i+\allowbreak{}1)\ensuremath{-}y\_i)/\allowbreak{}h\_i.
+
+\item Công bố bậc spline và điều kiện biên: ba giá trị S\ensuremath{\prime},\allowbreak{} S\ensuremath{\prime\prime},\allowbreak{} S\ensuremath{\prime\prime\prime} ở đầu trái;\allowbreak{} truyền các đạo hàm sang phải.
+
+\item Đặt u=\allowbreak{}x\ensuremath{-}x\_i trên từng đoạn;\allowbreak{} lập điều kiện nội suy,\allowbreak{} ghép đạo hàm đến cấp p\ensuremath{-}1 và điều kiện biên.
+
+\item Thực hiện truy hồi hoặc giải đúng hệ đã lập. Với cubic moment,\allowbreak{} tìm M\_i=\allowbreak{}S\ensuremath{\prime\prime}(\allowbreak{}x\_i) rồi khôi phục từng mảnh.
+
+\item Viết S\_i(\allowbreak{}x) cùng miền [x\_i,\allowbreak{}x\_(\allowbreak{}i+\allowbreak{}1)];\allowbreak{} xác định mảnh chứa điểm tính trước khi thế số,\allowbreak{} đạo hàm hoặc tích phân.
+
+\item Kiểm tra giá trị tại mốc,\allowbreak{} độ khớp đạo hàm và điều kiện biên;\allowbreak{} kết luận đúng miền nội suy đã nhập.
+
+\end{enumerate}
+
+\textbf{Output:} Điều kiện biên,\allowbreak{} hệ/\allowbreak{}truy hồi,\allowbreak{} hệ số và công thức mọi mảnh,\allowbreak{} giá trị/\allowbreak{}đạo hàm/\allowbreak{}tích phân được yêu cầu,\allowbreak{} phần dư kiểm tra.
+
+\examplebreak\subsubsection*{17. Biên tổng quát}
+
+\textbf{Input:} Điểm cần tính x (\allowbreak{}có thể để trống);\allowbreak{} Cấp đạo hàm (\allowbreak{}0 =\allowbreak{} giá trị);\allowbreak{} Bậc spline;\allowbreak{} Điều kiện biên (\allowbreak{}JSON);\allowbreak{} Cận tích phân a (\allowbreak{}không bắt buộc);\allowbreak{} Cận tích phân b (\allowbreak{}không bắt buộc);\allowbreak{} Cách giải hệ biên;\allowbreak{} Mức trình bày.
+
+Bảng cặp $x,y$ là đầu vào riêng của lượt chạy; giữ ánh xạ nguồn nếu chọn một phần bảng.
+
+\begin{enumerate}
+
+\item Sắp cặp theo x,\allowbreak{} giữ ID nguồn;\allowbreak{} đặt h\_i=\allowbreak{}x\_(\allowbreak{}i+\allowbreak{}1)\ensuremath{-}x\_i và \ensuremath{\delta}\_i=\allowbreak{}(\allowbreak{}y\_(\allowbreak{}i+\allowbreak{}1)\ensuremath{-}y\_i)/\allowbreak{}h\_i.
+
+\item Công bố bậc spline và điều kiện biên: p\ensuremath{-}1 điều kiện độc lập đúng phía và cấp trong JSON;\allowbreak{} không tự thêm biên tự nhiên.
+
+\item Đặt u=\allowbreak{}x\ensuremath{-}x\_i trên từng đoạn;\allowbreak{} lập điều kiện nội suy,\allowbreak{} ghép đạo hàm đến cấp p\ensuremath{-}1 và điều kiện biên.
+
+\item Thực hiện truy hồi hoặc giải đúng hệ đã lập. Với cubic moment,\allowbreak{} tìm M\_i=\allowbreak{}S\ensuremath{\prime\prime}(\allowbreak{}x\_i) rồi khôi phục từng mảnh.
+
+\item Viết S\_i(\allowbreak{}x) cùng miền [x\_i,\allowbreak{}x\_(\allowbreak{}i+\allowbreak{}1)];\allowbreak{} xác định mảnh chứa điểm tính trước khi thế số,\allowbreak{} đạo hàm hoặc tích phân.
+
+\item Kiểm tra giá trị tại mốc,\allowbreak{} độ khớp đạo hàm và điều kiện biên;\allowbreak{} kết luận đúng miền nội suy đã nhập.
+
+\end{enumerate}
+
+\textbf{Output:} Điều kiện biên,\allowbreak{} hệ/\allowbreak{}truy hồi,\allowbreak{} hệ số và công thức mọi mảnh,\allowbreak{} giá trị/\allowbreak{}đạo hàm/\allowbreak{}tích phân được yêu cầu,\allowbreak{} phần dư kiểm tra.
+
+\subsection{Bình phương tối thiểu}
+
+\examplebreak\subsubsection*{18. Tuyến tính theo cơ sở}
+
+\textbf{Input:} Các hàm cơ sở (\allowbreak{}ngăn bằng dấu ;\allowbreak{});\allowbreak{} Trọng số w\_i (\allowbreak{}để trống: tất cả bằng 1);\allowbreak{} Cách giải bình phương tối thiểu;\allowbreak{} Quy tắc khi thiếu hạng;\allowbreak{} Điểm dự đoán x (\allowbreak{}không bắt buộc);\allowbreak{} Mức trình bày.
+
+Bảng cặp $x,y$ là đầu vào riêng của lượt chạy; giữ ánh xạ nguồn nếu chọn một phần bảng.
+
+\begin{enumerate}
+
+\item Công bố N quan sát,\allowbreak{} trọng số và mô hình. Kiểm tra miền,\allowbreak{} dấu và hạng;\allowbreak{} không tự lọc dòng để ép phép biến đổi hợp lệ.
+
+\item Viết phép biến đổi và ánh xạ tham số: z=\allowbreak{}y,\allowbreak{} g(\allowbreak{}x)=\allowbreak{}c\_0\ensuremath{\varphi}\_0(\allowbreak{}x)+\allowbreak{}…+\allowbreak{}c\_(\allowbreak{}p\ensuremath{-}1)\ensuremath{\varphi}\_(\allowbreak{}p\ensuremath{-}1)(\allowbreak{}x);\allowbreak{} các cơ sở lấy đúng ô nhập.
+
+\item Lập \ensuremath{\Phi}\_ij=\allowbreak{}\ensuremath{\varphi}\_j(\allowbreak{}x\_i),\allowbreak{} bảng các tích và các tổng;\allowbreak{} viết J=\allowbreak{}\ensuremath{\sum}w\_i(\allowbreak{}\ensuremath{\sum}c\_j\ensuremath{\varphi}\_j(\allowbreak{}x\_i)\ensuremath{-}z\_i)².
+
+\item Từ \ensuremath{\partial}J/\allowbreak{}\ensuremath{\partial}c\_j=\allowbreak{}0 suy ra (\allowbreak{}\ensuremath{\Phi}\ensuremath{{}^T}W\ensuremath{\Phi})c=\allowbreak{}\ensuremath{\Phi}\ensuremath{{}^T}Wz. Trình bày hệ tổng quát rồi hệ đã thế số.
+
+\item Tính nghiệm bằng bộ giải đã chọn: Gauss trên hệ chuẩn,\allowbreak{} QR trên thiết kế có trọng số hoặc SVD. Nhật ký phải đúng bộ giải.
+
+\item Khôi phục tham số và hàm g theo biến gốc;\allowbreak{} lập r\_i=\allowbreak{}y\_i\ensuremath{-}g(\allowbreak{}x\_i),\allowbreak{} tính SSE,\allowbreak{} RMSE và mục tiêu trên thang khớp riêng biệt.
+
+\end{enumerate}
+
+\textbf{Output:} Hàm g(\allowbreak{}x),\allowbreak{} tham số gốc,\allowbreak{} bảng thiết kế/\allowbreak{}tổng,\allowbreak{} hệ và nhật ký bộ giải,\allowbreak{} phần dư và sai số có định nghĩa rõ.
+
+\examplebreak\subsubsection*{19. Lũy thừa}
+
+\textbf{Input:} Trọng số w\_i (\allowbreak{}để trống: tất cả bằng 1);\allowbreak{} Cách giải bình phương tối thiểu;\allowbreak{} Quy tắc khi thiếu hạng;\allowbreak{} Điểm dự đoán x (\allowbreak{}không bắt buộc);\allowbreak{} Mức trình bày.
+
+Bảng cặp $x,y$ là đầu vào riêng của lượt chạy; giữ ánh xạ nguồn nếu chọn một phần bảng.
+
+\begin{enumerate}
+
+\item Công bố N quan sát,\allowbreak{} trọng số và mô hình. Kiểm tra miền,\allowbreak{} dấu và hạng;\allowbreak{} không tự lọc dòng để ép phép biến đổi hợp lệ.
+
+\item Viết phép biến đổi và ánh xạ tham số: z=\allowbreak{}ln|y|,\allowbreak{} u=\allowbreak{}ln x,\allowbreak{} z\ensuremath{\approx}c\_0+\allowbreak{}c\_1u;\allowbreak{} khôi phục A=\allowbreak{}s·exp(\allowbreak{}c\_0),\allowbreak{} b=\allowbreak{}c\_1.
+
+\item Lập \ensuremath{\Phi}\_ij=\allowbreak{}\ensuremath{\varphi}\_j(\allowbreak{}x\_i),\allowbreak{} bảng các tích và các tổng;\allowbreak{} viết J=\allowbreak{}\ensuremath{\sum}w\_i(\allowbreak{}\ensuremath{\sum}c\_j\ensuremath{\varphi}\_j(\allowbreak{}x\_i)\ensuremath{-}z\_i)².
+
+\item Từ \ensuremath{\partial}J/\allowbreak{}\ensuremath{\partial}c\_j=\allowbreak{}0 suy ra (\allowbreak{}\ensuremath{\Phi}\ensuremath{{}^T}W\ensuremath{\Phi})c=\allowbreak{}\ensuremath{\Phi}\ensuremath{{}^T}Wz. Trình bày hệ tổng quát rồi hệ đã thế số.
+
+\item Tính nghiệm bằng bộ giải đã chọn: Gauss trên hệ chuẩn,\allowbreak{} QR trên thiết kế có trọng số hoặc SVD. Nhật ký phải đúng bộ giải.
+
+\item Khôi phục tham số và hàm g theo biến gốc;\allowbreak{} lập r\_i=\allowbreak{}y\_i\ensuremath{-}g(\allowbreak{}x\_i),\allowbreak{} tính SSE,\allowbreak{} RMSE và mục tiêu trên thang khớp riêng biệt.
+
+\end{enumerate}
+
+\textbf{Output:} Hàm g(\allowbreak{}x),\allowbreak{} tham số gốc,\allowbreak{} bảng thiết kế/\allowbreak{}tổng,\allowbreak{} hệ và nhật ký bộ giải,\allowbreak{} phần dư và sai số có định nghĩa rõ.
+
+\examplebreak\subsubsection*{20. Hàm mũ}
+
+\textbf{Input:} Các hàm cơ sở (\allowbreak{}ngăn bằng dấu ;\allowbreak{});\allowbreak{} Trọng số w\_i (\allowbreak{}để trống: tất cả bằng 1);\allowbreak{} Cách giải bình phương tối thiểu;\allowbreak{} Quy tắc khi thiếu hạng;\allowbreak{} Điểm dự đoán x (\allowbreak{}không bắt buộc);\allowbreak{} Mức trình bày.
+
+Bảng cặp $x,y$ là đầu vào riêng của lượt chạy; giữ ánh xạ nguồn nếu chọn một phần bảng.
+
+\begin{enumerate}
+
+\item Công bố N quan sát,\allowbreak{} trọng số và mô hình. Kiểm tra miền,\allowbreak{} dấu và hạng;\allowbreak{} không tự lọc dòng để ép phép biến đổi hợp lệ.
+
+\item Viết phép biến đổi và ánh xạ tham số: z=\allowbreak{}ln|y|,\allowbreak{} z\ensuremath{\approx}c\_0+\allowbreak{}c\_1\ensuremath{\varphi}\_1(\allowbreak{}x)+\allowbreak{}…;\allowbreak{} khôi phục A=\allowbreak{}s·exp(\allowbreak{}c\_0).
+
+\item Lập \ensuremath{\Phi}\_ij=\allowbreak{}\ensuremath{\varphi}\_j(\allowbreak{}x\_i),\allowbreak{} bảng các tích và các tổng;\allowbreak{} viết J=\allowbreak{}\ensuremath{\sum}w\_i(\allowbreak{}\ensuremath{\sum}c\_j\ensuremath{\varphi}\_j(\allowbreak{}x\_i)\ensuremath{-}z\_i)².
+
+\item Từ \ensuremath{\partial}J/\allowbreak{}\ensuremath{\partial}c\_j=\allowbreak{}0 suy ra (\allowbreak{}\ensuremath{\Phi}\ensuremath{{}^T}W\ensuremath{\Phi})c=\allowbreak{}\ensuremath{\Phi}\ensuremath{{}^T}Wz. Trình bày hệ tổng quát rồi hệ đã thế số.
+
+\item Tính nghiệm bằng bộ giải đã chọn: Gauss trên hệ chuẩn,\allowbreak{} QR trên thiết kế có trọng số hoặc SVD. Nhật ký phải đúng bộ giải.
+
+\item Khôi phục tham số và hàm g theo biến gốc;\allowbreak{} lập r\_i=\allowbreak{}y\_i\ensuremath{-}g(\allowbreak{}x\_i),\allowbreak{} tính SSE,\allowbreak{} RMSE và mục tiêu trên thang khớp riêng biệt.
+
+\end{enumerate}
+
+\textbf{Output:} Hàm g(\allowbreak{}x),\allowbreak{} tham số gốc,\allowbreak{} bảng thiết kế/\allowbreak{}tổng,\allowbreak{} hệ và nhật ký bộ giải,\allowbreak{} phần dư và sai số có định nghĩa rõ.
+
+\examplebreak\subsubsection*{21. Lũy thừa — SSE thang y}
+
+\textbf{Input:} Tham số đầu A b1 b2... (\allowbreak{}để trống: từ log);\allowbreak{} Ngưỡng dừng phi tuyến;\allowbreak{} Số vòng tối đa;\allowbreak{} Trọng số w\_i (\allowbreak{}để trống: tất cả bằng 1);\allowbreak{} Bộ giải phi tuyến;\allowbreak{} Điểm dự đoán x (\allowbreak{}không bắt buộc);\allowbreak{} Mức trình bày.
+
+Bảng cặp $x,y$ là đầu vào riêng của lượt chạy; giữ ánh xạ nguồn nếu chọn một phần bảng.
+
+\begin{enumerate}
+
+\item Công bố N quan sát,\allowbreak{} trọng số và mô hình. Kiểm tra miền,\allowbreak{} dấu và hạng;\allowbreak{} không tự lọc dòng để ép phép biến đổi hợp lệ.
+
+\item Viết phép biến đổi và ánh xạ tham số: g(\allowbreak{}x)=\allowbreak{}A·exp(\allowbreak{}b ln x)=\allowbreak{}A x\textasciicircum{}b;\allowbreak{} tối thiểu SSE trên y bằng LM.
+
+\item Công bố tham số đầu. Mỗi bước thử lập dự đoán,\allowbreak{} phần dư,\allowbreak{} Jacobian và hệ tăng cường LM với damping \ensuremath{\lambda}.
+
+\item Ghi tham số cũ/\allowbreak{}đề xuất,\allowbreak{} SSE trước/\allowbreak{}sau,\allowbreak{} \ensuremath{\lambda} và quyết định nhận hoặc từ chối. Giữ cả các bước thử bị từ chối.
+
+\item Kiểm tra điều kiện dừng thực tế;\allowbreak{} kết luận phụ thuộc điểm đầu,\allowbreak{} không suy ra cực tiểu toàn cục.
+
+\item Khôi phục tham số và hàm g theo biến gốc;\allowbreak{} lập r\_i=\allowbreak{}y\_i\ensuremath{-}g(\allowbreak{}x\_i),\allowbreak{} tính SSE,\allowbreak{} RMSE và mục tiêu trên thang khớp riêng biệt.
+
+\end{enumerate}
+
+\textbf{Output:} Hàm g(\allowbreak{}x),\allowbreak{} tham số gốc,\allowbreak{} bảng thiết kế/\allowbreak{}tổng,\allowbreak{} hệ và nhật ký bộ giải,\allowbreak{} phần dư và sai số có định nghĩa rõ.
+
+\examplebreak\subsubsection*{22. Hàm mũ — SSE thang y}
+
+\textbf{Input:} Các hàm cơ sở (\allowbreak{}ngăn bằng dấu ;\allowbreak{});\allowbreak{} Tham số đầu A b1 b2... (\allowbreak{}để trống: từ log);\allowbreak{} Ngưỡng dừng phi tuyến;\allowbreak{} Số vòng tối đa;\allowbreak{} Trọng số w\_i (\allowbreak{}để trống: tất cả bằng 1);\allowbreak{} Bộ giải phi tuyến;\allowbreak{} Điểm dự đoán x (\allowbreak{}không bắt buộc);\allowbreak{} Mức trình bày.
+
+Bảng cặp $x,y$ là đầu vào riêng của lượt chạy; giữ ánh xạ nguồn nếu chọn một phần bảng.
+
+\begin{enumerate}
+
+\item Công bố N quan sát,\allowbreak{} trọng số và mô hình. Kiểm tra miền,\allowbreak{} dấu và hạng;\allowbreak{} không tự lọc dòng để ép phép biến đổi hợp lệ.
+
+\item Viết phép biến đổi và ánh xạ tham số: g(\allowbreak{}x)=\allowbreak{}A·exp(\allowbreak{}b\_1\ensuremath{\varphi}\_1(\allowbreak{}x)+\allowbreak{}…);\allowbreak{} tối thiểu SSE trên y bằng LM.
+
+\item Công bố tham số đầu. Mỗi bước thử lập dự đoán,\allowbreak{} phần dư,\allowbreak{} Jacobian và hệ tăng cường LM với damping \ensuremath{\lambda}.
+
+\item Ghi tham số cũ/\allowbreak{}đề xuất,\allowbreak{} SSE trước/\allowbreak{}sau,\allowbreak{} \ensuremath{\lambda} và quyết định nhận hoặc từ chối. Giữ cả các bước thử bị từ chối.
+
+\item Kiểm tra điều kiện dừng thực tế;\allowbreak{} kết luận phụ thuộc điểm đầu,\allowbreak{} không suy ra cực tiểu toàn cục.
+
+\item Khôi phục tham số và hàm g theo biến gốc;\allowbreak{} lập r\_i=\allowbreak{}y\_i\ensuremath{-}g(\allowbreak{}x\_i),\allowbreak{} tính SSE,\allowbreak{} RMSE và mục tiêu trên thang khớp riêng biệt.
+
+\end{enumerate}
+
+\textbf{Output:} Hàm g(\allowbreak{}x),\allowbreak{} tham số gốc,\allowbreak{} bảng thiết kế/\allowbreak{}tổng,\allowbreak{} hệ và nhật ký bộ giải,\allowbreak{} phần dư và sai số có định nghĩa rõ.
+
+\examplebreak\subsubsection*{23. Log của tổ hợp cơ sở}
+
+\textbf{Input:} Các hàm cơ sở (\allowbreak{}ngăn bằng dấu ;\allowbreak{});\allowbreak{} Trọng số w\_i (\allowbreak{}để trống: tất cả bằng 1);\allowbreak{} Cách giải bình phương tối thiểu;\allowbreak{} Quy tắc khi thiếu hạng;\allowbreak{} Điểm dự đoán x (\allowbreak{}không bắt buộc);\allowbreak{} Mức trình bày.
+
+Bảng cặp $x,y$ là đầu vào riêng của lượt chạy; giữ ánh xạ nguồn nếu chọn một phần bảng.
+
+\begin{enumerate}
+
+\item Công bố N quan sát,\allowbreak{} trọng số và mô hình. Kiểm tra miền,\allowbreak{} dấu và hạng;\allowbreak{} không tự lọc dòng để ép phép biến đổi hợp lệ.
+
+\item Viết phép biến đổi và ánh xạ tham số: z=\allowbreak{}exp(\allowbreak{}y),\allowbreak{} z\ensuremath{\approx}c\_0\ensuremath{\varphi}\_0(\allowbreak{}x)+\allowbreak{}…;\allowbreak{} khôi phục g(\allowbreak{}x)=\allowbreak{}ln(\allowbreak{}c\_0\ensuremath{\varphi}\_0(\allowbreak{}x)+\allowbreak{}…).
+
+\item Lập \ensuremath{\Phi}\_ij=\allowbreak{}\ensuremath{\varphi}\_j(\allowbreak{}x\_i),\allowbreak{} bảng các tích và các tổng;\allowbreak{} viết J=\allowbreak{}\ensuremath{\sum}w\_i(\allowbreak{}\ensuremath{\sum}c\_j\ensuremath{\varphi}\_j(\allowbreak{}x\_i)\ensuremath{-}z\_i)².
+
+\item Từ \ensuremath{\partial}J/\allowbreak{}\ensuremath{\partial}c\_j=\allowbreak{}0 suy ra (\allowbreak{}\ensuremath{\Phi}\ensuremath{{}^T}W\ensuremath{\Phi})c=\allowbreak{}\ensuremath{\Phi}\ensuremath{{}^T}Wz. Trình bày hệ tổng quát rồi hệ đã thế số.
+
+\item Tính nghiệm bằng bộ giải đã chọn: Gauss trên hệ chuẩn,\allowbreak{} QR trên thiết kế có trọng số hoặc SVD. Nhật ký phải đúng bộ giải.
+
+\item Khôi phục tham số và hàm g theo biến gốc;\allowbreak{} lập r\_i=\allowbreak{}y\_i\ensuremath{-}g(\allowbreak{}x\_i),\allowbreak{} tính SSE,\allowbreak{} RMSE và mục tiêu trên thang khớp riêng biệt.
+
+\end{enumerate}
+
+\textbf{Output:} Hàm g(\allowbreak{}x),\allowbreak{} tham số gốc,\allowbreak{} bảng thiết kế/\allowbreak{}tổng,\allowbreak{} hệ và nhật ký bộ giải,\allowbreak{} phần dư và sai số có định nghĩa rõ.
+
+\examplebreak\subsubsection*{24. 1/\allowbreak{}(\allowbreak{}a+\allowbreak{}b*x)}
+
+\textbf{Input:} Trọng số w\_i (\allowbreak{}để trống: tất cả bằng 1);\allowbreak{} Cách giải bình phương tối thiểu;\allowbreak{} Quy tắc khi thiếu hạng;\allowbreak{} Điểm dự đoán x (\allowbreak{}không bắt buộc);\allowbreak{} Mức trình bày.
+
+Bảng cặp $x,y$ là đầu vào riêng của lượt chạy; giữ ánh xạ nguồn nếu chọn một phần bảng.
+
+\begin{enumerate}
+
+\item Công bố N quan sát,\allowbreak{} trọng số và mô hình. Kiểm tra miền,\allowbreak{} dấu và hạng;\allowbreak{} không tự lọc dòng để ép phép biến đổi hợp lệ.
+
+\item Viết phép biến đổi và ánh xạ tham số: z=\allowbreak{}1/\allowbreak{}y,\allowbreak{} z\ensuremath{\approx}a+\allowbreak{}bx;\allowbreak{} khôi phục g(\allowbreak{}x)=\allowbreak{}1/\allowbreak{}(\allowbreak{}a+\allowbreak{}bx).
+
+\item Lập \ensuremath{\Phi}\_ij=\allowbreak{}\ensuremath{\varphi}\_j(\allowbreak{}x\_i),\allowbreak{} bảng các tích và các tổng;\allowbreak{} viết J=\allowbreak{}\ensuremath{\sum}w\_i(\allowbreak{}\ensuremath{\sum}c\_j\ensuremath{\varphi}\_j(\allowbreak{}x\_i)\ensuremath{-}z\_i)².
+
+\item Từ \ensuremath{\partial}J/\allowbreak{}\ensuremath{\partial}c\_j=\allowbreak{}0 suy ra (\allowbreak{}\ensuremath{\Phi}\ensuremath{{}^T}W\ensuremath{\Phi})c=\allowbreak{}\ensuremath{\Phi}\ensuremath{{}^T}Wz. Trình bày hệ tổng quát rồi hệ đã thế số.
+
+\item Tính nghiệm bằng bộ giải đã chọn: Gauss trên hệ chuẩn,\allowbreak{} QR trên thiết kế có trọng số hoặc SVD. Nhật ký phải đúng bộ giải.
+
+\item Khôi phục tham số và hàm g theo biến gốc;\allowbreak{} lập r\_i=\allowbreak{}y\_i\ensuremath{-}g(\allowbreak{}x\_i),\allowbreak{} tính SSE,\allowbreak{} RMSE và mục tiêu trên thang khớp riêng biệt.
+
+\end{enumerate}
+
+\textbf{Output:} Hàm g(\allowbreak{}x),\allowbreak{} tham số gốc,\allowbreak{} bảng thiết kế/\allowbreak{}tổng,\allowbreak{} hệ và nhật ký bộ giải,\allowbreak{} phần dư và sai số có định nghĩa rõ.
+
+\examplebreak\subsubsection*{25. x/\allowbreak{}(\allowbreak{}a+\allowbreak{}b*x)}
+
+\textbf{Input:} Trọng số w\_i (\allowbreak{}để trống: tất cả bằng 1);\allowbreak{} Cách giải bình phương tối thiểu;\allowbreak{} Quy tắc khi thiếu hạng;\allowbreak{} Điểm dự đoán x (\allowbreak{}không bắt buộc);\allowbreak{} Mức trình bày.
+
+Bảng cặp $x,y$ là đầu vào riêng của lượt chạy; giữ ánh xạ nguồn nếu chọn một phần bảng.
+
+\begin{enumerate}
+
+\item Công bố N quan sát,\allowbreak{} trọng số và mô hình. Kiểm tra miền,\allowbreak{} dấu và hạng;\allowbreak{} không tự lọc dòng để ép phép biến đổi hợp lệ.
+
+\item Viết phép biến đổi và ánh xạ tham số: z=\allowbreak{}1/\allowbreak{}y,\allowbreak{} u=\allowbreak{}1/\allowbreak{}x,\allowbreak{} z\ensuremath{\approx}c\_0+\allowbreak{}c\_1u;\allowbreak{} khôi phục a=\allowbreak{}c\_1,\allowbreak{} b=\allowbreak{}c\_0.
+
+\item Lập \ensuremath{\Phi}\_ij=\allowbreak{}\ensuremath{\varphi}\_j(\allowbreak{}x\_i),\allowbreak{} bảng các tích và các tổng;\allowbreak{} viết J=\allowbreak{}\ensuremath{\sum}w\_i(\allowbreak{}\ensuremath{\sum}c\_j\ensuremath{\varphi}\_j(\allowbreak{}x\_i)\ensuremath{-}z\_i)².
+
+\item Từ \ensuremath{\partial}J/\allowbreak{}\ensuremath{\partial}c\_j=\allowbreak{}0 suy ra (\allowbreak{}\ensuremath{\Phi}\ensuremath{{}^T}W\ensuremath{\Phi})c=\allowbreak{}\ensuremath{\Phi}\ensuremath{{}^T}Wz. Trình bày hệ tổng quát rồi hệ đã thế số.
+
+\item Tính nghiệm bằng bộ giải đã chọn: Gauss trên hệ chuẩn,\allowbreak{} QR trên thiết kế có trọng số hoặc SVD. Nhật ký phải đúng bộ giải.
+
+\item Khôi phục tham số và hàm g theo biến gốc;\allowbreak{} lập r\_i=\allowbreak{}y\_i\ensuremath{-}g(\allowbreak{}x\_i),\allowbreak{} tính SSE,\allowbreak{} RMSE và mục tiêu trên thang khớp riêng biệt.
+
+\end{enumerate}
+
+\textbf{Output:} Hàm g(\allowbreak{}x),\allowbreak{} tham số gốc,\allowbreak{} bảng thiết kế/\allowbreak{}tổng,\allowbreak{} hệ và nhật ký bộ giải,\allowbreak{} phần dư và sai số có định nghĩa rõ.
+
+\examplebreak\subsubsection*{26. a+\allowbreak{}b*ln(\allowbreak{}x)}
+
+\textbf{Input:} Trọng số w\_i (\allowbreak{}để trống: tất cả bằng 1);\allowbreak{} Cách giải bình phương tối thiểu;\allowbreak{} Quy tắc khi thiếu hạng;\allowbreak{} Điểm dự đoán x (\allowbreak{}không bắt buộc);\allowbreak{} Mức trình bày.
+
+Bảng cặp $x,y$ là đầu vào riêng của lượt chạy; giữ ánh xạ nguồn nếu chọn một phần bảng.
+
+\begin{enumerate}
+
+\item Công bố N quan sát,\allowbreak{} trọng số và mô hình. Kiểm tra miền,\allowbreak{} dấu và hạng;\allowbreak{} không tự lọc dòng để ép phép biến đổi hợp lệ.
+
+\item Viết phép biến đổi và ánh xạ tham số: z=\allowbreak{}y,\allowbreak{} u=\allowbreak{}ln x,\allowbreak{} z\ensuremath{\approx}a+\allowbreak{}bu;\allowbreak{} không đổi thang tung độ.
+
+\item Lập \ensuremath{\Phi}\_ij=\allowbreak{}\ensuremath{\varphi}\_j(\allowbreak{}x\_i),\allowbreak{} bảng các tích và các tổng;\allowbreak{} viết J=\allowbreak{}\ensuremath{\sum}w\_i(\allowbreak{}\ensuremath{\sum}c\_j\ensuremath{\varphi}\_j(\allowbreak{}x\_i)\ensuremath{-}z\_i)².
+
+\item Từ \ensuremath{\partial}J/\allowbreak{}\ensuremath{\partial}c\_j=\allowbreak{}0 suy ra (\allowbreak{}\ensuremath{\Phi}\ensuremath{{}^T}W\ensuremath{\Phi})c=\allowbreak{}\ensuremath{\Phi}\ensuremath{{}^T}Wz. Trình bày hệ tổng quát rồi hệ đã thế số.
+
+\item Tính nghiệm bằng bộ giải đã chọn: Gauss trên hệ chuẩn,\allowbreak{} QR trên thiết kế có trọng số hoặc SVD. Nhật ký phải đúng bộ giải.
+
+\item Khôi phục tham số và hàm g theo biến gốc;\allowbreak{} lập r\_i=\allowbreak{}y\_i\ensuremath{-}g(\allowbreak{}x\_i),\allowbreak{} tính SSE,\allowbreak{} RMSE và mục tiêu trên thang khớp riêng biệt.
+
+\end{enumerate}
+
+\textbf{Output:} Hàm g(\allowbreak{}x),\allowbreak{} tham số gốc,\allowbreak{} bảng thiết kế/\allowbreak{}tổng,\allowbreak{} hệ và nhật ký bộ giải,\allowbreak{} phần dư và sai số có định nghĩa rõ.
+
+\examplebreak\subsubsection*{27. A*b\textasciicircum{}x}
+
+\textbf{Input:} Trọng số w\_i (\allowbreak{}để trống: tất cả bằng 1);\allowbreak{} Cách giải bình phương tối thiểu;\allowbreak{} Quy tắc khi thiếu hạng;\allowbreak{} Điểm dự đoán x (\allowbreak{}không bắt buộc);\allowbreak{} Mức trình bày.
+
+Bảng cặp $x,y$ là đầu vào riêng của lượt chạy; giữ ánh xạ nguồn nếu chọn một phần bảng.
+
+\begin{enumerate}
+
+\item Công bố N quan sát,\allowbreak{} trọng số và mô hình. Kiểm tra miền,\allowbreak{} dấu và hạng;\allowbreak{} không tự lọc dòng để ép phép biến đổi hợp lệ.
+
+\item Viết phép biến đổi và ánh xạ tham số: z=\allowbreak{}ln|y|,\allowbreak{} z\ensuremath{\approx}c\_0+\allowbreak{}c\_1x;\allowbreak{} khôi phục A=\allowbreak{}s·exp(\allowbreak{}c\_0),\allowbreak{} B=\allowbreak{}exp(\allowbreak{}c\_1)>0.
+
+\item Lập \ensuremath{\Phi}\_ij=\allowbreak{}\ensuremath{\varphi}\_j(\allowbreak{}x\_i),\allowbreak{} bảng các tích và các tổng;\allowbreak{} viết J=\allowbreak{}\ensuremath{\sum}w\_i(\allowbreak{}\ensuremath{\sum}c\_j\ensuremath{\varphi}\_j(\allowbreak{}x\_i)\ensuremath{-}z\_i)².
+
+\item Từ \ensuremath{\partial}J/\allowbreak{}\ensuremath{\partial}c\_j=\allowbreak{}0 suy ra (\allowbreak{}\ensuremath{\Phi}\ensuremath{{}^T}W\ensuremath{\Phi})c=\allowbreak{}\ensuremath{\Phi}\ensuremath{{}^T}Wz. Trình bày hệ tổng quát rồi hệ đã thế số.
+
+\item Tính nghiệm bằng bộ giải đã chọn: Gauss trên hệ chuẩn,\allowbreak{} QR trên thiết kế có trọng số hoặc SVD. Nhật ký phải đúng bộ giải.
+
+\item Khôi phục tham số và hàm g theo biến gốc;\allowbreak{} lập r\_i=\allowbreak{}y\_i\ensuremath{-}g(\allowbreak{}x\_i),\allowbreak{} tính SSE,\allowbreak{} RMSE và mục tiêu trên thang khớp riêng biệt.
+
+\end{enumerate}
+
+\textbf{Output:} Hàm g(\allowbreak{}x),\allowbreak{} tham số gốc,\allowbreak{} bảng thiết kế/\allowbreak{}tổng,\allowbreak{} hệ và nhật ký bộ giải,\allowbreak{} phần dư và sai số có định nghĩa rõ.
+
+\subsection{Nội suy ngược}
+
+\examplebreak\subsubsection*{28. Lặp tiến}
+
+\textbf{Input:} Giá trị y cần tìm ngược;\allowbreak{} Cận x trái (\allowbreak{}trống: khoảng đổi dấu duy nhất);\allowbreak{} Cận x phải (\allowbreak{}trống: khoảng đổi dấu duy nhất);\allowbreak{} Dung sai vị trí/\allowbreak{}bước theo x;\allowbreak{} Dung sai phần dư;\allowbreak{} Mốc dùng (\allowbreak{}JSON,\allowbreak{} trống: toàn bộ bảng);\allowbreak{} Số vòng tối đa;\allowbreak{} Quy tắc khởi tạo;\allowbreak{} t₀ khi khởi tạo thủ công;\allowbreak{} Mức trình bày.
+
+Bảng cặp $x,y$ là đầu vào riêng của lượt chạy; giữ ánh xạ nguồn nếu chọn một phần bảng.
+
+\begin{enumerate}
+
+\item Công bố mức y*,\allowbreak{} các mốc được chọn và nhánh/\allowbreak{}khoảng nghiệm;\allowbreak{} kiểm tra trường hợp trùng mốc,\allowbreak{} nghiệm nhiều nhánh và dữ liệu phẳng.
+
+\item Giữ toàn bộ tập mốc đã chọn;\allowbreak{} dựng đa thức thuận p. Lặp tiến lấy gốc đầu tập,\allowbreak{} lặp lùi lấy gốc cuối tập;\allowbreak{} khoảng nghiệm có thể nằm giữa.
+
+\item Đặt t=\allowbreak{}(\allowbreak{}x\ensuremath{-}x\_gốc)/\allowbreak{}h,\allowbreak{} t\_0 theo quy tắc khởi tạo;\allowbreak{} tách hạng tuyến tính để viết t\_(\allowbreak{}k+\allowbreak{}1)=\allowbreak{}H(\allowbreak{}t\_k),\allowbreak{} cố định các sai phân.
+
+\item Mỗi vòng ghi t\_k,\allowbreak{} từng tích và đóng góp phi tuyến,\allowbreak{} H(\allowbreak{}t\_k),\allowbreak{} x\_(\allowbreak{}k+\allowbreak{}1),\allowbreak{} độ đổi theo x và phần dư |p(\allowbreak{}x)\ensuremath{-}y*|.
+
+\item Dừng thực hành cần đạt cả độ đổi theo x và phần dư. Chế độ có cận co còn kiểm tra miền bất biến,\allowbreak{} q<1 và cận sai số;\allowbreak{} giữ nhật ký thất bại.
+
+\end{enumerate}
+
+\textbf{Output:} Nghiệm x xấp xỉ hoặc lý do chưa đạt,\allowbreak{} tập mốc/\allowbreak{}gốc thực dùng,\allowbreak{} bảng hệ số,\allowbreak{} toàn bộ vòng lặp và tiêu chí dừng.
+
+\examplebreak\subsubsection*{29. Lặp lùi}
+
+\textbf{Input:} Giá trị y cần tìm ngược;\allowbreak{} Cận x trái (\allowbreak{}trống: khoảng đổi dấu duy nhất);\allowbreak{} Cận x phải (\allowbreak{}trống: khoảng đổi dấu duy nhất);\allowbreak{} Dung sai vị trí/\allowbreak{}bước theo x;\allowbreak{} Dung sai phần dư;\allowbreak{} Mốc dùng (\allowbreak{}JSON,\allowbreak{} trống: toàn bộ bảng);\allowbreak{} Số vòng tối đa;\allowbreak{} Quy tắc khởi tạo;\allowbreak{} t₀ khi khởi tạo thủ công;\allowbreak{} Mức trình bày.
+
+Bảng cặp $x,y$ là đầu vào riêng của lượt chạy; giữ ánh xạ nguồn nếu chọn một phần bảng.
+
+\begin{enumerate}
+
+\item Công bố mức y*,\allowbreak{} các mốc được chọn và nhánh/\allowbreak{}khoảng nghiệm;\allowbreak{} kiểm tra trường hợp trùng mốc,\allowbreak{} nghiệm nhiều nhánh và dữ liệu phẳng.
+
+\item Giữ toàn bộ tập mốc đã chọn;\allowbreak{} dựng đa thức thuận p. Lặp tiến lấy gốc đầu tập,\allowbreak{} lặp lùi lấy gốc cuối tập;\allowbreak{} khoảng nghiệm có thể nằm giữa.
+
+\item Đặt t=\allowbreak{}(\allowbreak{}x\ensuremath{-}x\_gốc)/\allowbreak{}h,\allowbreak{} t\_0 theo quy tắc khởi tạo;\allowbreak{} tách hạng tuyến tính để viết t\_(\allowbreak{}k+\allowbreak{}1)=\allowbreak{}H(\allowbreak{}t\_k),\allowbreak{} cố định các sai phân.
+
+\item Mỗi vòng ghi t\_k,\allowbreak{} từng tích và đóng góp phi tuyến,\allowbreak{} H(\allowbreak{}t\_k),\allowbreak{} x\_(\allowbreak{}k+\allowbreak{}1),\allowbreak{} độ đổi theo x và phần dư |p(\allowbreak{}x)\ensuremath{-}y*|.
+
+\item Dừng thực hành cần đạt cả độ đổi theo x và phần dư. Chế độ có cận co còn kiểm tra miền bất biến,\allowbreak{} q<1 và cận sai số;\allowbreak{} giữ nhật ký thất bại.
+
+\end{enumerate}
+
+\textbf{Output:} Nghiệm x xấp xỉ hoặc lý do chưa đạt,\allowbreak{} tập mốc/\allowbreak{}gốc thực dùng,\allowbreak{} bảng hệ số,\allowbreak{} toàn bộ vòng lặp và tiêu chí dừng.
+
+\examplebreak\subsubsection*{30. Lặp có cận co}
+
+\textbf{Input:} Giá trị y cần tìm ngược;\allowbreak{} Cận x trái của khoảng nghiệm;\allowbreak{} Cận x phải của khoảng nghiệm;\allowbreak{} Dung sai vị trí;\allowbreak{} Dung sai phần dư;\allowbreak{} Hướng nội suy;\allowbreak{} Mốc dùng (\allowbreak{}JSON,\allowbreak{} trống: toàn bộ bảng);\allowbreak{} Số vòng tối đa;\allowbreak{} Quy tắc khởi tạo;\allowbreak{} t₀ khi khởi tạo thủ công;\allowbreak{} Mức trình bày.
+
+Bảng cặp $x,y$ là đầu vào riêng của lượt chạy; giữ ánh xạ nguồn nếu chọn một phần bảng.
+
+\begin{enumerate}
+
+\item Công bố mức y*,\allowbreak{} các mốc được chọn và nhánh/\allowbreak{}khoảng nghiệm;\allowbreak{} kiểm tra trường hợp trùng mốc,\allowbreak{} nghiệm nhiều nhánh và dữ liệu phẳng.
+
+\item Giữ toàn bộ tập mốc đã chọn;\allowbreak{} dựng đa thức thuận p. Lặp tiến lấy gốc đầu tập,\allowbreak{} lặp lùi lấy gốc cuối tập;\allowbreak{} khoảng nghiệm có thể nằm giữa.
+
+\item Đặt t=\allowbreak{}(\allowbreak{}x\ensuremath{-}x\_gốc)/\allowbreak{}h,\allowbreak{} t\_0 theo quy tắc khởi tạo;\allowbreak{} tách hạng tuyến tính để viết t\_(\allowbreak{}k+\allowbreak{}1)=\allowbreak{}H(\allowbreak{}t\_k),\allowbreak{} cố định các sai phân.
+
+\item Mỗi vòng ghi t\_k,\allowbreak{} từng tích và đóng góp phi tuyến,\allowbreak{} H(\allowbreak{}t\_k),\allowbreak{} x\_(\allowbreak{}k+\allowbreak{}1),\allowbreak{} độ đổi theo x và phần dư |p(\allowbreak{}x)\ensuremath{-}y*|.
+
+\item Dừng thực hành cần đạt cả độ đổi theo x và phần dư. Chế độ có cận co còn kiểm tra miền bất biến,\allowbreak{} q<1 và cận sai số;\allowbreak{} giữ nhật ký thất bại.
+
+\end{enumerate}
+
+\textbf{Output:} Nghiệm x xấp xỉ hoặc lý do chưa đạt,\allowbreak{} tập mốc/\allowbreak{}gốc thực dùng,\allowbreak{} bảng hệ số,\allowbreak{} toàn bộ vòng lặp và tiêu chí dừng.
+
+\examplebreak\subsubsection*{31. Hàm ngược — Newton}
+
+\textbf{Input:} Giá trị y cần tìm ngược;\allowbreak{} Số mốc đã chọn (\allowbreak{}để trống: toàn tập nhập);\allowbreak{} Mốc dùng (\allowbreak{}JSON,\allowbreak{} trống: toàn bộ bảng);\allowbreak{} Mức trình bày.
+
+Bảng cặp $x,y$ là đầu vào riêng của lượt chạy; giữ ánh xạ nguồn nếu chọn một phần bảng.
+
+\begin{enumerate}
+
+\item Công bố mức y*,\allowbreak{} các mốc được chọn và nhánh/\allowbreak{}khoảng nghiệm;\allowbreak{} kiểm tra trường hợp trùng mốc,\allowbreak{} nghiệm nhiều nhánh và dữ liệu phẳng.
+
+\item Đổi vai x và y trên nhánh đã chọn;\allowbreak{} lập đa thức x\ensuremath{\approx}Q(\allowbreak{}y) bằng Newton.
+
+\item Thế y* vào Q;\allowbreak{} trình bày các tích/\allowbreak{}hệ số và tổng từng hạng. Không gọi đây là nghiệm chính xác của p(\allowbreak{}x)=\allowbreak{}y*.
+
+\item Kiểm tra miền nhánh và báo ngoại suy nếu mức đích nằm ngoài dữ liệu được chọn.
+
+\end{enumerate}
+
+\textbf{Output:} Nghiệm x xấp xỉ hoặc lý do chưa đạt,\allowbreak{} tập mốc/\allowbreak{}gốc thực dùng,\allowbreak{} bảng hệ số,\allowbreak{} toàn bộ vòng lặp và tiêu chí dừng.
+
+\examplebreak\subsubsection*{32. Hàm ngược — Lagrange}
+
+\textbf{Input:} Giá trị y cần tìm ngược;\allowbreak{} Số mốc đã chọn (\allowbreak{}để trống: toàn tập nhập);\allowbreak{} Mốc dùng (\allowbreak{}JSON,\allowbreak{} trống: toàn bộ bảng);\allowbreak{} Mức trình bày.
+
+Bảng cặp $x,y$ là đầu vào riêng của lượt chạy; giữ ánh xạ nguồn nếu chọn một phần bảng.
+
+\begin{enumerate}
+
+\item Công bố mức y*,\allowbreak{} các mốc được chọn và nhánh/\allowbreak{}khoảng nghiệm;\allowbreak{} kiểm tra trường hợp trùng mốc,\allowbreak{} nghiệm nhiều nhánh và dữ liệu phẳng.
+
+\item Đổi vai x và y trên nhánh đã chọn;\allowbreak{} lập đa thức x\ensuremath{\approx}Q(\allowbreak{}y) bằng Lagrange.
+
+\item Thế y* vào Q;\allowbreak{} trình bày các tích/\allowbreak{}hệ số và tổng từng hạng. Không gọi đây là nghiệm chính xác của p(\allowbreak{}x)=\allowbreak{}y*.
+
+\item Kiểm tra miền nhánh và báo ngoại suy nếu mức đích nằm ngoài dữ liệu được chọn.
+
+\end{enumerate}
+
+\textbf{Output:} Nghiệm x xấp xỉ hoặc lý do chưa đạt,\allowbreak{} tập mốc/\allowbreak{}gốc thực dùng,\allowbreak{} bảng hệ số,\allowbreak{} toàn bộ vòng lặp và tiêu chí dừng.
+
+\examplebreak\subsubsection*{33. Chia đôi đa thức}
+
+\textbf{Input:} Giá trị y cần tìm ngược;\allowbreak{} Cận trái;\allowbreak{} Cận phải;\allowbreak{} Dung sai vị trí;\allowbreak{} Mốc dùng (\allowbreak{}JSON,\allowbreak{} trống: toàn bộ bảng);\allowbreak{} Mức trình bày.
+
+Bảng cặp $x,y$ là đầu vào riêng của lượt chạy; giữ ánh xạ nguồn nếu chọn một phần bảng.
+
+\begin{enumerate}
+
+\item Công bố mức y*,\allowbreak{} các mốc được chọn và nhánh/\allowbreak{}khoảng nghiệm;\allowbreak{} kiểm tra trường hợp trùng mốc,\allowbreak{} nghiệm nhiều nhánh và dữ liệu phẳng.
+
+\item Giữ toàn bộ tập mốc đã chọn;\allowbreak{} dựng đa thức thuận p. Lặp tiến lấy gốc đầu tập,\allowbreak{} lặp lùi lấy gốc cuối tập;\allowbreak{} khoảng nghiệm có thể nằm giữa.
+
+\item Đặt F(\allowbreak{}x)=\allowbreak{}p(\allowbreak{}x)\ensuremath{-}y*;\allowbreak{} kiểm tra dấu tại hai đầu. Mỗi vòng tính c=\allowbreak{}(\allowbreak{}a+\allowbreak{}b)/\allowbreak{}2,\allowbreak{} F(\allowbreak{}c) và giữ nửa đoạn còn đổi dấu.
+
+\item Ghi a,\allowbreak{} b,\allowbreak{} c,\allowbreak{} phần dư và độ rộng từng vòng;\allowbreak{} trả về kết quả khi đạt điều kiện dừng hoặc trạng thái chưa đạt.
+
+\end{enumerate}
+
+\textbf{Output:} Nghiệm x xấp xỉ hoặc lý do chưa đạt,\allowbreak{} tập mốc/\allowbreak{}gốc thực dùng,\allowbreak{} bảng hệ số,\allowbreak{} toàn bộ vòng lặp và tiêu chí dừng.
+
+\subsection{Chọn mốc}
+
+\examplebreak\subsubsection*{34. Mốc cách đều}
+
+\textbf{Input:} Điểm x;\allowbreak{} Số mốc cần lấy.
+
+Bảng cặp $x,y$ là đầu vào riêng của lượt chạy; giữ ánh xạ nguồn nếu chọn một phần bảng.
+
+\begin{enumerate}
+
+\item Đọc cặp x,\allowbreak{}y,\allowbreak{} giữ ID nguồn;\allowbreak{} kiểm tra cặp hợp lệ và yêu cầu điểm/\allowbreak{}số mốc.
+
+\item Trên lưới đều chọn một cửa sổ liên tiếp gần điểm tính;\allowbreak{} công bố các mốc và kiểm tra đủ số lượng.
+
+\item Xuất các mốc đã chọn và ID nguồn;\allowbreak{} dùng tập này làm đầu vào riêng cho phương pháp nội suy được quyết định sau đó.
+
+\end{enumerate}
+
+\textbf{Output:} Các mốc/\allowbreak{}nhánh,\allowbreak{} thứ tự và ID nguồn;\allowbreak{} bước chọn mốc chưa phải lời giải nội suy.
+
+\examplebreak\subsubsection*{35. Mốc nội suy ngược}
+
+\textbf{Input:} Giá trị y.
+
+Bảng cặp $x,y$ là đầu vào riêng của lượt chạy; giữ ánh xạ nguồn nếu chọn một phần bảng.
+
+\begin{enumerate}
+
+\item Đọc cặp x,\allowbreak{}y,\allowbreak{} giữ ID nguồn;\allowbreak{} kiểm tra cặp hợp lệ và yêu cầu điểm/\allowbreak{}số mốc.
+
+\item Chia các nhánh đơn điệu và tìm các khoảng chứa mức y*;\allowbreak{} công bố mọi lựa chọn,\allowbreak{} không tự gộp nhánh.
+
+\item Xuất các mốc đã chọn và ID nguồn;\allowbreak{} dùng tập này làm đầu vào riêng cho phương pháp nội suy được quyết định sau đó.
+
+\end{enumerate}
+
+\textbf{Output:} Các mốc/\allowbreak{}nhánh,\allowbreak{} thứ tự và ID nguồn;\allowbreak{} bước chọn mốc chưa phải lời giải nội suy.
+
+\examplebreak\subsubsection*{36. Chebyshev}
+
+\textbf{Input:} Bậc đa thức n (\allowbreak{}sinh n+\allowbreak{}1 mốc);\allowbreak{} Đầu đoạn a;\allowbreak{} Cuối đoạn b.
+
+\begin{enumerate}
+
+\item Cho bậc n và đoạn [a,\allowbreak{}b];\allowbreak{} cần sinh N=\allowbreak{}n+\allowbreak{}1 mốc.
+
+\item Tính \ensuremath{\theta}\_k=\allowbreak{}(\allowbreak{}2k+\allowbreak{}1)\ensuremath{\pi}/\allowbreak{}(\allowbreak{}2N),\allowbreak{} k=\allowbreak{}0,\allowbreak{}…,\allowbreak{}N\ensuremath{-}1;\allowbreak{} đặt x\_k=\allowbreak{}(\allowbreak{}a+\allowbreak{}b)/\allowbreak{}2+\allowbreak{}(\allowbreak{}b\ensuremath{-}a)cos \ensuremath{\theta}\_k/\allowbreak{}2.
+
+\item Sắp mốc tăng và giữ ánh xạ với chỉ số k ban đầu;\allowbreak{} đánh giá hàm tại các mốc này nếu cần bảng y.
+
+\end{enumerate}
+
+\textbf{Output:} Các mốc/\allowbreak{}nhánh,\allowbreak{} thứ tự và ID nguồn;\allowbreak{} bước chọn mốc chưa phải lời giải nội suy.
+
+\subsection{Đạo hàm \& Horner}
+
+\examplebreak\subsubsection*{37. Đạo hàm từ bảng}
+
+\textbf{Input:} Điểm x;\allowbreak{} Bậc p (\allowbreak{}dùng p+\allowbreak{}1 mốc);\allowbreak{} Cấp đạo hàm.
+
+Bảng cặp $x,y$ là đầu vào riêng của lượt chạy; giữ ánh xạ nguồn nếu chọn một phần bảng.
+
+\begin{enumerate}
+
+\item Chọn p+\allowbreak{}1 mốc gần điểm tính,\allowbreak{} giữ ID nguồn;\allowbreak{} xác định cấp đạo hàm r và đa thức bậc không quá p.
+
+\item Đặt tọa độ chuẩn hóa quanh điểm tính,\allowbreak{} lập các trọng số đạo hàm từ điều kiện chính xác trên đơn thức.
+
+\item Lập bảng w\_i,\allowbreak{} y\_i,\allowbreak{} w\_i y\_i;\allowbreak{} cộng đủ mọi hạng và đổi đơn vị đạo hàm nếu có chuẩn hóa.
+
+\item Kiểm tra tính chính xác trên các đơn thức và công bố mốc thực dùng;\allowbreak{} kết luận đạo hàm của mô hình,\allowbreak{} không tự nhận cận sai số hàm thật.
+
+\end{enumerate}
+
+\textbf{Output:} Giá trị/\allowbreak{}đạo hàm,\allowbreak{} bảng nhân–cộng hoặc trọng số và đối chiếu;\allowbreak{} đạo hàm vượt bậc đa thức bằng 0.
+
+\examplebreak\subsubsection*{38. Horner}
+
+\textbf{Input:} Hệ số theo bậc giảm dần;\allowbreak{} Điểm x;\allowbreak{} Đạo hàm đến cấp.
+
+\begin{enumerate}
+
+\item Đọc hệ số theo bậc giảm,\allowbreak{} giữ các hệ số 0 giữa/\allowbreak{}cuối;\allowbreak{} viết lại P(\allowbreak{}x) và điểm c.
+
+\item Lập bảng ngang: hàng A\_j;\allowbreak{} hàng c·b\_(\allowbreak{}j\ensuremath{-}1) dịch sang phải một ô;\allowbreak{} hàng cộng b\_j=\allowbreak{}A\_j+\allowbreak{}c·b\_(\allowbreak{}j\ensuremath{-}1).
+
+\item Phần tử cuối là số dư s\_0=\allowbreak{}P(\allowbreak{}c);\allowbreak{} các phần tử trước tạo thương Q\_1.
+
+\item Chia tiếp thương cho x\ensuremath{-}c,\allowbreak{} lấy s\_r;\allowbreak{} P\textasciicircum{}(\allowbreak{}r)(\allowbreak{}c)=\allowbreak{}r!s\_r. Công bố số dư và thương của từng lượt.
+
+\item Kết luận giá trị và các đạo hàm;\allowbreak{} đây là tính hữu hạn,\allowbreak{} không có điều kiện hội tụ.
+
+\end{enumerate}
+
+\textbf{Output:} Giá trị/\allowbreak{}đạo hàm,\allowbreak{} bảng nhân–cộng hoặc trọng số và đối chiếu;\allowbreak{} đạo hàm vượt bậc đa thức bằng 0.
+
+\subsection{Tích phân}
+
+\examplebreak\subsubsection*{39. Hình thang}
+
+\textbf{Input:} Hàm f(\allowbreak{}x);\allowbreak{} Cận trái a;\allowbreak{} Cận phải b;\allowbreak{} Số khoảng chia n;\allowbreak{} Dung sai tự chia lưới (\allowbreak{}để trống: dùng n);\allowbreak{} Cận đạo hàm M (\allowbreak{}không bắt buộc);\allowbreak{} Nguồn dữ liệu.
+
+\begin{enumerate}
+
+\item Xác định nguồn Hàm/\allowbreak{}Bảng,\allowbreak{} hai cận,\allowbreak{} n và điều kiện miền;\allowbreak{} nếu đảo cận thì đổi dấu kết quả.
+
+\item Lập lưới đúng quy tắc và bảng x\_i,\allowbreak{} y\_i,\allowbreak{} w\_i;\allowbreak{} h=\allowbreak{}(\allowbreak{}b\ensuremath{-}a)/\allowbreak{}n. Với trung điểm,\allowbreak{} dữ liệu phải ở tâm mỗi ô.
+
+\item Viết công thức và thế các hạng: I\_h\ensuremath{\approx}h[y\_0+\allowbreak{}2y\_1+\allowbreak{}…+\allowbreak{}2y\_(\allowbreak{}n\ensuremath{-}1)+\allowbreak{}y\_n]/\allowbreak{}2.
+
+\item Nếu nhập \ensuremath{\varepsilon} và M,\allowbreak{} chọn n từ cận lý thuyết. Nếu chỉ nhập \ensuremath{\varepsilon},\allowbreak{} tăng lưới và kiểm tra Runge cùng lưới đối chiếu.
+
+\item Công bố kết quả ở lưới được trả về,\allowbreak{} các lượt chia lưới và sai số;\allowbreak{} Runge là ước lượng,\allowbreak{} cận M có giả thiết riêng.
+
+\end{enumerate}
+
+\textbf{Output:} Tích phân xấp xỉ,\allowbreak{} lưới/\allowbreak{}trọng số,\allowbreak{} các lượt tinh chỉnh và ước lượng/\allowbreak{}cận sai số được phân biệt rõ.
+
+\examplebreak\subsubsection*{40. Simpson}
+
+\textbf{Input:} Hàm f(\allowbreak{}x);\allowbreak{} Cận trái a;\allowbreak{} Cận phải b;\allowbreak{} Số khoảng chia n;\allowbreak{} Dung sai tự chia lưới (\allowbreak{}để trống: dùng n);\allowbreak{} Cận đạo hàm M (\allowbreak{}không bắt buộc);\allowbreak{} Nguồn dữ liệu.
+
+\begin{enumerate}
+
+\item Xác định nguồn Hàm/\allowbreak{}Bảng,\allowbreak{} hai cận,\allowbreak{} n và điều kiện miền;\allowbreak{} nếu đảo cận thì đổi dấu kết quả.
+
+\item Lập lưới đúng quy tắc và bảng x\_i,\allowbreak{} y\_i,\allowbreak{} w\_i;\allowbreak{} h=\allowbreak{}(\allowbreak{}b\ensuremath{-}a)/\allowbreak{}n. Với trung điểm,\allowbreak{} dữ liệu phải ở tâm mỗi ô.
+
+\item Viết công thức và thế các hạng: I\_h\ensuremath{\approx}h[y\_0+\allowbreak{}4y\_1+\allowbreak{}2y\_2+\allowbreak{}4y\_3+\allowbreak{}…+\allowbreak{}4y\_(\allowbreak{}n\ensuremath{-}1)+\allowbreak{}y\_n]/\allowbreak{}3,\allowbreak{} n chẵn.
+
+\item Nếu nhập \ensuremath{\varepsilon} và M,\allowbreak{} chọn n từ cận lý thuyết. Nếu chỉ nhập \ensuremath{\varepsilon},\allowbreak{} tăng lưới và kiểm tra Runge cùng lưới đối chiếu.
+
+\item Công bố kết quả ở lưới được trả về,\allowbreak{} các lượt chia lưới và sai số;\allowbreak{} Runge là ước lượng,\allowbreak{} cận M có giả thiết riêng.
+
+\end{enumerate}
+
+\textbf{Output:} Tích phân xấp xỉ,\allowbreak{} lưới/\allowbreak{}trọng số,\allowbreak{} các lượt tinh chỉnh và ước lượng/\allowbreak{}cận sai số được phân biệt rõ.
+
+\examplebreak\subsubsection*{41. Trung điểm}
+
+\textbf{Input:} Hàm f(\allowbreak{}x);\allowbreak{} Cận trái a;\allowbreak{} Cận phải b;\allowbreak{} Số khoảng chia n;\allowbreak{} Dung sai tự chia lưới (\allowbreak{}để trống: dùng n);\allowbreak{} Cận đạo hàm M (\allowbreak{}không bắt buộc);\allowbreak{} Nguồn dữ liệu.
+
+\begin{enumerate}
+
+\item Xác định nguồn Hàm/\allowbreak{}Bảng,\allowbreak{} hai cận,\allowbreak{} n và điều kiện miền;\allowbreak{} nếu đảo cận thì đổi dấu kết quả.
+
+\item Lập lưới đúng quy tắc và bảng x\_i,\allowbreak{} y\_i,\allowbreak{} w\_i;\allowbreak{} h=\allowbreak{}(\allowbreak{}b\ensuremath{-}a)/\allowbreak{}n. Với trung điểm,\allowbreak{} dữ liệu phải ở tâm mỗi ô.
+
+\item Viết công thức và thế các hạng: I\_h\ensuremath{\approx}h[f(\allowbreak{}a+\allowbreak{}h/\allowbreak{}2)+\allowbreak{}f(\allowbreak{}a+\allowbreak{}3h/\allowbreak{}2)+\allowbreak{}…+\allowbreak{}f(\allowbreak{}b\ensuremath{-}h/\allowbreak{}2)].
+
+\item Nếu nhập \ensuremath{\varepsilon} và M,\allowbreak{} chọn n từ cận lý thuyết. Nếu chỉ nhập \ensuremath{\varepsilon},\allowbreak{} tăng lưới và kiểm tra Runge cùng lưới đối chiếu.
+
+\item Công bố kết quả ở lưới được trả về,\allowbreak{} các lượt chia lưới và sai số;\allowbreak{} Runge là ước lượng,\allowbreak{} cận M có giả thiết riêng.
+
+\end{enumerate}
+
+\textbf{Output:} Tích phân xấp xỉ,\allowbreak{} lưới/\allowbreak{}trọng số,\allowbreak{} các lượt tinh chỉnh và ước lượng/\allowbreak{}cận sai số được phân biệt rõ.
+
+\examplebreak\subsubsection*{42. Newton-Cotes}
+
+\textbf{Input:} Hàm f(\allowbreak{}x);\allowbreak{} Cận trái a;\allowbreak{} Cận phải b;\allowbreak{} Số khoảng chia n;\allowbreak{} Bậc Newton-Cotes;\allowbreak{} Dung sai tự chia lưới (\allowbreak{}để trống: dùng n);\allowbreak{} Cận đạo hàm M (\allowbreak{}không bắt buộc);\allowbreak{} Nguồn dữ liệu.
+
+\begin{enumerate}
+
+\item Xác định nguồn Hàm/\allowbreak{}Bảng,\allowbreak{} hai cận,\allowbreak{} n và điều kiện miền;\allowbreak{} nếu đảo cận thì đổi dấu kết quả.
+
+\item Lập lưới đúng quy tắc và bảng x\_i,\allowbreak{} y\_i,\allowbreak{} w\_i;\allowbreak{} h=\allowbreak{}(\allowbreak{}b\ensuremath{-}a)/\allowbreak{}n. Với trung điểm,\allowbreak{} dữ liệu phải ở tâm mỗi ô.
+
+\item Viết công thức và thế các hạng: I\_h\ensuremath{\approx}h[w\_0y\_0+\allowbreak{}w\_1y\_1+\allowbreak{}…+\allowbreak{}w\_ny\_n],\allowbreak{} n chia hết cho bậc khối.
+
+\item Nếu nhập \ensuremath{\varepsilon} và M,\allowbreak{} chọn n từ cận lý thuyết. Nếu chỉ nhập \ensuremath{\varepsilon},\allowbreak{} tăng lưới và kiểm tra Runge cùng lưới đối chiếu.
+
+\item Công bố kết quả ở lưới được trả về,\allowbreak{} các lượt chia lưới và sai số;\allowbreak{} Runge là ước lượng,\allowbreak{} cận M có giả thiết riêng.
+
+\end{enumerate}
+
+\textbf{Output:} Tích phân xấp xỉ,\allowbreak{} lưới/\allowbreak{}trọng số,\allowbreak{} các lượt tinh chỉnh và ước lượng/\allowbreak{}cận sai số được phân biệt rõ.
+
+\examplebreak\subsubsection*{43. Tích phân kép}
+
+\textbf{Input:} Hàm f(\allowbreak{}x,\allowbreak{}y);\allowbreak{} Cận trái a;\allowbreak{} Cận phải b;\allowbreak{} Số khoảng chia n;\allowbreak{} Cận dưới y;\allowbreak{} Cận trên y;\allowbreak{} Quy tắc;\allowbreak{} Dung sai Runge.
+
+\begin{enumerate}
+
+\item Công bố hình chữ nhật,\allowbreak{} hàm hai biến,\allowbreak{} quy tắc và n trên mỗi trục;\allowbreak{} kiểm tra miền hàm.
+
+\item Lập hai lưới và trọng số một chiều;\allowbreak{} trọng số tại (\allowbreak{}i,\allowbreak{}j) là tích w\_i v\_j.
+
+\item Cộng từng hàng rồi cộng các hàng: I\ensuremath{\approx}h\_x h\_y \ensuremath{\sum}\_i\ensuremath{\sum}\_j w\_i v\_j f(\allowbreak{}x\_i,\allowbreak{}y\_j).
+
+\item Chia đôi bước ở cả hai trục;\allowbreak{} ghi n,\allowbreak{} I và Runge từng vòng. Đối chiếu thêm lưới không lồng nhau khi cần.
+
+\item Kết luận xấp xỉ và ước lượng Runge;\allowbreak{} điều kiện trơn của hàm vẫn phải được xét.
+
+\end{enumerate}
+
+\textbf{Output:} Tích phân xấp xỉ,\allowbreak{} lưới/\allowbreak{}trọng số,\allowbreak{} các lượt tinh chỉnh và ước lượng/\allowbreak{}cận sai số được phân biệt rõ.
+
+\subsection{Phương trình vi phân}
+
+\examplebreak\subsubsection*{44. Euler hiện}
+
+\textbf{Input:} Vế phải x\ensuremath{\prime};\allowbreak{} y\ensuremath{\prime};\allowbreak{} z\ensuremath{\prime} (\allowbreak{}1–3 hàm);\allowbreak{} Giá trị đầu x,\allowbreak{} y,\allowbreak{} z;\allowbreak{} Thời điểm đầu t0;\allowbreak{} Thời điểm cuối;\allowbreak{} Bước h;\allowbreak{} Dung sai bước ẩn.
+
+\begin{enumerate}
+
+\item Viết hệ u\ensuremath{\prime}=\allowbreak{}f(\allowbreak{}t,\allowbreak{}u),\allowbreak{} u(\allowbreak{}a)=\allowbreak{}u\_0;\allowbreak{} trong ô nhập,\allowbreak{} biến độc lập là t và các trạng thái là x,\allowbreak{}y,\allowbreak{}z.
+
+\item Lập lưới t\_i=\allowbreak{}a+\allowbreak{}ih;\allowbreak{} h phải đúng chiều và kết thúc đúng ở b. Công bố bộ hệ số của phương pháp.
+
+\item Công bố bảng A,\allowbreak{}b,\allowbreak{}c. Mỗi bước tính lần lượt K\_j=\allowbreak{}f(\allowbreak{}t\_i+\allowbreak{}c\_jh,\allowbreak{}u\_i+\allowbreak{}h\ensuremath{\sum}\_(\allowbreak{}l<j)a\_jl K\_l),\allowbreak{} rồi u\_(\allowbreak{}i+\allowbreak{}1)=\allowbreak{}u\_i+\allowbreak{}h\ensuremath{\sum}\_j b\_jK\_j.
+
+\item Ghi các tầng/\allowbreak{}dự báo/\allowbreak{}hiệu chỉnh thực sự được tính. Bước ẩn kiểm tra phần dư và Jacobian;\allowbreak{} đánh giá của bộ giải không đồng nghĩa một vòng Newton.
+
+\item Lập bảng nghiệm qua mọi t\_i,\allowbreak{} kèm phần dư bước ẩn. Kết luận trên lưới h;\allowbreak{} dung sai hệ ẩn không phải cận sai số nghiệm ODE.
+
+\end{enumerate}
+
+\textbf{Output:} Nghiệm tại các mốc,\allowbreak{} bảng hệ số/\allowbreak{}tầng RK hoặc dự báo–hiệu chỉnh,\allowbreak{} phần dư và thông tin kiểm tra bước ẩn.
+
+\examplebreak\subsubsection*{45. Euler ẩn}
+
+\textbf{Input:} Vế phải x\ensuremath{\prime};\allowbreak{} y\ensuremath{\prime};\allowbreak{} z\ensuremath{\prime} (\allowbreak{}1–3 hàm);\allowbreak{} Giá trị đầu x,\allowbreak{} y,\allowbreak{} z;\allowbreak{} Thời điểm đầu t0;\allowbreak{} Thời điểm cuối;\allowbreak{} Bước h;\allowbreak{} Dung sai bước ẩn.
+
+\begin{enumerate}
+
+\item Viết hệ u\ensuremath{\prime}=\allowbreak{}f(\allowbreak{}t,\allowbreak{}u),\allowbreak{} u(\allowbreak{}a)=\allowbreak{}u\_0;\allowbreak{} trong ô nhập,\allowbreak{} biến độc lập là t và các trạng thái là x,\allowbreak{}y,\allowbreak{}z.
+
+\item Lập lưới t\_i=\allowbreak{}a+\allowbreak{}ih;\allowbreak{} h phải đúng chiều và kết thúc đúng ở b. Công bố bộ hệ số của phương pháp.
+
+\item Giải R(\allowbreak{}v)=\allowbreak{}v\ensuremath{-}u\_i\ensuremath{-}h f(\allowbreak{}t\_(\allowbreak{}i+\allowbreak{}1),\allowbreak{}v)=\allowbreak{}0 bằng bộ giải hệ ẩn.
+
+\item Ghi các tầng/\allowbreak{}dự báo/\allowbreak{}hiệu chỉnh thực sự được tính. Bước ẩn kiểm tra phần dư và Jacobian;\allowbreak{} đánh giá của bộ giải không đồng nghĩa một vòng Newton.
+
+\item Lập bảng nghiệm qua mọi t\_i,\allowbreak{} kèm phần dư bước ẩn. Kết luận trên lưới h;\allowbreak{} dung sai hệ ẩn không phải cận sai số nghiệm ODE.
+
+\end{enumerate}
+
+\textbf{Output:} Nghiệm tại các mốc,\allowbreak{} bảng hệ số/\allowbreak{}tầng RK hoặc dự báo–hiệu chỉnh,\allowbreak{} phần dư và thông tin kiểm tra bước ẩn.
+
+\examplebreak\subsubsection*{46. Hình thang}
+
+\textbf{Input:} Vế phải x\ensuremath{\prime};\allowbreak{} y\ensuremath{\prime};\allowbreak{} z\ensuremath{\prime} (\allowbreak{}1–3 hàm);\allowbreak{} Giá trị đầu x,\allowbreak{} y,\allowbreak{} z;\allowbreak{} Thời điểm đầu t0;\allowbreak{} Thời điểm cuối;\allowbreak{} Bước h;\allowbreak{} Dung sai bước ẩn.
+
+\begin{enumerate}
+
+\item Viết hệ u\ensuremath{\prime}=\allowbreak{}f(\allowbreak{}t,\allowbreak{}u),\allowbreak{} u(\allowbreak{}a)=\allowbreak{}u\_0;\allowbreak{} trong ô nhập,\allowbreak{} biến độc lập là t và các trạng thái là x,\allowbreak{}y,\allowbreak{}z.
+
+\item Lập lưới t\_i=\allowbreak{}a+\allowbreak{}ih;\allowbreak{} h phải đúng chiều và kết thúc đúng ở b. Công bố bộ hệ số của phương pháp.
+
+\item Giải R(\allowbreak{}v)=\allowbreak{}v\ensuremath{-}u\_i\ensuremath{-}h[f(\allowbreak{}t\_i,\allowbreak{}u\_i)+\allowbreak{}f(\allowbreak{}t\_(\allowbreak{}i+\allowbreak{}1),\allowbreak{}v)]/\allowbreak{}2=\allowbreak{}0 bằng bộ giải hệ ẩn.
+
+\item Ghi các tầng/\allowbreak{}dự báo/\allowbreak{}hiệu chỉnh thực sự được tính. Bước ẩn kiểm tra phần dư và Jacobian;\allowbreak{} đánh giá của bộ giải không đồng nghĩa một vòng Newton.
+
+\item Lập bảng nghiệm qua mọi t\_i,\allowbreak{} kèm phần dư bước ẩn. Kết luận trên lưới h;\allowbreak{} dung sai hệ ẩn không phải cận sai số nghiệm ODE.
+
+\end{enumerate}
+
+\textbf{Output:} Nghiệm tại các mốc,\allowbreak{} bảng hệ số/\allowbreak{}tầng RK hoặc dự báo–hiệu chỉnh,\allowbreak{} phần dư và thông tin kiểm tra bước ẩn.
+
+\examplebreak\subsubsection*{47. RK2}
+
+\textbf{Input:} Vế phải x\ensuremath{\prime};\allowbreak{} y\ensuremath{\prime};\allowbreak{} z\ensuremath{\prime} (\allowbreak{}1–3 hàm);\allowbreak{} Giá trị đầu x,\allowbreak{} y,\allowbreak{} z;\allowbreak{} Thời điểm đầu t0;\allowbreak{} Thời điểm cuối;\allowbreak{} Bước h;\allowbreak{} Dung sai bước ẩn.
+
+\begin{enumerate}
+
+\item Viết hệ u\ensuremath{\prime}=\allowbreak{}f(\allowbreak{}t,\allowbreak{}u),\allowbreak{} u(\allowbreak{}a)=\allowbreak{}u\_0;\allowbreak{} trong ô nhập,\allowbreak{} biến độc lập là t và các trạng thái là x,\allowbreak{}y,\allowbreak{}z.
+
+\item Lập lưới t\_i=\allowbreak{}a+\allowbreak{}ih;\allowbreak{} h phải đúng chiều và kết thúc đúng ở b. Công bố bộ hệ số của phương pháp.
+
+\item Công bố bảng A,\allowbreak{}b,\allowbreak{}c. Mỗi bước tính lần lượt K\_j=\allowbreak{}f(\allowbreak{}t\_i+\allowbreak{}c\_jh,\allowbreak{}u\_i+\allowbreak{}h\ensuremath{\sum}\_(\allowbreak{}l<j)a\_jl K\_l),\allowbreak{} rồi u\_(\allowbreak{}i+\allowbreak{}1)=\allowbreak{}u\_i+\allowbreak{}h\ensuremath{\sum}\_j b\_jK\_j.
+
+\item Ghi các tầng/\allowbreak{}dự báo/\allowbreak{}hiệu chỉnh thực sự được tính. Bước ẩn kiểm tra phần dư và Jacobian;\allowbreak{} đánh giá của bộ giải không đồng nghĩa một vòng Newton.
+
+\item Lập bảng nghiệm qua mọi t\_i,\allowbreak{} kèm phần dư bước ẩn. Kết luận trên lưới h;\allowbreak{} dung sai hệ ẩn không phải cận sai số nghiệm ODE.
+
+\end{enumerate}
+
+\textbf{Output:} Nghiệm tại các mốc,\allowbreak{} bảng hệ số/\allowbreak{}tầng RK hoặc dự báo–hiệu chỉnh,\allowbreak{} phần dư và thông tin kiểm tra bước ẩn.
+
+\examplebreak\subsubsection*{48. RK3}
+
+\textbf{Input:} Vế phải x\ensuremath{\prime};\allowbreak{} y\ensuremath{\prime};\allowbreak{} z\ensuremath{\prime} (\allowbreak{}1–3 hàm);\allowbreak{} Giá trị đầu x,\allowbreak{} y,\allowbreak{} z;\allowbreak{} Thời điểm đầu t0;\allowbreak{} Thời điểm cuối;\allowbreak{} Bước h;\allowbreak{} Dung sai bước ẩn.
+
+\begin{enumerate}
+
+\item Viết hệ u\ensuremath{\prime}=\allowbreak{}f(\allowbreak{}t,\allowbreak{}u),\allowbreak{} u(\allowbreak{}a)=\allowbreak{}u\_0;\allowbreak{} trong ô nhập,\allowbreak{} biến độc lập là t và các trạng thái là x,\allowbreak{}y,\allowbreak{}z.
+
+\item Lập lưới t\_i=\allowbreak{}a+\allowbreak{}ih;\allowbreak{} h phải đúng chiều và kết thúc đúng ở b. Công bố bộ hệ số của phương pháp.
+
+\item Công bố bảng A,\allowbreak{}b,\allowbreak{}c. Mỗi bước tính lần lượt K\_j=\allowbreak{}f(\allowbreak{}t\_i+\allowbreak{}c\_jh,\allowbreak{}u\_i+\allowbreak{}h\ensuremath{\sum}\_(\allowbreak{}l<j)a\_jl K\_l),\allowbreak{} rồi u\_(\allowbreak{}i+\allowbreak{}1)=\allowbreak{}u\_i+\allowbreak{}h\ensuremath{\sum}\_j b\_jK\_j.
+
+\item Ghi các tầng/\allowbreak{}dự báo/\allowbreak{}hiệu chỉnh thực sự được tính. Bước ẩn kiểm tra phần dư và Jacobian;\allowbreak{} đánh giá của bộ giải không đồng nghĩa một vòng Newton.
+
+\item Lập bảng nghiệm qua mọi t\_i,\allowbreak{} kèm phần dư bước ẩn. Kết luận trên lưới h;\allowbreak{} dung sai hệ ẩn không phải cận sai số nghiệm ODE.
+
+\end{enumerate}
+
+\textbf{Output:} Nghiệm tại các mốc,\allowbreak{} bảng hệ số/\allowbreak{}tầng RK hoặc dự báo–hiệu chỉnh,\allowbreak{} phần dư và thông tin kiểm tra bước ẩn.
+
+\examplebreak\subsubsection*{49. RK4}
+
+\textbf{Input:} Vế phải x\ensuremath{\prime};\allowbreak{} y\ensuremath{\prime};\allowbreak{} z\ensuremath{\prime} (\allowbreak{}1–3 hàm);\allowbreak{} Giá trị đầu x,\allowbreak{} y,\allowbreak{} z;\allowbreak{} Thời điểm đầu t0;\allowbreak{} Thời điểm cuối;\allowbreak{} Bước h;\allowbreak{} Dung sai bước ẩn.
+
+\begin{enumerate}
+
+\item Viết hệ u\ensuremath{\prime}=\allowbreak{}f(\allowbreak{}t,\allowbreak{}u),\allowbreak{} u(\allowbreak{}a)=\allowbreak{}u\_0;\allowbreak{} trong ô nhập,\allowbreak{} biến độc lập là t và các trạng thái là x,\allowbreak{}y,\allowbreak{}z.
+
+\item Lập lưới t\_i=\allowbreak{}a+\allowbreak{}ih;\allowbreak{} h phải đúng chiều và kết thúc đúng ở b. Công bố bộ hệ số của phương pháp.
+
+\item Công bố bảng A,\allowbreak{}b,\allowbreak{}c. Mỗi bước tính lần lượt K\_j=\allowbreak{}f(\allowbreak{}t\_i+\allowbreak{}c\_jh,\allowbreak{}u\_i+\allowbreak{}h\ensuremath{\sum}\_(\allowbreak{}l<j)a\_jl K\_l),\allowbreak{} rồi u\_(\allowbreak{}i+\allowbreak{}1)=\allowbreak{}u\_i+\allowbreak{}h\ensuremath{\sum}\_j b\_jK\_j.
+
+\item Ghi các tầng/\allowbreak{}dự báo/\allowbreak{}hiệu chỉnh thực sự được tính. Bước ẩn kiểm tra phần dư và Jacobian;\allowbreak{} đánh giá của bộ giải không đồng nghĩa một vòng Newton.
+
+\item Lập bảng nghiệm qua mọi t\_i,\allowbreak{} kèm phần dư bước ẩn. Kết luận trên lưới h;\allowbreak{} dung sai hệ ẩn không phải cận sai số nghiệm ODE.
+
+\end{enumerate}
+
+\textbf{Output:} Nghiệm tại các mốc,\allowbreak{} bảng hệ số/\allowbreak{}tầng RK hoặc dự báo–hiệu chỉnh,\allowbreak{} phần dư và thông tin kiểm tra bước ẩn.
+
+\examplebreak\subsubsection*{50. Adams 2}
+
+\textbf{Input:} Vế phải x\ensuremath{\prime};\allowbreak{} y\ensuremath{\prime};\allowbreak{} z\ensuremath{\prime} (\allowbreak{}1–3 hàm);\allowbreak{} Giá trị đầu x,\allowbreak{} y,\allowbreak{} z;\allowbreak{} Thời điểm đầu t0;\allowbreak{} Thời điểm cuối;\allowbreak{} Bước h;\allowbreak{} Dung sai bước ẩn.
+
+\begin{enumerate}
+
+\item Viết hệ u\ensuremath{\prime}=\allowbreak{}f(\allowbreak{}t,\allowbreak{}u),\allowbreak{} u(\allowbreak{}a)=\allowbreak{}u\_0;\allowbreak{} trong ô nhập,\allowbreak{} biến độc lập là t và các trạng thái là x,\allowbreak{}y,\allowbreak{}z.
+
+\item Lập lưới t\_i=\allowbreak{}a+\allowbreak{}ih;\allowbreak{} h phải đúng chiều và kết thúc đúng ở b. Công bố bộ hệ số của phương pháp.
+
+\item Khởi tạo s\ensuremath{-}1 bước bằng RK4;\allowbreak{} từ đủ lịch sử,\allowbreak{} dự báo AB\_s rồi giải phương trình AM\_(\allowbreak{}s+\allowbreak{}1) với dự báo làm điểm đầu.
+
+\item Ghi các tầng/\allowbreak{}dự báo/\allowbreak{}hiệu chỉnh thực sự được tính. Bước ẩn kiểm tra phần dư và Jacobian;\allowbreak{} đánh giá của bộ giải không đồng nghĩa một vòng Newton.
+
+\item Lập bảng nghiệm qua mọi t\_i,\allowbreak{} kèm phần dư bước ẩn. Kết luận trên lưới h;\allowbreak{} dung sai hệ ẩn không phải cận sai số nghiệm ODE.
+
+\end{enumerate}
+
+\textbf{Output:} Nghiệm tại các mốc,\allowbreak{} bảng hệ số/\allowbreak{}tầng RK hoặc dự báo–hiệu chỉnh,\allowbreak{} phần dư và thông tin kiểm tra bước ẩn.
+
+\examplebreak\subsubsection*{51. Adams 3}
+
+\textbf{Input:} Vế phải x\ensuremath{\prime};\allowbreak{} y\ensuremath{\prime};\allowbreak{} z\ensuremath{\prime} (\allowbreak{}1–3 hàm);\allowbreak{} Giá trị đầu x,\allowbreak{} y,\allowbreak{} z;\allowbreak{} Thời điểm đầu t0;\allowbreak{} Thời điểm cuối;\allowbreak{} Bước h;\allowbreak{} Dung sai bước ẩn.
+
+\begin{enumerate}
+
+\item Viết hệ u\ensuremath{\prime}=\allowbreak{}f(\allowbreak{}t,\allowbreak{}u),\allowbreak{} u(\allowbreak{}a)=\allowbreak{}u\_0;\allowbreak{} trong ô nhập,\allowbreak{} biến độc lập là t và các trạng thái là x,\allowbreak{}y,\allowbreak{}z.
+
+\item Lập lưới t\_i=\allowbreak{}a+\allowbreak{}ih;\allowbreak{} h phải đúng chiều và kết thúc đúng ở b. Công bố bộ hệ số của phương pháp.
+
+\item Khởi tạo s\ensuremath{-}1 bước bằng RK4;\allowbreak{} từ đủ lịch sử,\allowbreak{} dự báo AB\_s rồi giải phương trình AM\_(\allowbreak{}s+\allowbreak{}1) với dự báo làm điểm đầu.
+
+\item Ghi các tầng/\allowbreak{}dự báo/\allowbreak{}hiệu chỉnh thực sự được tính. Bước ẩn kiểm tra phần dư và Jacobian;\allowbreak{} đánh giá của bộ giải không đồng nghĩa một vòng Newton.
+
+\item Lập bảng nghiệm qua mọi t\_i,\allowbreak{} kèm phần dư bước ẩn. Kết luận trên lưới h;\allowbreak{} dung sai hệ ẩn không phải cận sai số nghiệm ODE.
+
+\end{enumerate}
+
+\textbf{Output:} Nghiệm tại các mốc,\allowbreak{} bảng hệ số/\allowbreak{}tầng RK hoặc dự báo–hiệu chỉnh,\allowbreak{} phần dư và thông tin kiểm tra bước ẩn.
+
+\examplebreak\subsubsection*{52. Adams 4}
+
+\textbf{Input:} Vế phải x\ensuremath{\prime};\allowbreak{} y\ensuremath{\prime};\allowbreak{} z\ensuremath{\prime} (\allowbreak{}1–3 hàm);\allowbreak{} Giá trị đầu x,\allowbreak{} y,\allowbreak{} z;\allowbreak{} Thời điểm đầu t0;\allowbreak{} Thời điểm cuối;\allowbreak{} Bước h;\allowbreak{} Dung sai bước ẩn.
+
+\begin{enumerate}
+
+\item Viết hệ u\ensuremath{\prime}=\allowbreak{}f(\allowbreak{}t,\allowbreak{}u),\allowbreak{} u(\allowbreak{}a)=\allowbreak{}u\_0;\allowbreak{} trong ô nhập,\allowbreak{} biến độc lập là t và các trạng thái là x,\allowbreak{}y,\allowbreak{}z.
+
+\item Lập lưới t\_i=\allowbreak{}a+\allowbreak{}ih;\allowbreak{} h phải đúng chiều và kết thúc đúng ở b. Công bố bộ hệ số của phương pháp.
+
+\item Khởi tạo s\ensuremath{-}1 bước bằng RK4;\allowbreak{} từ đủ lịch sử,\allowbreak{} dự báo AB\_s rồi giải phương trình AM\_(\allowbreak{}s+\allowbreak{}1) với dự báo làm điểm đầu.
+
+\item Ghi các tầng/\allowbreak{}dự báo/\allowbreak{}hiệu chỉnh thực sự được tính. Bước ẩn kiểm tra phần dư và Jacobian;\allowbreak{} đánh giá của bộ giải không đồng nghĩa một vòng Newton.
+
+\item Lập bảng nghiệm qua mọi t\_i,\allowbreak{} kèm phần dư bước ẩn. Kết luận trên lưới h;\allowbreak{} dung sai hệ ẩn không phải cận sai số nghiệm ODE.
+
+\end{enumerate}
+
+\textbf{Output:} Nghiệm tại các mốc,\allowbreak{} bảng hệ số/\allowbreak{}tầng RK hoặc dự báo–hiệu chỉnh,\allowbreak{} phần dư và thông tin kiểm tra bước ẩn.
+
+\examplebreak\subsubsection*{53. Adams 5}
+
+\textbf{Input:} Vế phải x\ensuremath{\prime};\allowbreak{} y\ensuremath{\prime};\allowbreak{} z\ensuremath{\prime} (\allowbreak{}1–3 hàm);\allowbreak{} Giá trị đầu x,\allowbreak{} y,\allowbreak{} z;\allowbreak{} Thời điểm đầu t0;\allowbreak{} Thời điểm cuối;\allowbreak{} Bước h;\allowbreak{} Dung sai bước ẩn.
+
+\begin{enumerate}
+
+\item Viết hệ u\ensuremath{\prime}=\allowbreak{}f(\allowbreak{}t,\allowbreak{}u),\allowbreak{} u(\allowbreak{}a)=\allowbreak{}u\_0;\allowbreak{} trong ô nhập,\allowbreak{} biến độc lập là t và các trạng thái là x,\allowbreak{}y,\allowbreak{}z.
+
+\item Lập lưới t\_i=\allowbreak{}a+\allowbreak{}ih;\allowbreak{} h phải đúng chiều và kết thúc đúng ở b. Công bố bộ hệ số của phương pháp.
+
+\item Khởi tạo s\ensuremath{-}1 bước bằng RK4;\allowbreak{} từ đủ lịch sử,\allowbreak{} dự báo AB\_s rồi giải phương trình AM\_(\allowbreak{}s+\allowbreak{}1) với dự báo làm điểm đầu.
+
+\item Ghi các tầng/\allowbreak{}dự báo/\allowbreak{}hiệu chỉnh thực sự được tính. Bước ẩn kiểm tra phần dư và Jacobian;\allowbreak{} đánh giá của bộ giải không đồng nghĩa một vòng Newton.
+
+\item Lập bảng nghiệm qua mọi t\_i,\allowbreak{} kèm phần dư bước ẩn. Kết luận trên lưới h;\allowbreak{} dung sai hệ ẩn không phải cận sai số nghiệm ODE.
+
+\end{enumerate}
+
+\textbf{Output:} Nghiệm tại các mốc,\allowbreak{} bảng hệ số/\allowbreak{}tầng RK hoặc dự báo–hiệu chỉnh,\allowbreak{} phần dư và thông tin kiểm tra bước ẩn.
+
+\examplebreak\subsubsection*{54. RK2 tham số}
+
+\textbf{Input:} Vế phải x\ensuremath{\prime};\allowbreak{} y\ensuremath{\prime};\allowbreak{} z\ensuremath{\prime} (\allowbreak{}1–3 hàm);\allowbreak{} Giá trị đầu x,\allowbreak{} y,\allowbreak{} z;\allowbreak{} Thời điểm đầu t0;\allowbreak{} Thời điểm cuối;\allowbreak{} Bước h;\allowbreak{} Dung sai bước ẩn;\allowbreak{} Tham số biết trước;\allowbreak{} Giá trị tham số.
+
+\begin{enumerate}
+
+\item Viết hệ u\ensuremath{\prime}=\allowbreak{}f(\allowbreak{}t,\allowbreak{}u),\allowbreak{} u(\allowbreak{}a)=\allowbreak{}u\_0;\allowbreak{} trong ô nhập,\allowbreak{} biến độc lập là t và các trạng thái là x,\allowbreak{}y,\allowbreak{}z.
+
+\item Lập lưới t\_i=\allowbreak{}a+\allowbreak{}ih;\allowbreak{} h phải đúng chiều và kết thúc đúng ở b. Công bố bộ hệ số của phương pháp.
+
+\item Công bố bảng A,\allowbreak{}b,\allowbreak{}c. Mỗi bước tính lần lượt K\_j=\allowbreak{}f(\allowbreak{}t\_i+\allowbreak{}c\_jh,\allowbreak{}u\_i+\allowbreak{}h\ensuremath{\sum}\_(\allowbreak{}l<j)a\_jl K\_l),\allowbreak{} rồi u\_(\allowbreak{}i+\allowbreak{}1)=\allowbreak{}u\_i+\allowbreak{}h\ensuremath{\sum}\_j b\_jK\_j.
+
+\item Ghi các tầng/\allowbreak{}dự báo/\allowbreak{}hiệu chỉnh thực sự được tính. Bước ẩn kiểm tra phần dư và Jacobian;\allowbreak{} đánh giá của bộ giải không đồng nghĩa một vòng Newton.
+
+\item Lập bảng nghiệm qua mọi t\_i,\allowbreak{} kèm phần dư bước ẩn. Kết luận trên lưới h;\allowbreak{} dung sai hệ ẩn không phải cận sai số nghiệm ODE.
+
+\end{enumerate}
+
+\textbf{Output:} Nghiệm tại các mốc,\allowbreak{} bảng hệ số/\allowbreak{}tầng RK hoặc dự báo–hiệu chỉnh,\allowbreak{} phần dư và thông tin kiểm tra bước ẩn.
+
+\examplebreak\subsubsection*{55. RK3 tham số}
+
+\textbf{Input:} Vế phải x\ensuremath{\prime};\allowbreak{} y\ensuremath{\prime};\allowbreak{} z\ensuremath{\prime} (\allowbreak{}1–3 hàm);\allowbreak{} Giá trị đầu x,\allowbreak{} y,\allowbreak{} z;\allowbreak{} Thời điểm đầu t0;\allowbreak{} Thời điểm cuối;\allowbreak{} Bước h;\allowbreak{} Dung sai bước ẩn;\allowbreak{} alpha2;\allowbreak{} alpha3.
+
+\begin{enumerate}
+
+\item Viết hệ u\ensuremath{\prime}=\allowbreak{}f(\allowbreak{}t,\allowbreak{}u),\allowbreak{} u(\allowbreak{}a)=\allowbreak{}u\_0;\allowbreak{} trong ô nhập,\allowbreak{} biến độc lập là t và các trạng thái là x,\allowbreak{}y,\allowbreak{}z.
+
+\item Lập lưới t\_i=\allowbreak{}a+\allowbreak{}ih;\allowbreak{} h phải đúng chiều và kết thúc đúng ở b. Công bố bộ hệ số của phương pháp.
+
+\item Công bố bảng A,\allowbreak{}b,\allowbreak{}c. Mỗi bước tính lần lượt K\_j=\allowbreak{}f(\allowbreak{}t\_i+\allowbreak{}c\_jh,\allowbreak{}u\_i+\allowbreak{}h\ensuremath{\sum}\_(\allowbreak{}l<j)a\_jl K\_l),\allowbreak{} rồi u\_(\allowbreak{}i+\allowbreak{}1)=\allowbreak{}u\_i+\allowbreak{}h\ensuremath{\sum}\_j b\_jK\_j.
+
+\item Ghi các tầng/\allowbreak{}dự báo/\allowbreak{}hiệu chỉnh thực sự được tính. Bước ẩn kiểm tra phần dư và Jacobian;\allowbreak{} đánh giá của bộ giải không đồng nghĩa một vòng Newton.
+
+\item Lập bảng nghiệm qua mọi t\_i,\allowbreak{} kèm phần dư bước ẩn. Kết luận trên lưới h;\allowbreak{} dung sai hệ ẩn không phải cận sai số nghiệm ODE.
+
+\end{enumerate}
+
+\textbf{Output:} Nghiệm tại các mốc,\allowbreak{} bảng hệ số/\allowbreak{}tầng RK hoặc dự báo–hiệu chỉnh,\allowbreak{} phần dư và thông tin kiểm tra bước ẩn.
+
+\examplebreak\subsubsection*{56. RK tùy chỉnh}
+
+\textbf{Input:} Vế phải x\ensuremath{\prime};\allowbreak{} y\ensuremath{\prime};\allowbreak{} z\ensuremath{\prime} (\allowbreak{}1–3 hàm);\allowbreak{} Giá trị đầu x,\allowbreak{} y,\allowbreak{} z;\allowbreak{} Thời điểm đầu t0;\allowbreak{} Thời điểm cuối;\allowbreak{} Bước h;\allowbreak{} Dung sai bước ẩn;\allowbreak{} Ma trận A (\allowbreak{}JSON);\allowbreak{} Trọng số b;\allowbreak{} Vị trí c.
+
+\begin{enumerate}
+
+\item Viết hệ u\ensuremath{\prime}=\allowbreak{}f(\allowbreak{}t,\allowbreak{}u),\allowbreak{} u(\allowbreak{}a)=\allowbreak{}u\_0;\allowbreak{} trong ô nhập,\allowbreak{} biến độc lập là t và các trạng thái là x,\allowbreak{}y,\allowbreak{}z.
+
+\item Lập lưới t\_i=\allowbreak{}a+\allowbreak{}ih;\allowbreak{} h phải đúng chiều và kết thúc đúng ở b. Công bố bộ hệ số của phương pháp.
+
+\item Công bố bảng A,\allowbreak{}b,\allowbreak{}c. Mỗi bước tính lần lượt K\_j=\allowbreak{}f(\allowbreak{}t\_i+\allowbreak{}c\_jh,\allowbreak{}u\_i+\allowbreak{}h\ensuremath{\sum}\_(\allowbreak{}l<j)a\_jl K\_l),\allowbreak{} rồi u\_(\allowbreak{}i+\allowbreak{}1)=\allowbreak{}u\_i+\allowbreak{}h\ensuremath{\sum}\_j b\_jK\_j.
+
+\item Ghi các tầng/\allowbreak{}dự báo/\allowbreak{}hiệu chỉnh thực sự được tính. Bước ẩn kiểm tra phần dư và Jacobian;\allowbreak{} đánh giá của bộ giải không đồng nghĩa một vòng Newton.
+
+\item Lập bảng nghiệm qua mọi t\_i,\allowbreak{} kèm phần dư bước ẩn. Kết luận trên lưới h;\allowbreak{} dung sai hệ ẩn không phải cận sai số nghiệm ODE.
+
+\end{enumerate}
+
+\textbf{Output:} Nghiệm tại các mốc,\allowbreak{} bảng hệ số/\allowbreak{}tầng RK hoặc dự báo–hiệu chỉnh,\allowbreak{} phần dư và thông tin kiểm tra bước ẩn.
+
+\subsection{Bài toán biên}
+
+\examplebreak\subsubsection*{57. Biên tổng quát}
+
+\textbf{Input:} Hàm p(\allowbreak{}x);\allowbreak{} Hàm q(\allowbreak{}x);\allowbreak{} Hàm f(\allowbreak{}x);\allowbreak{} Đầu đoạn a;\allowbreak{} Cuối đoạn b;\allowbreak{} Bước h;\allowbreak{} Biên trái: alpha beta gamma;\allowbreak{} Biên phải: alpha beta gamma.
+
+\begin{enumerate}
+
+\item Viết \ensuremath{-}(\allowbreak{}p u\ensuremath{\prime})\ensuremath{\prime}+\allowbreak{}qu=\allowbreak{}f trên [a,\allowbreak{}b];\allowbreak{} công bố lưới và quy ước dấu.
+
+\item Tính p tại nửa bước,\allowbreak{} q tại mốc;\allowbreak{} lập các hàng sai phân ở mốc trong từ thông lượng hai mặt ô.
+
+\item Thay \ensuremath{\alpha}u\ensuremath{\prime}+\allowbreak{}\ensuremath{\beta}u=\allowbreak{}\ensuremath{\gamma} ở mỗi đầu;\allowbreak{} trường hợp \ensuremath{\alpha}=\allowbreak{}0 là Dirichlet,\allowbreak{} trường hợp \ensuremath{\alpha}\ensuremath{\ne}0 dùng phương trình nửa ô.
+
+\item Công bố các đường chéo và vế phải;\allowbreak{} giải hệ băng đã lập,\allowbreak{} giữ đủ các hàng biên.
+
+\item Lập bảng u\_i,\allowbreak{} thế lại hệ và báo phần dư. Phần dư đại số không đồng nghĩa sai số so với nghiệm liên tục.
+
+\end{enumerate}
+
+\textbf{Output:} Hệ rời rạc,\allowbreak{} nghiệm trên lưới hoặc các cặp trị riêng–vectơ riêng và thông tin chuẩn hóa/\allowbreak{}kiểm tra.
+
+\examplebreak\subsubsection*{58. Trị riêng}
+
+\textbf{Input:} Hàm p(\allowbreak{}x);\allowbreak{} Hàm q(\allowbreak{}x);\allowbreak{} Hàm r(\allowbreak{}x);\allowbreak{} Đầu đoạn a;\allowbreak{} Cuối đoạn b;\allowbreak{} Bước h;\allowbreak{} Số trị riêng nhỏ nhất.
+
+\begin{enumerate}
+
+\item Viết \ensuremath{-}(\allowbreak{}p u\ensuremath{\prime})\ensuremath{\prime}+\allowbreak{}qu=\allowbreak{}\ensuremath{\lambda}r u trên [a,\allowbreak{}b];\allowbreak{} công bố lưới và quy ước dấu.
+
+\item Tính p tại nửa bước,\allowbreak{} q tại mốc;\allowbreak{} lập các hàng sai phân ở mốc trong từ thông lượng hai mặt ô.
+
+\item Dùng u(\allowbreak{}a)=\allowbreak{}u(\allowbreak{}b)=\allowbreak{}0;\allowbreak{} kiểm tra p>0,\allowbreak{} r>0 và dựng K v=\allowbreak{}\ensuremath{\lambda} R v trên các mốc trong.
+
+\item Đổi sang ma trận đối xứng R\textasciicircum{}(\allowbreak{}\ensuremath{-}1/\allowbreak{}2) K R\textasciicircum{}(\allowbreak{}\ensuremath{-}1/\allowbreak{}2),\allowbreak{} tính các trị riêng nhỏ nhất và đổi lại vectơ.
+
+\item Khôi phục hai biên 0,\allowbreak{} chuẩn hóa max|u|=\allowbreak{}1 đúng như tool;\allowbreak{} công bố từng trị riêng và vectơ riêng trên lưới.
+
+\end{enumerate}
+
+\textbf{Output:} Hệ rời rạc,\allowbreak{} nghiệm trên lưới hoặc các cặp trị riêng–vectơ riêng và thông tin chuẩn hóa/\allowbreak{}kiểm tra.

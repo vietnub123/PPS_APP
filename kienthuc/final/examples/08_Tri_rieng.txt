@@ -1,14 +1,63 @@
 Trị riêng Sturm–Liouville
+
 ================================================================
--(p(x)u')' + q(x)u = lambda*r(x)*u; u(a)=u(b)=0.
-Dùng dấu của phép tính trong mã gốc; sửa nhãn phương trình vốn không nhất quán.
-Hàm riêng được chuẩn hóa max |u| = 1; dấu hàm riêng tùy ý.
-Đây là trị riêng của hệ sai phân; phải xét giảm h để đánh giá sai số so với bài toán liên tục.
+
+Dữ liệu → lập luận → kết quả
+
+Hàm p(x): 1; Hàm q(x): 0; Hàm r(x): 1; Đầu đoạn a: 0; Cuối đoạn b: 1; Bước h: 0.3333333333333333; Số trị riêng nhỏ nhất: 2.
+
+Cách lập bài và thứ tự các bước
+
+B1. Viết −(p u′)′+qu=λr u trên [a,b]; công bố lưới và quy ước dấu.
+
+B2. Tính p tại nửa bước, q tại mốc; lập các hàng sai phân ở mốc trong từ thông lượng hai mặt ô.
+
+B3. Dùng u(a)=u(b)=0; kiểm tra p>0, r>0 và dựng K v=λ R v trên các mốc trong.
+
+B4. Đổi sang ma trận đối xứng R^(−1/2) K R^(−1/2), tính các trị riêng nhỏ nhất và đổi lại vectơ.
+
+B5. Khôi phục hai biên 0, chuẩn hóa max|u|=1 đúng như tool; công bố từng trị riêng và vectơ riêng trên lưới.
+
+Output cần đọc: Hệ rời rạc, nghiệm trên lưới hoặc các cặp trị riêng–vectơ riêng và thông tin chuẩn hóa/kiểm tra.
+
+1. Phương trình và công thức áp dụng
+
+Bài toán trị riêng
+
+-\frac{d}{dx}\left(p(x)\frac{du}{dx}\right)+q(x)u=\lambda r(x)u
+
+u(a)=u(b)=0
+
+Đổi bài toán trị riêng tổng quát thành đối xứng
+
+K v=\lambda Rv,\quad R=\operatorname{diag}(r_i),\quad T=R^{-1/2}KR^{-1/2}
+
+T_{ii}=\frac{p_{i-1/2}+p_{i+1/2}}{h^2r_i}+\frac{q_i}{r_i}
+
+T_{i,i+1}=-\frac{p_{i+1/2}}{h^2\sqrt{r_i r_{i+1}}}
+
+2. Bảng tính và các bước thực hiện
+
+Toán tử đối xứng thực sự đưa vào bộ giải
+================================================================
+
+Toán tử đối xứng thực sự đưa vào bộ giải
+i trong  x_i             r_i  T_ii                                                                               T_i,i+1                                                                             T_ii / scale  T_i,i+1 / scale
+1        0.333333333333  1    18.000000000000003600000000000000540000000000000072000000000000009000000000000001  -9.0000000000000018000000000000002700000000000000360000000000000045000000000000005  1             -0.5
+2        0.666666666667  1    18.000000000000003600000000000000540000000000000072000000000000009000000000000001                                                                                      1
+
+
+Trị riêng
+================================================================
 
 Trị riêng
 k  lambda
 1  9
 2  27
+
+
+Hàm riêng
+================================================================
 
 Hàm riêng
 x               u1  u2
@@ -16,3 +65,16 @@ x               u1  u2
 0.333333333333  1   1
 0.666666666667  1   -1
 1               0   0
+
+
+3. Kết luận và sai số
+
+-(p(x)u')' + q(x)u = lambda*r(x)*u; u(a)=u(b)=0.
+
+Dùng dấu của phép tính trong mã gốc; sửa nhãn phương trình vốn không nhất quán.
+
+Hàm riêng được chuẩn hóa max |u| = 1; dấu hàm riêng tùy ý.
+
+Đây là trị riêng của hệ sai phân; phải xét giảm h để đánh giá sai số so với bài toán liên tục.
+
+Đổi thang chung trước khi gọi eigh_tridiagonal: scale=18.000000000000003600000000000000540000000000000072000000000000009000000000000001. Nhân trị riêng của T/scale với scale; đổi vectơ bằng R^(−1/2), thêm hai biên 0 rồi chuẩn hóa max|u|=1.

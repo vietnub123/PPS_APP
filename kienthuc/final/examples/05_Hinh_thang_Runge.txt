@@ -1,29 +1,65 @@
 Tích phân — Hình thang
+
 ================================================================
-I ≈ 0.333984375; số khoảng chia n = 16.
-Ước lượng Runge: 0.000651041667.
-Runge là ước lượng tiệm cận, không phải cận sai số được chứng minh.
-Đã đối chiếu thêm lưới không lồng nhau để giảm bỏ sót dao động; phép kiểm tra này vẫn không phải cận sai số bảo đảm.
+
+Dữ liệu → lập luận → kết quả
+
+Hàm f(x): x^2; Cận trái a: 0; Cận phải b: 1; Số khoảng chia n: 2; Dung sai tự chia lưới (để trống: dùng n): 0.001; Nguồn dữ liệu: Hàm.
+
+Cách lập bài và thứ tự các bước
+
+B1. Xác định nguồn Hàm/Bảng, hai cận, n và điều kiện miền; nếu đảo cận thì đổi dấu kết quả.
+
+B2. Lập lưới đúng quy tắc và bảng x_i, y_i, w_i; h=(b−a)/n. Với trung điểm, dữ liệu phải ở tâm mỗi ô.
+
+B3. Viết công thức và thế các hạng: I_h≈h[y_0+2y_1+…+2y_(n−1)+y_n]/2.
+
+B4. Nếu nhập ε và M, chọn n từ cận lý thuyết. Nếu chỉ nhập ε, tăng lưới và kiểm tra Runge cùng lưới đối chiếu.
+
+B5. Công bố kết quả ở lưới được trả về, các lượt chia lưới và sai số; Runge là ước lượng, cận M có giả thiết riêng.
+
+Output cần đọc: Tích phân xấp xỉ, lưới/trọng số, các lượt tinh chỉnh và ước lượng/cận sai số được phân biệt rõ.
+
+1. Phương trình và công thức áp dụng
+
+Công thức tích phân
+
+I_h=\frac{h}{2}\left[y_0+2\sum_{i=1}^{n-1}y_i+y_n\right]
+
+Cộng theo các trọng số thực trong bảng
+
+I_h=s h\left(w_0y_0+w_1y_1+\cdots+w_my_m\right)
+
+s=1,\quad h=0.0625,\quad m=16
+
+2. Bảng tính và các bước thực hiện
 
 Các giá trị và trọng số
-x       f(x)        trọng số
-0       0           0.5
-0.0625  0.00390625  1
-0.125   0.015625    1
-0.1875  0.03515625  1
-0.25    0.0625      1
-0.3125  0.09765625  1
-0.375   0.140625    1
-0.4375  0.19140625  1
-0.5     0.25        1
-0.5625  0.31640625  1
-0.625   0.390625    1
-0.6875  0.47265625  1
-0.75    0.5625      1
-0.8125  0.66015625  1
-0.875   0.765625    1
-0.9375  0.87890625  1
-1       1           0.5
+================================================================
+
+Các giá trị và trọng số
+x       f(x)        trọng số  w_i f(x_i)
+0       0           0.5       0
+0.0625  0.00390625  1         0.00390625
+0.125   0.015625    1         0.015625
+0.1875  0.03515625  1         0.03515625
+0.25    0.0625      1         0.0625
+0.3125  0.09765625  1         0.09765625
+0.375   0.140625    1         0.140625
+0.4375  0.19140625  1         0.19140625
+0.5     0.25        1         0.25
+0.5625  0.31640625  1         0.31640625
+0.625   0.390625    1         0.390625
+0.6875  0.47265625  1         0.47265625
+0.75    0.5625      1         0.5625
+0.8125  0.66015625  1         0.66015625
+0.875   0.765625    1         0.765625
+0.9375  0.87890625  1         0.87890625
+1       1           0.5       0.5
+
+
+Chia đôi lưới
+================================================================
 
 Chia đôi lưới
 n   tích phân    ước lượng Runge
@@ -31,6 +67,29 @@ n   tích phân    ước lượng Runge
 8   0.3359375    0.002604166667
 16  0.333984375  0.000651041667
 
+
+Kiểm tra thêm trên lưới không lồng nhau
+
+Kiểm tra thêm trên lưới không lồng nhau
+================================================================
+
 Kiểm tra thêm trên lưới không lồng nhau
 n   n kiểm tra  I kiểm tra      độ chênh
 16  17          0.333910034602  0.000074340398
+
+
+3. Kết luận và sai số
+
+I=\int_{0}^{1}f(x)\,dx\approx 0.333984375
+
+|h|=\frac{|b-a|}{n},\qquad n=16
+
+I ≈ 0.333984375; số khoảng chia n = 16.
+
+Ước lượng Runge: 0.000651041667.
+
+Runge là ước lượng tiệm cận, không phải cận sai số được chứng minh.
+
+Đã đối chiếu thêm lưới không lồng nhau để giảm bỏ sót dao động; phép kiểm tra này vẫn không phải cận sai số bảo đảm.
+
+Trọng số ở bảng đã chứa hệ số 1/2, 1/3 hoặc hệ số Newton–Cotes; cộng w_i*y_i rồi nhân h và dấu s, không chia thêm hệ số của quy tắc lần nữa.

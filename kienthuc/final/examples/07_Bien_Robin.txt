@@ -1,15 +1,63 @@
 Bài toán biên — sai phân hữu hạn
+
 ================================================================
-[p(x)u']' - q(x)u = -f(x)
-Biên: alpha*u' + beta*u = gamma.
-Sai phân tại nút trong: A*u[i-1] + B*u[i] + C*u[i+1] = F.
-Biên Robin dùng công thức nửa ô: p tại biên nhân đạo hàm biên; p tại nửa bước nhân thông lượng trong ô.
-Phần dư nhỏ xác nhận hệ sai phân; sai số so với nghiệm liên tục cần xét khi giảm h.
-Phần dư hệ tuyến tính lớn nhất: 0
-Min u = 0; max u = 1
+
+Dữ liệu → lập luận → kết quả
+
+Hàm p(x): 1; Hàm q(x): 0; Hàm f(x): -2; Đầu đoạn a: 0; Cuối đoạn b: 1; Bước h: 0.5; Biên trái: alpha beta gamma: 1 1 0; Biên phải: alpha beta gamma: 1 1 3.
+
+Cách lập bài và thứ tự các bước
+
+B1. Viết −(p u′)′+qu=f trên [a,b]; công bố lưới và quy ước dấu.
+
+B2. Tính p tại nửa bước, q tại mốc; lập các hàng sai phân ở mốc trong từ thông lượng hai mặt ô.
+
+B3. Thay αu′+βu=γ ở mỗi đầu; trường hợp α=0 là Dirichlet, trường hợp α≠0 dùng phương trình nửa ô.
+
+B4. Công bố các đường chéo và vế phải; giải hệ băng đã lập, giữ đủ các hàng biên.
+
+B5. Lập bảng u_i, thế lại hệ và báo phần dư. Phần dư đại số không đồng nghĩa sai số so với nghiệm liên tục.
+
+Output cần đọc: Hệ rời rạc, nghiệm trên lưới hoặc các cặp trị riêng–vectơ riêng và thông tin chuẩn hóa/kiểm tra.
+
+1. Phương trình và công thức áp dụng
+
+Bài toán biên
+
+\frac{d}{dx}\left(p(x)\frac{du}{dx}\right)-q(x)u=-f(x)
+
+(1)u^\prime(a)+(1)u(a)=0
+
+(1)u^\prime(b)+(1)u(b)=3
+
+Hệ sai phân
+
+A_i u_{i-1}+B_i u_i+C_i u_{i+1}=F_i
+
+2. Bảng tính và các bước thực hiện
+
+Bảng hệ số và nghiệm
+================================================================
 
 Bảng hệ số và nghiệm
 x    A  B     C  F      u
 0    0  -0.5  1  0.25   0
 0.5  1  -2    1  0.5    0.25
 1    1  -1.5  0  -1.25  1
+
+
+3. Kết luận và sai số
+
+[p(x)u']' - q(x)u = -f(x)
+
+Biên: alpha*u' + beta*u = gamma.
+
+Sai phân tại nút trong: A*u[i-1] + B*u[i] + C*u[i+1] = F.
+
+Biên Robin dùng công thức nửa ô: p tại biên nhân đạo hàm biên; p tại nửa bước nhân thông lượng trong ô.
+
+Phần dư nhỏ xác nhận hệ sai phân; sai số so với nghiệm liên tục cần xét khi giảm h.
+
+Phần dư hệ tuyến tính lớn nhất: 0
+
+Min u = 0; max u = 1

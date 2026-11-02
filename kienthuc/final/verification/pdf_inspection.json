@@ -1,6 +1,6 @@
 {
-  "pages": 109,
-  "bookmarks": 111,
+  "pages": 141,
+  "bookmarks": 118,
   "review_pages_zero_based": {
     "horner": 11,
     "inverse": 34,
@@ -16,8 +16,15 @@
     "exam": 105,
     "gauss_restored": 55,
     "qr_restored": 56,
-    "svd_restored": 57
+    "svd_restored": 57,
+    "image_case": 112
   },
   "replacement_chars": 0,
-  "over_page_words": []
+  "over_page_words": [],
+  "preprocessing_pdf": {
+    "pages": 6,
+    "replacement_chars": 0,
+    "over_page_words": [],
+    "formula_and_input_sheet_names_found": true
+  }
 }

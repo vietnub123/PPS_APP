@@ -2,6 +2,28 @@ Spline — Biên tổng quát
 
 ================================================================
 
+Dữ liệu → lập luận → kết quả
+
+Các cặp x,y lấy từ bảng đã nhập; tập thực dùng và ID nguồn được công bố trong phần tính.
+
+Điểm cần tính x (có thể để trống): 1.5; Cấp đạo hàm (0 = giá trị): 0; Bậc spline: 4; Điều kiện biên (JSON): [['phải', 1, 32], ['phải', 2, 48], ['phải', 3, 48]]; Cách giải hệ biên: Tự chọn; Mức trình bày: Tổng hợp.
+
+Cách lập bài và thứ tự các bước
+
+B1. Sắp cặp theo x, giữ ID nguồn; đặt h_i=x_(i+1)−x_i và δ_i=(y_(i+1)−y_i)/h_i.
+
+B2. Công bố bậc spline và điều kiện biên: p−1 điều kiện độc lập đúng phía và cấp trong JSON; không tự thêm biên tự nhiên.
+
+B3. Đặt u=x−x_i trên từng đoạn; lập điều kiện nội suy, ghép đạo hàm đến cấp p−1 và điều kiện biên.
+
+B4. Thực hiện truy hồi hoặc giải đúng hệ đã lập. Với cubic moment, tìm M_i=S″(x_i) rồi khôi phục từng mảnh.
+
+B5. Viết S_i(x) cùng miền [x_i,x_(i+1)]; xác định mảnh chứa điểm tính trước khi thế số, đạo hàm hoặc tích phân.
+
+B6. Kiểm tra giá trị tại mốc, độ khớp đạo hàm và điều kiện biên; kết luận đúng miền nội suy đã nhập.
+
+Output cần đọc: Điều kiện biên, hệ/truy hồi, hệ số và công thức mọi mảnh, giá trị/đạo hàm/tích phân được yêu cầu, phần dư kiểm tra.
+
 1. Bài toán, dữ liệu và điều kiện biên
 
 Phương pháp: Biên tổng quát; bậc tối đa 4. Có 3 mốc và 2 đoạn. Mốc không đều là hợp lệ.

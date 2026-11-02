@@ -101,6 +101,12 @@ def fields(tool,method):
 
 
 def dispatch(tool,method,values,xtext,ytext):
+    from .exam_style import apply_exam_style
+    report = _dispatch(tool,method,values,xtext,ytext)
+    return apply_exam_style(report,tool,method,values,xtext,ytext,fields(tool,method))
+
+
+def _dispatch(tool,method,values,xtext,ytext):
     if not isinstance(values,dict):raise ValueError('values trong bài JSON phải là một đối tượng gồm tên ô và giá trị.')
     sequence_fields={'coef','weights','initial','rk_b','rk_c','derivatives','left','right'}
     values={k: ('; '.join(map(str,v)) if k=='basis' and isinstance(v,(list,tuple)) else ' '.join(map(str,v)) if isinstance(v,(list,tuple)) and k in sequence_fields

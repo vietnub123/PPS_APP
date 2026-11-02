@@ -1,0 +1,309 @@
+{
+  "cases": [
+    {
+      "title": "Nội suy đa thức / Lagrange",
+      "numeric_state_unchanged": true,
+      "baseline_matched": true
+    },
+    {
+      "title": "Nội suy đa thức / Newton",
+      "numeric_state_unchanged": true,
+      "baseline_matched": true
+    },
+    {
+      "title": "Nội suy đa thức / Gauss I",
+      "numeric_state_unchanged": true,
+      "baseline_matched": true
+    },
+    {
+      "title": "Nội suy đa thức / Gauss II",
+      "numeric_state_unchanged": true,
+      "baseline_matched": true
+    },
+    {
+      "title": "Nội suy đa thức / Stirling",
+      "numeric_state_unchanged": true,
+      "baseline_matched": true
+    },
+    {
+      "title": "Nội suy đa thức / Bessel",
+      "numeric_state_unchanged": true,
+      "baseline_matched": true
+    },
+    {
+      "title": "Spline / Tuyến tính",
+      "numeric_state_unchanged": true,
+      "baseline_matched": true
+    },
+    {
+      "title": "Spline / Bậc hai — biên trái",
+      "numeric_state_unchanged": true,
+      "baseline_matched": true
+    },
+    {
+      "title": "Spline / Bậc hai — biên phải",
+      "numeric_state_unchanged": true,
+      "baseline_matched": true
+    },
+    {
+      "title": "Spline / Cubic tự nhiên",
+      "numeric_state_unchanged": true,
+      "baseline_matched": true
+    },
+    {
+      "title": "Spline / Cubic kẹp",
+      "numeric_state_unchanged": true,
+      "baseline_matched": true
+    },
+    {
+      "title": "Spline / Cubic đạo hàm bậc hai",
+      "numeric_state_unchanged": true,
+      "baseline_matched": true
+    },
+    {
+      "title": "Spline / Cubic hỗn hợp",
+      "numeric_state_unchanged": true,
+      "baseline_matched": true
+    },
+    {
+      "title": "Spline / Cubic tuần hoàn",
+      "numeric_state_unchanged": true,
+      "baseline_matched": true
+    },
+    {
+      "title": "Spline / Cubic not-a-knot",
+      "numeric_state_unchanged": true,
+      "baseline_matched": true
+    },
+    {
+      "title": "Spline / Bậc 4 — đạo hàm trái",
+      "numeric_state_unchanged": true,
+      "baseline_matched": true
+    },
+    {
+      "title": "Spline / Biên tổng quát",
+      "numeric_state_unchanged": true,
+      "baseline_matched": true
+    },
+    {
+      "title": "Bình phương tối thiểu / Tuyến tính theo cơ sở",
+      "numeric_state_unchanged": true,
+      "baseline_matched": true
+    },
+    {
+      "title": "Bình phương tối thiểu / Lũy thừa",
+      "numeric_state_unchanged": true,
+      "baseline_matched": true
+    },
+    {
+      "title": "Bình phương tối thiểu / Hàm mũ",
+      "numeric_state_unchanged": true,
+      "baseline_matched": true
+    },
+    {
+      "title": "Bình phương tối thiểu / Lũy thừa — SSE thang y",
+      "numeric_state_unchanged": true,
+      "baseline_matched": true
+    },
+    {
+      "title": "Bình phương tối thiểu / Hàm mũ — SSE thang y",
+      "numeric_state_unchanged": true,
+      "baseline_matched": true
+    },
+    {
+      "title": "Bình phương tối thiểu / Log của tổ hợp cơ sở",
+      "numeric_state_unchanged": true,
+      "baseline_matched": true
+    },
+    {
+      "title": "Bình phương tối thiểu / 1/(a+b*x)",
+      "numeric_state_unchanged": true,
+      "baseline_matched": true
+    },
+    {
+      "title": "Bình phương tối thiểu / x/(a+b*x)",
+      "numeric_state_unchanged": true,
+      "baseline_matched": true
+    },
+    {
+      "title": "Bình phương tối thiểu / a+b*ln(x)",
+      "numeric_state_unchanged": true,
+      "baseline_matched": true
+    },
+    {
+      "title": "Bình phương tối thiểu / A*b^x",
+      "numeric_state_unchanged": true,
+      "baseline_matched": true
+    },
+    {
+      "title": "Nội suy ngược / Lặp tiến",
+      "numeric_state_unchanged": true,
+      "baseline_matched": true
+    },
+    {
+      "title": "Nội suy ngược / Lặp lùi",
+      "numeric_state_unchanged": true,
+      "baseline_matched": true
+    },
+    {
+      "title": "Nội suy ngược / Lặp có cận co",
+      "numeric_state_unchanged": true,
+      "baseline_matched": true
+    },
+    {
+      "title": "Nội suy ngược / Hàm ngược — Newton",
+      "numeric_state_unchanged": true,
+      "baseline_matched": true
+    },
+    {
+      "title": "Nội suy ngược / Hàm ngược — Lagrange",
+      "numeric_state_unchanged": true,
+      "baseline_matched": true
+    },
+    {
+      "title": "Nội suy ngược / Chia đôi đa thức",
+      "numeric_state_unchanged": true,
+      "baseline_matched": true
+    },
+    {
+      "title": "Chọn mốc / Mốc cách đều",
+      "numeric_state_unchanged": true,
+      "baseline_matched": true
+    },
+    {
+      "title": "Chọn mốc / Mốc nội suy ngược",
+      "numeric_state_unchanged": true,
+      "baseline_matched": true
+    },
+    {
+      "title": "Chọn mốc / Chebyshev",
+      "numeric_state_unchanged": true,
+      "baseline_matched": true
+    },
+    {
+      "title": "Đạo hàm & Horner / Đạo hàm từ bảng",
+      "numeric_state_unchanged": true,
+      "baseline_matched": true
+    },
+    {
+      "title": "Đạo hàm & Horner / Horner",
+      "numeric_state_unchanged": true,
+      "baseline_matched": true
+    },
+    {
+      "title": "Tích phân / Hình thang",
+      "numeric_state_unchanged": true,
+      "baseline_matched": true
+    },
+    {
+      "title": "Tích phân / Simpson",
+      "numeric_state_unchanged": true,
+      "baseline_matched": true
+    },
+    {
+      "title": "Tích phân / Trung điểm",
+      "numeric_state_unchanged": true,
+      "baseline_matched": true
+    },
+    {
+      "title": "Tích phân / Newton-Cotes",
+      "numeric_state_unchanged": true,
+      "baseline_matched": true
+    },
+    {
+      "title": "Tích phân / Tích phân kép",
+      "numeric_state_unchanged": true,
+      "baseline_matched": true
+    },
+    {
+      "title": "Phương trình vi phân / Euler hiện",
+      "numeric_state_unchanged": true,
+      "baseline_matched": true
+    },
+    {
+      "title": "Phương trình vi phân / Euler ẩn",
+      "numeric_state_unchanged": true,
+      "baseline_matched": true
+    },
+    {
+      "title": "Phương trình vi phân / Hình thang",
+      "numeric_state_unchanged": true,
+      "baseline_matched": true
+    },
+    {
+      "title": "Phương trình vi phân / RK2",
+      "numeric_state_unchanged": true,
+      "baseline_matched": true
+    },
+    {
+      "title": "Phương trình vi phân / RK3",
+      "numeric_state_unchanged": true,
+      "baseline_matched": true
+    },
+    {
+      "title": "Phương trình vi phân / RK4",
+      "numeric_state_unchanged": true,
+      "baseline_matched": true
+    },
+    {
+      "title": "Phương trình vi phân / Adams 2",
+      "numeric_state_unchanged": true,
+      "baseline_matched": true
+    },
+    {
+      "title": "Phương trình vi phân / Adams 3",
+      "numeric_state_unchanged": true,
+      "baseline_matched": true
+    },
+    {
+      "title": "Phương trình vi phân / Adams 4",
+      "numeric_state_unchanged": true,
+      "baseline_matched": true
+    },
+    {
+      "title": "Phương trình vi phân / Adams 5",
+      "numeric_state_unchanged": true,
+      "baseline_matched": true
+    },
+    {
+      "title": "Phương trình vi phân / RK2 tham số",
+      "numeric_state_unchanged": true,
+      "baseline_matched": true
+    },
+    {
+      "title": "Phương trình vi phân / RK3 tham số",
+      "numeric_state_unchanged": true,
+      "baseline_matched": true
+    },
+    {
+      "title": "Phương trình vi phân / RK tùy chỉnh",
+      "numeric_state_unchanged": true,
+      "baseline_matched": true
+    },
+    {
+      "title": "Bài toán biên / Biên tổng quát",
+      "numeric_state_unchanged": true,
+      "baseline_matched": true
+    },
+    {
+      "title": "Bài toán biên / Trị riêng",
+      "numeric_state_unchanged": true,
+      "baseline_matched": true
+    }
+  ],
+  "baseline_sha256": "ca530a101c76676a8397faf67893bf84e32107e96fd313db9dd410e44d447219",
+  "workbook": {
+    "sheets": 10,
+    "formulas": 197,
+    "excel_recalculation_required": true,
+    "input_sheets_two_columns": true
+  },
+  "source_sha256": {
+    "pps/exam_style.py": "7e5f1ad4573f6d55f59604fa09148495b90b1a5433077235b7a0e0317154ccfb",
+    "pps/polynomial_worked.py": "53f658232e04d04794605a679500a785d53374e381b5c5a37c37ca0a839c53ce",
+    "pps/least_squares_worked.py": "7c2befba089d0bd1771138422dc1f1b044f703eb4f4a22ec20123f34c450f981",
+    "pps/calculus.py": "03675e34d153583e48f4da3af69400ef3d1630d4234c2ea8cafb567da8fa0d73",
+    "pps/differential.py": "9680d0d16704946071ad64ecca736411162b61d3b90329407a4f6df65862fc1e",
+    "kienthuc/final/Tien_xu_ly_Excel.tex": "4f665d9e764c519e65035bab3070a0e8270f99e61f9d142f1e066fe34f975ec5"
+  }
+}

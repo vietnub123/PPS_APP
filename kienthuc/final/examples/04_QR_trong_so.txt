@@ -2,6 +2,28 @@ Bình phương tối thiểu — Tuyến tính theo cơ sở
 
 ================================================================
 
+Dữ liệu → lập luận → kết quả
+
+Các cặp x,y lấy từ bảng đã nhập; tập thực dùng và ID nguồn được công bố trong phần tính.
+
+Các hàm cơ sở (ngăn bằng dấu ;): 1;x; Trọng số w_i (để trống: tất cả bằng 1): 1 2 1; Cách giải bình phương tối thiểu: QR; Quy tắc khi thiếu hạng: Nghiệm duy nhất; Mức trình bày: Tổng hợp.
+
+Cách lập bài và thứ tự các bước
+
+B1. Công bố N quan sát, trọng số và mô hình. Kiểm tra miền, dấu và hạng; không tự lọc dòng để ép phép biến đổi hợp lệ.
+
+B2. Viết phép biến đổi và ánh xạ tham số: z=y, g(x)=c_0φ_0(x)+…+c_(p−1)φ_(p−1)(x); các cơ sở lấy đúng ô nhập.
+
+B3. Lập Φ_ij=φ_j(x_i), bảng các tích và các tổng; viết J=Σw_i(Σc_jφ_j(x_i)−z_i)².
+
+B4. Từ ∂J/∂c_j=0 suy ra (ΦᵀWΦ)c=ΦᵀWz. Trình bày hệ tổng quát rồi hệ đã thế số.
+
+B5. Tính nghiệm bằng bộ giải đã chọn: Gauss trên hệ chuẩn, QR trên thiết kế có trọng số hoặc SVD. Nhật ký phải đúng bộ giải.
+
+B6. Khôi phục tham số và hàm g theo biến gốc; lập r_i=y_i−g(x_i), tính SSE, RMSE và mục tiêu trên thang khớp riêng biệt.
+
+Output cần đọc: Hàm g(x), tham số gốc, bảng thiết kế/tổng, hệ và nhật ký bộ giải, phần dư và sai số có định nghĩa rõ.
+
 1. Bài toán và lựa chọn
 
 Mô hình, mục tiêu và bộ giải
@@ -56,6 +78,27 @@ j  σ_j
 Số điều kiện của thiết kế đổi thang: 3.1861406616345063. Đổi thang chỉ hỗ trợ số học, không phải cận sai số dữ liệu.
 
 3. Bảng cơ sở, biến đổi và các tổng
+
+Đặt N là số quan sát, p là số cơ sở; i=0,…,N−1, j=0,…,p−1. N là số dòng, không phải chỉ số cuối.
+
+z_hat_i=c_0*phi_0(x_i)+c_1*phi_1(x_i)+…+c_(p−1)*phi_(p−1)(x_i).
+
+J(c)=w_0*(z_hat_0−z_0)^2+w_1*(z_hat_1−z_1)^2+…+w_(N−1)*(z_hat_(N−1)−z_(N−1))^2 → min.
+
+Với từng j: ∂J/∂c_j=2*Σ_i w_i*phi_j(x_i)*(z_hat_i−z_i)=0; gom hệ số của từng c_k để lập hệ chuẩn.
+
+G_jk=w_0*phi_j(x_0)*phi_k(x_0)+…+w_(N−1)*phi_j(x_(N−1))*phi_k(x_(N−1)); b_j=w_0*phi_j(x_0)*z_0+…+w_(N−1)*phi_j(x_(N−1))*z_(N−1).
+
+Khuôn hệ chuẩn theo các cơ sở đã chọn
+================================================================
+
+Khuôn hệ chuẩn theo các cơ sở đã chọn
+ẩn   c_0: 1       c_1: x         vế phải
+c_0  Σ w_i·(1)    Σ w_i·(x_i)    Σ w_i·(z_i)
+c_1  Σ w_i·(x_i)  Σ w_i·(x_i^2)  Σ w_i·(x_i*z_i)
+
+
+Mọi dấu Σ trong bảng chạy trên đúng N dòng đã nhập; dòng trọng số 0 đóng góp 0. Thay các tổng này bằng bảng số ở bước kế tiếp; không dùng Φc=z như một hệ khớp đúng.
 
 Biến mục tiêu dùng để giải: z = y.
 

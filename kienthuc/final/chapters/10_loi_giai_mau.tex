@@ -1,0 +1,223 @@
+\chapter{Trình bày theo mẫu bài thi và đối chiếu ảnh}
+\label{ch:presentation}
+\section{Trật tự đọc một lời giải}
+Mẫu ảnh người dùng gửi có một điểm đáng học: mỗi phép tính xuất hiện sau lý do phải tính nó.
+Bài giải đi từ dữ liệu và mô hình, qua công thức tổng quát, bảng cần lập, hệ đã thế số, quá trình tính, rồi mới kết luận.
+Trong phiên bản này, cùng dàn ý đó được dùng trong GUI, HTML xuất ra và danh mục 58 lựa chọn ở cuối phụ lục.
+Các chương trước vẫn giữ công thức, bảng tổng quát, ví dụ và phần Gauss/QR/SVD đầy đủ.
+
+\begin{enumerate}
+\item \textbf{Dữ liệu:} số quan sát $N$, các cặp gốc, mục tiêu, số mốc, đơn vị, trọng số và điều kiện biên. Nếu chọn mốc, công bố ID nguồn và thứ tự sau chọn.
+\item \textbf{Đặt bài:} mô hình/cơ sở, biến chuẩn hóa, nhánh nghiệm hay hệ số quy tắc. Tách tiền xử lý ra khỏi phép giải.
+\item \textbf{Công thức trước, số sau:} định nghĩa mỗi ô bảng, phép truy hồi hoặc từng tổng; viết dạng tổng gọn và dạng khai triển để biết phải cộng gì.
+\item \textbf{Bảng làm việc:} bảng sai phân/tổng/trọng số/hệ số/moment/tầng. Mỗi ô cần hiểu được nó lấy dữ liệu nào từ bước trước.
+\item \textbf{Tính:} thế số vào hệ/công thức; với vòng lặp ghi trạng thái đầu, các lượng tính mới, quyết định cập nhật và điều kiện dừng.
+\item \textbf{Trả lời:} viết hàm hay đa thức cuối, giá trị được hỏi, đơn vị, đổi về biến gốc, sai số và giới hạn của kết luận.
+\end{enumerate}
+Các bảng nhỏ cạnh nhau khi đọc được; bảng mốc nhỏ và Horner dùng chiều ngang.
+Bảng rộng được chia cột khi in và lặp cột chỉ số, không tự cắt mất hệ số.
+Trong GUI/HTML, nhật ký dài đặt trong Chi tiết, vẫn giữ đầy đủ và mở hết khi in HTML.
+Màu nền hoặc ô đánh dấu dùng để chỉ ô thực sự tham gia phép tính, không thay lời giải thích.
+
+\section{Những điểm không được sao chép từ mẫu}
+\subsection{Chọn 102 điểm âm khác với giữ toàn bộ 104 điểm}
+Với mô hình $y=Ae^{bx+c/x}$, $A$ có dấu cố định.
+Lấy $Z_i=\ln(-y_i)$ chỉ hợp lệ khi $y_i<0$.
+Bài mẫu loại hai quan sát dương; tool không tự thực hiện lựa chọn tập con này.
+Nếu chủ động xử lý ở Excel, phải nêu các ID bị loại và tính RMSE trên đúng tập đã công bố.
+Tệp \texttt{Tien\_xu\_ly\_Excel.pdf} hướng dẫn các thao tác đó, kèm các trường hợp tịnh tiến và đổi đơn vị.
+
+Khớp $Z$ bằng bình phương tối thiểu không tối thiểu hóa SSE của $y$.
+Không được gọi nhánh log đã lọc điểm và nhánh LM trên $y$ giữ toàn bộ điểm là cùng một bài giải số.
+Đặt trọng số 0 cũng không bỏ qua kiểm tra miền log của những quan sát vẫn đang được nhập.
+
+\subsection{Cách chọn gốc, bậc và điều kiện dừng nội suy ngược}
+Mã giả trên ảnh tự chọn hướng, lấy gốc tại một đầu khoảng đổi dấu và giảm bậc theo số mốc phía đó.
+Tool giữ hướng và tập mốc người dùng đã chọn; gốc Newton tiến/lùi là đầu/cuối của tập đó, khoảng nghiệm có thể nằm ở giữa.
+Hai lựa chọn này có thể tạo hai đa thức và hai phép lặp khác nhau.
+
+Điều kiện trên ảnh $|t_{k+1}-t_k|<\varepsilon$ là ngưỡng theo biến không thứ nguyên $t$.
+Tool dùng ngưỡng theo $x$ cùng phần dư trên $y$; chế độ chứng nhận còn đòi miền bất biến và cận co.
+Mẫu bỏ khoảng không hội tụ; tool giữ trạng thái chưa đạt và các vòng đã thực hiện.
+Vì vậy chỉ áp dụng cách \emph{trình bày} vòng lặp, không tự thay tiêu chí dừng hay giấu nhánh thất bại.
+
+Mã giả nói thường dùng bậc tối đa 3 hoặc 4, nhưng ví dụ sau đó dùng sáu mốc trên hai cửa sổ khác nhau.
+Cần khai báo chính xác cửa sổ và bậc trước khi đối chiếu hai kết quả; không lấy hai nghiệm in trên ảnh làm chuẩn duy nhất khi thiếu bảng dữ liệu đầy đủ.
+
+\subsection{Ký hiệu đếm và chữ số}
+Dùng $N$ cho số dòng, $n=N-1$ cho chỉ số cuối nếu cần. Mẫu dùng $n$ theo hai nghĩa ở các đoạn khác nhau.
+Giữ hệ số và số trung gian đầy đủ, chỉ làm tròn khi trình bày.
+Hệ chuẩn có thể trình bày để suy luận; nếu nghiệm thực sự tính bằng QR/SVD thì nhật ký phải ghi QR/SVD, không dựng một quá trình khử Gauss giả.
+
+\section{Viết bình phương tối thiểu theo trật tự trên ảnh}
+Xét $N$ cặp hợp lệ $x_i\ne0,y_i<0$, $i=0,\ldots,N-1$, và họ
+\[
+y=Ae^{bx+c/x},\qquad A<0.
+\]
+\textbf{Bước 1 -- tuyến tính hóa và công bố ý nghĩa tham số.}
+\begin{align*}
+-y&=(-A)e^{bx+c/x},\\
+\ln(-y)&=\ln(-A)+bx+\frac cx,\\
+Z&=C_0\varphi_0(x)+b\varphi_1(x)+c\varphi_2(x),\qquad
+(\varphi_0,\varphi_1,\varphi_2)=(1,x,1/x).
+\end{align*}
+Ở đây $C_0=\ln(-A)$; khôi phục $A=-e^{C_0}$.
+Trong tool chọn Hàm mũ, nhập cơ sở \texttt{x;1/x} và cặp $x,y$ gốc hợp lệ.
+
+\textbf{Bước 2 -- lập hàm mục tiêu.}
+\begin{align*}
+J(C_0,b,c)&=\sum_{i=0}^{N-1}\left(C_0+bx_i+\frac{c}{x_i}-Z_i\right)^2\\
+&=\left(C_0+bx_0+c/x_0-Z_0\right)^2+\cdots\\
+&\hspace{8mm}+\left(C_0+bx_{N-1}+c/x_{N-1}-Z_{N-1}\right)^2\longrightarrow\min.
+\end{align*}
+\textbf{Bước 3 -- lập bảng tổng quát.} Mỗi hàng tạo đủ các tích cần chuyển sang hệ chuẩn:
+\begin{center}\small
+\begin{tabular}{crrrrrrr}\toprule
+Dòng&$x_i$&$x_i^2$&$1/x_i$&$1/x_i^2$&$Z_i$&$x_iZ_i$&$Z_i/x_i$\\\midrule
+0&$x_0$&$x_0^2$&$1/x_0$&$1/x_0^2$&$Z_0$&$x_0Z_0$&$Z_0/x_0$\\
+$i$&$x_i$&$x_i^2$&$1/x_i$&$1/x_i^2$&$Z_i$&$x_iZ_i$&$Z_i/x_i$\\
+$N-1$&$x_{N-1}$&$x_{N-1}^2$&$1/x_{N-1}$&$1/x_{N-1}^2$&$Z_{N-1}$&$x_{N-1}Z_{N-1}$&$Z_{N-1}/x_{N-1}$\\\midrule
+Tổng&$S_x$&$S_{xx}$&$S_{1/x}$&$S_{1/x^2}$&$S_Z$&$S_{xZ}$&$S_{Z/x}$\\\bottomrule
+\end{tabular}\end{center}
+Ví dụ $S_x=x_0+x_1+\cdots+x_{N-1}$ và
+$S_{xZ}=x_0Z_0+x_1Z_1+\cdots+x_{N-1}Z_{N-1}$.
+
+\textbf{Bước 4 -- từ cực trị đến hệ chuẩn.}
+Lấy $\partial J/\partial C_0=\partial J/\partial b=\partial J/\partial c=0$:
+\[
+\begin{bmatrix}N&S_x&S_{1/x}\\S_x&S_{xx}&N\\S_{1/x}&N&S_{1/x^2}\end{bmatrix}
+\begin{bmatrix}C_0\\b\\c\end{bmatrix}
+=\begin{bmatrix}S_Z\\S_{xZ}\\S_{Z/x}\end{bmatrix}.
+\]
+Ô $N$ ở hàng 2 cột 3 xuất phát từ $\sum_i x_i(1/x_i)=\sum_i1=N$.
+Nếu có trọng số thì mỗi tổng nhân $w_i$, các ô $N$ thay bằng $\sum w_i$.
+
+\textbf{Bước 5 -- thế số công khai.} Chỉ dùng các tổng \emph{đã làm tròn trên ảnh}, ta có hệ
+\[
+\begin{bmatrix}
+102&694.365000&22.591638\\
+694.365000&5896.316975&102\\
+22.591638&102&8.528590
+\end{bmatrix}
+\begin{bmatrix}C_0\\b\\c\end{bmatrix}
+=\begin{bmatrix}-103.195072\\-1107.657050\\-3.786516\end{bmatrix}.
+\]
+Giải hệ này được xấp xỉ $C_0=0.8684645$, $b=-0.30595013$, $c=0.91461331$,
+$A=-2.38324857$, khớp chữ số in của tham số trong mẫu.
+Đây là \emph{kiểm tra hệ số từ các tổng đã in}, không phải chạy lại 102 quan sát gốc.
+
+\textbf{Bước 6 -- trả lời và sai số.}
+\[
+g(x)=-2.38324857\exp\left(-0.30595013x+\frac{0.91461331}{x}\right).
+\]
+Muốn kiểm tra RMSE $0.111911$ trên ảnh cần đủ các quan sát của chính bảng test1.
+Repo hiện có \texttt{20251GKtest2.xlsx}; không dùng bảng đó thay cho test1.
+Khi có bảng đúng, tính $r_i=y_i-g(x_i)$ rồi
+\[
+\operatorname{RMSE}_y=\sqrt{(r_0^2+\cdots+r_{N-1}^2)/N}.
+\]
+Không nhầm RMSE này với $\sqrt{\mathrm{SSE}/(N-3)}$ hoặc mục tiêu log $J$.
+
+\section{Kiểm tra độc lập đúng bảy mốc Stirling trên ảnh}
+\textbf{Input.} Lấy đúng bảy cặp đọc được trên ảnh; ID trong bảng toàn bộ của ảnh là 24 đến 30, chỉ số cục bộ $j=-3,\ldots,3$.
+Nếu nhập riêng bảy dòng vào tool, ID nguồn trong lượt chạy là 0 đến 6.
+\begin{center}\small
+\begin{tabular}{crrrrrrr}\toprule
+$j$&$-3$&$-2$&$-1$&0&1&2&3\\\midrule
+ID trên ảnh&24&25&26&27&28&29&30\\
+$x_j$&3.760&3.875&3.990&4.105&4.220&4.335&4.450\\
+$y_j$&$-.9384$&$-.8979$&$-.8110$&$-.8056$&$-.7548$&$-.7416$&$-.7049$\\\bottomrule
+\end{tabular}\end{center}
+\textbf{Bước 1 -- đổi biến.}
+$h=0.115$, $x_0=4.105$, $t=(x-4.105)/0.115$.
+Tại $\bar x=4.15$, $\bar t=9/23\simeq0.391304347826$.
+
+\textbf{Bước 2 -- bảng sai phân.} Mỗi ô cấp sau là hiệu hai ô liền kề cấp trước; các ô trống không phải số 0:
+\begin{center}\small
+\begin{tabular}{crrrrrrr}\toprule
+$j$&$y_j$&$\Delta$&$\Delta^2$&$\Delta^3$&$\Delta^4$&$\Delta^5$&$\Delta^6$\\\midrule
+$-3$&$-.9384$&.0405&.0464&$-.1279$&.2548&$-.4647$&.8187\\
+$-2$&$-.8979$&.0869&$-.0815$&.1269&$-.2099$&.3540&\\
+$-1$&$-.8110$&.0054&.0454&$-.0830$&.1441&&\\
+0&$-.8056$&.0508&$-.0376$&.0611&&&\\
+1&$-.7548$&.0132&.0235&&&&\\
+2&$-.7416$&.0367&&&&&\\
+3&$-.7049$&&&&&&\\\bottomrule
+\end{tabular}\end{center}
+Ví dụ $\Delta^2y_{-1}=0.0508-0.0054=0.0454$;
+$\Delta^3y_{-1}=-0.0376-0.0454=-0.0830$.
+
+\textbf{Bước 3 -- lấy đủ các hạng Stirling.}
+\begin{align*}
+Q_6(t)={}&-.8056+\frac{.0054+.0508}{2}t+\frac{.0454}{2!}t^2\\
+&+\frac{.1269-.0830}{2\cdot3!}t(t^2-1)
+ +\frac{-.2099}{4!}t^2(t^2-1)\\
+&+\frac{-.4647+.3540}{2\cdot5!}t(t^2-1)(t^2-4)
+ +\frac{.8187}{6!}t^2(t^2-1)(t^2-4).
+\end{align*}
+Hệ số đi với cơ sở lần lượt là
+\[
+\left[-.8056,\ .0281,\ .0227,\ \frac{.0439}{12},\
+\frac{-.2099}{24},\ \frac{-.1107}{240},\ \frac{.8187}{720}\right].
+\]
+Các phân số giữ đủ chữ số; không nhân/chia giai thừa lần thứ hai.
+
+\textbf{Bước 4 -- khai triển tích rồi cộng theo cột.}
+\begin{center}\small
+\begin{tabular}{lrrrrrrr}\toprule
+Cơ sở&$t^6$&$t^5$&$t^4$&$t^3$&$t^2$&$t$&1\\\midrule
+1&0&0&0&0&0&0&1\\
+$t$&0&0&0&0&0&1&0\\
+$t^2$&0&0&0&0&1&0&0\\
+$t(t^2-1)$&0&0&0&1&0&$-1$&0\\
+$t^2(t^2-1)$&0&0&1&0&$-1$&0&0\\
+$t(t^2-1)(t^2-4)$&0&1&0&$-5$&0&4&0\\
+$t^2(t^2-1)(t^2-4)$&1&0&$-5$&0&4&0&0\\\bottomrule
+\end{tabular}\end{center}
+Nhân từng hàng với hệ số của chính cơ sở đó, cộng các cột. Ví dụ
+$[t^4]Q_6=-.2099/24-5(.8187/720)=-.01443125$.
+\begin{align*}
+Q_6(t)={}&.00113708333333333t^6-.00046125t^5-.01443125t^4\\
+&+.00596458333333333t^3+.0359941666666667t^2\\
+&+.0225966666666667t-.8056.
+\end{align*}
+Các số thập phân tuần hoàn trên chỉ là bản hiển thị; phép tính dùng phân số đầy đủ.
+
+\textbf{Bước 5 -- Horner, giá trị và đổi đạo hàm.}
+Với hệ số bậc giảm $a_6,\ldots,a_0$ và $c=9/23$, khuôn Horner là
+\begin{center}\small
+\begin{tabular}{lrrrrr}\toprule
+Hàng&$t^6$&$t^5$&$\cdots$&$t$&1\\\midrule
+Hệ số&$a_6$&$a_5$&$\cdots$&$a_1$&$a_0$\\
+Nhân $c$&&$cb_6$&$\cdots$&$cb_2$&$cb_1$\\
+Cộng&$b_6=a_6$&$b_5=a_5+cb_6$&$\cdots$&$b_1$&$b_0=Q_6(c)$\\\bottomrule
+\end{tabular}\end{center}
+Bỏ số dư $b_0$, chia tiếp dãy thương $b_6,\ldots,b_1$ cho $t-c$;
+số dư lượt hai là $Q_6'(c)$. Tool và HTML minh họa ghi đủ các ô số của hai lượt.
+\[
+Q_6(9/23)\simeq-0.791227553804,\qquad
+Q_6'(9/23)\simeq0.050055749174.
+\]
+\[
+f(4.15)\simeq-0.791227553804,\qquad
+f'(4.15)\simeq\frac{Q_6'(9/23)}{0.115}\simeq0.435267384125.
+\]
+\textbf{Sai lệch của ảnh:} giá trị $-0.791128$ trong mẫu gần với tổng mới gồm ba hạng đầu
+$-.8056+.0281t+.0227t^2\simeq-.7911285$, chưa phải giá trị của đa thức bậc 6 đã viết.
+Đạo hàm trong ảnh khớp sau làm tròn. Không sửa kết quả đúng của tool để chạy theo giá trị thiếu hạng.
+
+Tệp mở trực tiếp: \texttt{examples/presentation/Stirling\_7\_tu\_anh.json};
+HTML cùng tên đọc ngoại tuyến. Đây là kiểm tra chính xác bảy mốc nhìn thấy, không xác nhận toàn bộ 104 mốc hay RMSE của dữ liệu chưa có.
+
+\section{Đọc các bảng lặp đúng ý nghĩa}
+\textbf{Nội suy ngược:} trạng thái $t_k$ $\to$ tích từng cơ sở $\to$ tổng phi tuyến $\to$ $H(t_k)$ $\to$ $x_{k+1}$ $\to$ độ đổi/phần dư/cận co $\to$ quyết định.
+\textbf{LM:} tham số cũ $\to$ phần dư/Jacobian $\to$ damping/hệ tăng cường $\to$ bước thử $\to$ SSE mới $\to$ nhận hoặc từ chối.
+\textbf{RK:} trạng thái cũ $\to$ thời gian/trạng thái từng tầng $\to$ độ dốc $K_j$ $\to$ đóng góp $hb_jK_j$ $\to$ nghiệm mới.
+\textbf{Adams:} ghi riêng các bước RK4 khởi tạo, sau đó AB dự báo và AM hiệu chỉnh. Hệ số lịch sử được công bố đúng vị trí.
+\textbf{Bước ODE ẩn:} công bố điểm đầu của bộ giải, nghiệm cuối, phần dư, số đánh giá hàm/Jacobian và thông báo thư viện. Số đánh giá không phải số vòng Newton.
+
+Spline và nội suy đa thức là tính hữu hạn, không có tiêu chí hội tụ của phép lặp nghiệm.
+Trị riêng và bài toán biên dùng bộ giải thư viện; không dựng nhật ký vòng lặp nội bộ khi thư viện không cung cấp.
+Trị riêng trong tool chuẩn hóa $\max|u|=1$, không tự đổi sang chuẩn tích phân có trọng số.
+
+\input{verification/outline58.tex}

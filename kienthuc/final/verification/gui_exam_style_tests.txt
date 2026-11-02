@@ -1,0 +1,14 @@
+test_async_calculate_button (tests.test_gui.GuiTests.test_async_calculate_button) ... ok
+test_every_method_accepts_its_editable_example (tests.test_gui.GuiTests.test_every_method_accepts_its_editable_example) ... ok
+test_excel_csv_import_export_and_project (tests.test_gui.GuiTests.test_excel_csv_import_export_and_project) ... ok
+test_failed_inverse_report_stays_visible_and_exportable (tests.test_gui.GuiTests.test_failed_inverse_report_stays_visible_and_exportable) ... ok
+test_interpolation_builds_polynomial_without_a_target (tests.test_gui.GuiTests.test_interpolation_builds_polynomial_without_a_target) ... ok
+test_inverse_json_choices_survive_load_run_and_method_switch (tests.test_gui.GuiTests.test_inverse_json_choices_survive_load_run_and_method_switch) ... ok
+test_inverse_layout_reflows_and_opens_details_without_solving_again (tests.test_gui.GuiTests.test_inverse_layout_reflows_and_opens_details_without_solving_again) ... ok
+test_newton_variants_precision_and_switch (tests.test_gui.GuiTests.test_newton_variants_precision_and_switch) ... ok
+test_saved_inverse_selected_indices_remain_json_and_worked_subjects_display (tests.test_gui.GuiTests.test_saved_inverse_selected_indices_remain_json_and_worked_subjects_display) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 111.644s
+
+OK

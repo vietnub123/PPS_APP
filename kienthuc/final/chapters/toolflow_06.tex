@@ -2,7 +2,7 @@
 \input{verification/inputs_ode.tex}
 \paragraph{Đổi đề sang tên biến của tool.} Biến độc lập là $t$; các thành phần trạng thái lần lượt $x,y,z$. Ví dụ đề $y'=y$ thì nhập biểu thức \texttt{x}, điều kiện đầu một số; đề hệ dao động nhập \texttt{y; -x}, đầu \texttt{1 0}. Nếu dùng tên không có trong hệ, tool từ chối.
 \paragraph{Input lưới.} $a$ là thời điểm đầu, $b$ là cuối, $h$ cùng chiều $a\to b$ và chia hết đoạn trong dung sai máy. $u_0$ là vector đầu. Dung sai bước ẩn không phải sai số toàn cục ODE; số bước được xác định từ $a,b,h$.
-\paragraph{Output chung.} Bảng các thời điểm $t_n$ và trạng thái $u_n$; bảng hệ số RK nếu có; phần dư cuối mỗi bước ẩn và đồ thị. Tool hiện không lưu mọi tầng RK hoặc mọi vòng nội bộ của bộ giải ẩn; các khuôn dưới đây hướng dẫn cách tự lập bài tính tay theo đúng công thức.
+\paragraph{Output chung.} Bảng các thời điểm $t_n$ và trạng thái $u_n$; bảng hệ số và mọi tầng RK thực tính (thời gian, trạng thái, độ dốc và đóng góp $hb_jK_j$); dự báo AB/hiệu chỉnh AM nếu có; phần dư cuối mỗi bước ẩn và đồ thị. Bước ẩn ghi điểm đầu, nghiệm cuối, số đánh giá hàm/Jacobian và thông báo thư viện; không có nhật ký mọi vòng Newton bên trong bộ giải. Các khuôn dưới đây chỉ ra cách đọc và trình bày từng hàng.
 
 \subsection{Euler hiện, Euler ẩn, Hình thang: khuôn một bước}
 Đặt $u'=F(t,u)$, $F_n=F(t_n,u_n)$. Mỗi dòng nhận $t_n,u_n$, tạo $t_{n+1}=t_n+h$ rồi xử lý:

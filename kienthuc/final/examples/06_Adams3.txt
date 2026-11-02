@@ -1,10 +1,97 @@
 Bài toán Cauchy — Adams 3
+
 ================================================================
-Biến độc lập t; các thành phần nghiệm x(t), y(t), z(t).
-Các bước ẩn giải hệ phương trình và kiểm tra phần dư.
-Lưới cố định: dung sai bước ẩn không phải cận sai số toàn cục hoặc bảo đảm ổn định; cần xét thêm h và h/2.
-Adams dùng RK4 khởi tạo, AB dự báo và AM hiệu chỉnh đến hội tụ.
-Adams 3: AB dùng 3 giá trị cũ, AM dùng thêm giá trị mới; bậc toàn cục còn phụ thuộc RK4 khởi tạo.
+
+Dữ liệu → lập luận → kết quả
+
+Vế phải x′; y′; z′ (1–3 hàm): x; Giá trị đầu x, y, z: 1; Thời điểm đầu t0: 0; Thời điểm cuối: 0.3; Bước h: 0.1; Dung sai bước ẩn: 1e-10.
+
+Cách lập bài và thứ tự các bước
+
+B1. Viết hệ u′=f(t,u), u(a)=u_0; trong ô nhập, biến độc lập là t và các trạng thái là x,y,z.
+
+B2. Lập lưới t_i=a+ih; h phải đúng chiều và kết thúc đúng ở b. Công bố bộ hệ số của phương pháp.
+
+B3. Khởi tạo s−1 bước bằng RK4; từ đủ lịch sử, dự báo AB_s rồi giải phương trình AM_(s+1) với dự báo làm điểm đầu.
+
+B4. Ghi các tầng/dự báo/hiệu chỉnh thực sự được tính. Bước ẩn kiểm tra phần dư và Jacobian; đánh giá của bộ giải không đồng nghĩa một vòng Newton.
+
+B5. Lập bảng nghiệm qua mọi t_i, kèm phần dư bước ẩn. Kết luận trên lưới h; dung sai hệ ẩn không phải cận sai số nghiệm ODE.
+
+Output cần đọc: Nghiệm tại các mốc, bảng hệ số/tầng RK hoặc dự báo–hiệu chỉnh, phần dư và thông tin kiểm tra bước ẩn.
+
+1. Phương trình và công thức áp dụng
+
+Phương trình và điều kiện đầu
+
+\frac{dx}{dt}=x,\qquad x(0)=1
+
+Tầng và phép cộng Runge–Kutta
+
+K_j=f(t_i+c_jh,u_i+h\sum_{\ell<j}a_{j\ell}K_\ell)
+
+u_{i+1}=u_i+h(b_1K_1+b_2K_2+\cdots+b_sK_s)
+
+2. Bảng tính và các bước thực hiện
+
+Hệ số Adams — lịch sử theo f_i, f_(i−1), …
+================================================================
+
+Hệ số Adams — lịch sử theo f_i, f_(i−1), …
+vị trí  AB               AM
+0       1.916666666667   0.375
+1       -1.333333333333  0.791666666667
+2       0.416666666667   -0.208333333333
+3                        0.041666666667
+
+
+Các tầng RK đã tính — K là độ dốc, chưa nhân h
+================================================================
+
+Các tầng RK đã tính — K là độ dốc, chưa nhân h
+bước  tầng  t tầng  x tầng          K_x             h b K_x
+1     1     0       1               1               0.016666666667
+1     2     0.05    1.05            1.05            0.035
+1     3     0.05    1.0525          1.0525          0.035083333333
+1     4     0.1     1.10525         1.10525         0.018420833333
+2     1     0.1     1.105170833333  1.105170833333  0.018419513889
+2     2     0.15    1.160429375     1.160429375     0.038680979167
+2     3     0.15    1.163192302083  1.163192302083  0.038773076736
+2     4     0.2     1.221490063542  1.221490063542  0.020358167726
+
+
+Dự báo AB và hiệu chỉnh AM đã tính
+================================================================
+
+Dự báo AB và hiệu chỉnh AM đã tính
+bước  dự báo x        tổng lịch sử AM x  hiệu chỉnh x
+3     1.349815285819  0.778366444979     1.349858925038
+
+
+Phần dư bước ẩn
+
+Phần dư bước ẩn
+================================================================
+
+Phần dư bước ẩn
+bước  t    phần dư
+1     0.1  0
+2     0.2  0
+3     0.3  8.32667268469e-17
+
+
+Kiểm tra bộ giải bước ẩn — số đánh giá không phải số vòng Newton
+
+Kiểm tra bộ giải bước ẩn — số đánh giá không phải số vòng Newton
+================================================================
+
+Kiểm tra bộ giải bước ẩn — số đánh giá không phải số vòng Newton
+bước  đầu x           cuối x          nfev  njev  phần dư            σ_min Jacobian  thông báo
+3     1.349815285819  1.349858925038  14    2     8.32667268469e-17  0.9625          The iteration is not making good progress, as measured by the improvement from the last ten iterations.
+
+
+Nghiệm trên lưới
+================================================================
 
 Nghiệm trên lưới
 t    x
@@ -13,8 +100,19 @@ t    x
 0.2  1.221402570851
 0.3  1.349858925038
 
-Phần dư bước ẩn
-bước  t    phần dư
-1     0.1  0
-2     0.2  0
-3     0.3  8.32667268469e-17
+
+3. Kết luận và sai số
+
+Biến độc lập t; các thành phần nghiệm x(t), y(t), z(t).
+
+Các bước ẩn giải hệ phương trình và kiểm tra phần dư.
+
+Lưới cố định: dung sai bước ẩn không phải cận sai số toàn cục hoặc bảo đảm ổn định; cần xét thêm h và h/2.
+
+Adams dùng RK4 khởi tạo, AB dự báo và AM hiệu chỉnh đến hội tụ.
+
+Adams 3: AB dùng 3 giá trị cũ, AM dùng thêm giá trị mới; bậc toàn cục còn phụ thuộc RK4 khởi tạo.
+
+AM: vị trí 0 nhân f_(i+1); các vị trí 1,… nhân lần lượt f_i, f_(i−1), …; AB vị trí 0 nhân f_i.
+
+nfev/njev là số lần đánh giá hàm/Jacobian do SciPy báo. Tool chấp nhận bước theo phần dư và Jacobian, không chỉ cờ success; không có nhật ký các vòng Newton bên trong thư viện.

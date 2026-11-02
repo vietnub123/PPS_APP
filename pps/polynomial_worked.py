@@ -260,14 +260,19 @@ def _numeric_expression(w, data):
             factors=(r'(t-\frac{1}{2})' if k%2 else '')+''.join(('t(t-1)' if not j else rf'(t+{j})(t-{j+1})') for j in range(k//2))
         else:
             factors = ''.join(variable if not r else rf'({variable}{"-" if r>0 else "+"}{w.tex(abs(r))})' for r in term['roots'])
-        if data['normalized'] and k>1:
+        averaged=(data['method'] in ('Stirling','Bessel') and len(term['operands'])==2)
+        if averaged:
+            numerator='+'.join('('+w.tex(v)+')' for v in term['operands'])
+            divisor='2' if k<2 else rf'2\cdot {k}!'
+            coefficient=rf'\frac{{{numerator}}}{{{divisor}}}'
+        elif data['normalized'] and k>1:
             coefficient=rf'\frac{{{w.tex(abs(term["sigma"]))}}}{{{k}!}}'
         elif data['method']=='Lagrange' and term['denominator']!=1:
             coefficient=rf'\frac{{{w.tex(abs(term["sigma"]))}}}{{{w.tex(abs(term["denominator"]))}}}'
         else:
             coefficient=w.tex(abs(term['beta']))
         body = coefficient+(r'\,'+factors if factors else '')
-        terms.append(('-' if term['beta'] < 0 else '+', body))
+        terms.append(('+' if averaged else '-' if term['beta'] < 0 else '+', body))
         basis = [ONE]
         for root in term['roots']:
             basis = _multiply(basis, root)
@@ -289,6 +294,33 @@ def _numeric_expression(w, data):
             for latex in split_equation(label, poly_latex(Polynomial(as_float), 't'), width=78):
                 _formula_title(w, 'Đa thức theo biến t', latex,
                                label+' = '+_power_text(coefficients, 't', w.digits))
+
+
+def _horner_check(w,data,derivative):
+    """Kiểm tra hữu hạn trên chính hệ số khai triển, không dựng đa thức khác."""
+    coefficients=data.get('power_coefficients')
+    if coefficients is None or data.get('target') is None:return
+    point=data['tau'] if data['normalized'] else data['target']
+    variable='t' if data['normalized'] else 'x'
+    with w.details('Horner trên dạng chính tắc — kiểm tra giá trị và đạo hàm'):
+        w.text('Đây là phép đánh giá đối chiếu trên chính đa thức vừa khai triển. Dùng hệ số đầy đủ, không dùng dãy số đã làm tròn trong công thức in.')
+        w.formula(r'b_0=A_0,\quad b_j=A_j+c b_{j-1},\quad Q^{(r)}(c)=r!s_r',
+                  'Chép A_0; ở mỗi cột sau nhân b trước với c rồi cộng A_j. Chia lặp phần thương; đạo hàm cấp r bằng r! lần số dư s_r.')
+        current=list(reversed(coefficients))
+        for r in range(min(derivative,len(coefficients)-1)+1):
+            accumulated=[];products=[None]
+            for j,a in enumerate(current):
+                product=point*accumulated[-1] if j else ZERO
+                if j:products.append(product)
+                accumulated.append(a+product)
+            remainder=accumulated[-1];raw=math.factorial(r)*remainder
+            w.table(f'Horner theo {variable}, lượt {r+1}, c={w.number(point)}',
+                    ['hàng']+[f'bậc {len(current)-1-j}' for j in range(len(current))],
+                    [('A_j',*current),('c·b trước',*products),('b_j',*accumulated)],
+                    used_cells=[(2,len(current))],text_columns=(0,),kind='horner')
+            w.text(f'Số dư s_{r}={w.number(remainder)}; đạo hàm theo {variable} cấp {r}: {r}!·s_{r}={w.number(raw)}.'+
+                   (f' Đổi sang x: chia cho h^{r}={w.number(data["h"]**r)}, được {w.number(raw/data["h"]**r)}.' if data['normalized'] and r else ''))
+            current=accumulated[:-1]
 
 
 def present_interpolation(report, x, y, method, target, derivative, original_rows, used_ids):
@@ -345,8 +377,12 @@ def present_interpolation(report, x, y, method, target, derivative, original_row
                         w.text('Mốc bất kỳ: không yêu cầu cách đều.')
                 with w.group('panel', 'Tập mốc thực sự sử dụng'):
                     offset = data['center'] if method in CENTRAL else 0
-                    w.table('Mốc tính và ánh xạ nguồn', ['ID nguồn', 'j', 'x_j', 'y_j', '|x_j−z|'],
-                            ((used_ids[i], i-offset, decimal(x[i]), decimal(y[i]), abs(decimal(x[i])-data['target']) if target is not None else None) for i in range(m)))
+                    if m <= 11:
+                        w.table('Mốc tính và ánh xạ nguồn', ['đại lượng']+[str(i-offset) for i in range(m)],
+                                [('ID nguồn',*used_ids),('x_j',*data['x']),('y_j',*data['y'])],text_columns=(0,))
+                    else:
+                        w.table('Mốc tính và ánh xạ nguồn', ['ID nguồn', 'j', 'x_j', 'y_j', '|x_j−z|'],
+                                ((used_ids[i], i-offset, decimal(x[i]), decimal(y[i]), abs(decimal(x[i])-data['target']) if target is not None else None) for i in range(m)))
             if m < len(original_rows) or used_ids != list(range(m)):
                 with w.details('Toàn bộ dữ liệu nhập và thứ tự dòng nguồn'):
                     w.table('Dữ liệu nguồn', ['ID nguồn', 'x', 'y'], original_rows)
@@ -404,11 +440,12 @@ def present_interpolation(report, x, y, method, target, derivative, original_row
             w.table('Các hạng của công thức đã chọn', ['k','nguồn σₖ','các ô nguồn','σₖ','mẫu chia','βₖ','Bₖ'],
                     ((t['k'],t['source'],'; '.join(w.number(v) for v in t['operands']),t['sigma'],t['denominator'],t['beta'],_basis(t,data,w)) for t in terms),
                     text_columns=(1,2,6))
-            _numeric_expression(w, data)
             if method != 'Lagrange' and len(report.tables) > 1 and not legacy.get('compact_polynomial'):
-                with w.details('Bảng tích khai triển — hệ số theo bậc giảm dần'):
+                with w.group('panel','Bảng tích khai triển — hệ số theo bậc giảm dần'):
                     w.text('Các tích cơ sở chưa chia giai thừa và chưa nhân sai phân; không chia k! thêm lần nữa khi đã dùng β_k.')
                     w.stack[-1].append({'kind':'table','index':1})
+                    w.text('Nhân mỗi hàng với β_k tương ứng, rồi cộng theo từng cột cùng lũy thừa để được dạng chính tắc. Phép khai triển chỉ đổi cách viết của cùng đa thức.')
+            _numeric_expression(w, data)
         if target is not None:
             with w.group('section', '5. Thế số và cộng kết quả'):
                 with w.group('columns'):
@@ -445,6 +482,7 @@ def present_interpolation(report, x, y, method, target, derivative, original_row
                         w.text('Khởi tạo g_0=1, g_l=0 (l>0). Khi nhân (t−r), cập nhật từ cấp cao xuống thấp: g_l←(t_z−r)g_l+l·g_(l−1), rồi g_0←(t_z−r)g_0. Không chia cho t_z−r nên không lỗi khi trùng mốc.')
                         for t in terms:
                             w.text(f'k={t["k"]}: {_basis(t,data,w)}; đạo hàm cơ sở cấp {derivative} = '+w.number(t['jet'][derivative] if derivative < m else ZERO)+'.')
+                _horner_check(w,data,derivative)
         with w.group('section', '6. Đối chiếu và phạm vi kết luận'):
             if data['node_checks']:
                 maximum=max(row[3] for row in data['node_checks'])
@@ -496,8 +534,16 @@ def present_horner(report, original, target, order, passes):
             with w.group('columns'):
                 for p in passes[start:start+2]:
                     with w.group('panel',f'Lượt {p["r"]+1}: Q_{p["r"]}, lấy s_{p["r"]}'):
-                        w.table('Nhân–cộng trong lượt '+str(p['r']+1), ['j','bậc','Aⱼ','bⱼ₋₁','c·bⱼ₋₁','bⱼ'],
-                                ((s['j'],len(p['input'])-1-s['j'],s['input'],s['previous'],s['product'],s['accumulated']) for s in p['steps']))
+                        w.text('Đọc từ trái sang phải: chép hệ số đầu xuống hàng cộng; nhân với c, viết lệch sang cột kế, rồi cộng với hệ số ở cột đó. Ô cuối là số dư, các ô trước là thương.')
+                        w.table('Sơ đồ Horner ngang — lượt '+str(p['r']+1),
+                                ['hàng']+[f'bậc {len(p["input"])-1-j}' for j in range(len(p['input']))],
+                                [('Hệ số A_j',*p['input']),
+                                 (f'Nhân c={w.number(data["target"])}',None,*[s['product'] for s in p['steps'][1:]]),
+                                 ('Cộng b_j',*[s['accumulated'] for s in p['steps']])],
+                                used_cells=[(2,len(p['input']))],text_columns=(0,),kind='horner')
+                        with w.details('Đọc riêng từng phép nhân và cộng của lượt '+str(p['r']+1)):
+                            w.table('Nhân–cộng trong lượt '+str(p['r']+1), ['j','bậc','Aⱼ','bⱼ₋₁','c·bⱼ₋₁','bⱼ'],
+                                    ((s['j'],len(p['input'])-1-s['j'],s['input'],s['previous'],s['product'],s['accumulated']) for s in p['steps']))
                         w.text('Thương theo bậc giảm: '+(', '.join(w.number(v) for v in p['quotient']) or '0')+'.')
                         w.formula(rf's_{{{p["r"]}}}={w.tex(p["remainder"])},\quad P^{{({p["r"]})}}(c)={p["r"]}!\,s_{{{p["r"]}}}={w.tex(p["derivative"])}',
                                   f's_{p["r"]}={w.number(p["remainder"])}; {p["r"]}!·s_{p["r"]}={w.number(p["derivative"])}.')

@@ -224,7 +224,12 @@ def integrate(method='Simpson',expr='sin(x)',a=0.,b=1.,n=20,order=4,
     if bound is not None:
         err=constant/Decimal(n)**p_bound
         r.lines.append(f'Cận lý thuyết ≤ {fmt(decimal_cell(err),12)}, nếu M là cận đúng của |f^({p_bound})| trên [a,b].')
-    r.table('Các giá trị và trọng số',['x','f(x)','trọng số'],zip(xx,yy,weights))
+    if len(xx)<=512:
+        with localcontext() as context:
+            context.prec=80
+            products=[decimal_cell(Decimal(str(float(w)))*Decimal(str(float(v)))) for w,v in zip(weights,yy)]
+        r.table('Các giá trị và trọng số',['x','f(x)','trọng số','w_i f(x_i)'],zip(xx,yy,weights,products))
+    else:r.table('Các giá trị và trọng số',['x','f(x)','trọng số'],zip(xx,yy,weights))
     if rows: r.table('Chia đôi lưới',['n','tích phân','ước lượng Runge'],rows)
     if checks:
         r.table('Kiểm tra thêm trên lưới không lồng nhau',['n','n kiểm tra','I kiểm tra','độ chênh'],
@@ -238,6 +243,10 @@ def integrate(method='Simpson',expr='sin(x)',a=0.,b=1.,n=20,order=4,
     r.presentation={'formulas':[('Công thức tích phân',[formula]),('Kết quả',[
         rf'I=\int_{{{fmt(original_a)}}}^{{{fmt(original_b)}}}f(x)\,dx\approx {fmt(value)}',
         rf'|h|=\frac{{|b-a|}}{{n}},\qquad n={n}'])]}
+    r.presentation['formulas'].insert(1,('Cộng theo các trọng số thực trong bảng',[
+        r'I_h=s h\left(w_0y_0+w_1y_1+\cdots+w_my_m\right)',
+        rf's={direction},\quad h={fmt((b-a)/n,12)},\quad m={len(xx)-1}']))
+    r.lines.append('Trọng số ở bảng đã chứa hệ số 1/2, 1/3 hoặc hệ số Newton–Cotes; cộng w_i*y_i rồi nhân h và dấu s, không chia thêm hệ số của quy tắc lần nữa.')
     return r
 
 
@@ -246,13 +255,14 @@ def double_integral(expr,a,b,c,d,n=10,method='Simpson',tolerance=1e-7):
     if not np.all(np.isfinite([a,b,c,d,b-a,d-c,tolerance])) or tolerance<=0:
         raise ValueError('Các cận/độ dài hữu hạn và dung sai phải dương hữu hạn.')
     if method not in ('Simpson','Hình thang'): raise ValueError('Chọn Simpson hoặc hình thang.')
-    f=function(expr,('x','y')); rows=[];checks=[]
+    f=function(expr,('x','y')); rows=[];checks=[];last_grid=None
     original=(a,b,c,d)
     if a==b or c==d:return Report('Tích phân kép trên miền chữ nhật',['Miền có một chiều bằng 0: I = 0.'],value=0.)
     direction=(1 if a<b else -1)*(1 if c<d else -1)
     if a>b:a,b=b,a
     if c>d:c,d=d,c
     def calc(k):
+        nonlocal last_grid
         if k>2000: raise ValueError('Lưới tích phân kép vượt 2000 × 2000; tăng dung sai.')
         w,p=quadrature_weights(k,method)
         xx=np.linspace(a,b,k+1); yy=np.linspace(c,d,k+1)
@@ -260,12 +270,14 @@ def double_integral(expr,a,b,c,d,n=10,method='Simpson',tolerance=1e-7):
         if np.any(np.diff(xx)==0) or np.any(np.diff(yy)==0):raise ValueError('Các nút tích phân kép bị trùng do độ phân giải float; đổi gốc/đơn vị.')
         measure=Decimal(str(b-a))*Decimal(str(d-c))/k**2
         result=direction*_weighted_integral(w[:,None]*w[None,:],vals,measure)
+        last_grid=(k,xx,yy,w,vals)
         return result,p
     old,p=calc(n)
     for _ in range(12):
         n*=2; value,p=calc(n); err=abs(value-old)/(2**p-1)
         rows.append([n,value,err])
         if err<=tolerance:
+            accepted_grid=last_grid
             block=2 if method=='Simpson' else 1
             probe_n=n+block if n+block<=2000 else n-block
             probe,_=calc(probe_n);mismatch=abs(probe-value)
@@ -280,6 +292,17 @@ def double_integral(expr,a,b,c,d,n=10,method='Simpson',tolerance=1e-7):
             report.table('Kiểm tra thêm trên lưới không lồng nhau',['n','n kiểm tra','I kiểm tra','độ chênh'],checks)
             report.presentation={'formulas':[('Tích phân kép',[
                 rf'I=\int_{{{fmt(original[0])}}}^{{{fmt(original[1])}}}\int_{{{fmt(original[2])}}}^{{{fmt(original[3])}}}f(x,y)\,dy\,dx\approx {fmt(value)}'])]}
+            k,xx,yy,w,vals=accepted_grid
+            report.table('Lưới và trọng số một chiều — dùng tích trọng số hai trục',
+                         ['i','x_i','y_i','w_i'],zip(range(k+1),xx,yy,w))
+            report.table('Giá trị lưới 2D của kết quả chính — không phải lưới kiểm tra',
+                         ['x_i / y_j']+[fmt(v,12) for v in yy],
+                         ([xx[i],*vals[i]] for i in range(k+1)))
+            report.presentation['quadrature_grid']={'n':k,'x':xx,'y':yy,'weights':w,'values':vals,'direction':direction}
+            report.presentation['formulas'].append(('Ghép hai quy tắc một chiều',[
+                r'I_h=s h_xh_y\sum_{i=0}^{n}\sum_{j=0}^{n}w_iw_j f(x_i,y_j)',
+                rf'h_x={fmt((b-a)/k,12)},\quad h_y={fmt((d-c)/k,12)},\quad s={direction},\quad n={k}']))
+            report.lines.append('Trọng số đã chứa hệ số 1/2 hoặc 1/3 theo quy tắc; chỉ nhân h_x*h_y và dấu s của hai chiều cận, không chia thêm lần nữa. Ô (i,j) dùng w_i*w_j; bảng hàm giữ đúng lưới chính được trả về.')
             return report
         old=value
     raise ValueError('Tích phân kép chưa hội tụ với dung sai đã nhập.')

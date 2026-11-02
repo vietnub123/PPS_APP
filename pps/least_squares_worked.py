@@ -391,6 +391,64 @@ def _model_tex(data,w):
     return 'g(x)='+body
 
 
+def _derivation(w,data):
+    """Khuôn lập bài → hàm mục tiêu → từng tổng của hệ chuẩn."""
+    kind=data['kind']
+    if data['nonlinear']:
+        w.text('Giữ y ở thang gốc. Log chỉ có thể giúp chọn tham số đầu khi hợp lệ; các bước LM sau đó tối thiểu hóa SSE trên y, không phải SSE của log.')
+        return
+    if kind in ('Hàm mũ','Lũy thừa','A*b^x'):
+        sign='-' if data['sign']<0 else ''
+        w.formula(r'z_i=\ln|y_i|,\quad c_0=\ln|A|,\quad A='+sign+r'e^{c_0}',
+                  'Đặt z_i=ln|y_i|, c_0=ln|A|; khôi phục A='+sign+'exp(c_0). Dấu A lấy từ dấu chung của y.')
+        if kind=='Lũy thừa':
+            w.formula(r'y=A x^b\ \Longrightarrow\ z=\ln|A|+b\ln x=c_0+c_1\ln x',
+                      'y=A*x^b ⇒ ln|y|=ln|A|+b*ln(x); c_1=b, cần x>0.')
+        elif kind=='A*b^x':
+            w.formula(r'y=A B^x\ \Longrightarrow\ z=\ln|A|+x\ln B,\quad B=e^{c_1}',
+                      'y=A*B^x ⇒ ln|y|=ln|A|+x*ln(B); B=exp(c_1)>0.')
+        else:
+            w.formula(r'y=A e^{\sum_{j=1}^{p-1}c_j\varphi_j(x)}\ \Longrightarrow\ z=c_0+\sum_{j=1}^{p-1}c_j\varphi_j(x)',
+                      'y=A*exp(c_1*phi_1+…+c_(p−1)*phi_(p−1)) ⇒ z=c_0+c_1*phi_1+…+c_(p−1)*phi_(p−1).')
+    elif kind=='Log của tổ hợp cơ sở':
+        w.formula(r'y=\ln\left(\sum_j c_j\varphi_j(x)\right)\ \Longrightarrow\ z=e^y=\sum_j c_j\varphi_j(x)',
+                  'y=ln(sum c_j*phi_j) ⇒ z=exp(y)=sum c_j*phi_j; biểu thức trong log của hàm khôi phục phải dương.')
+    elif kind=='1/(a+b*x)':
+        w.formula(r'y=\frac{1}{a+bx}\ \Longrightarrow\ z=\frac{1}{y}=a+bx',
+                  'y=1/(a+b*x) ⇒ z=1/y=a+b*x; a=c_0, b=c_1.')
+    elif kind=='x/(a+b*x)':
+        w.formula(r'y=\frac{x}{a+bx}\ \Longrightarrow\ z=\frac{1}{y}=b+a\frac{1}{x}',
+                  'y=x/(a+b*x) ⇒ 1/y=b+a*(1/x); hệ số chặn c_0=b, hệ số của 1/x là c_1=a.')
+    elif kind=='a+b*ln(x)':
+        w.formula(r'u=\ln x,\quad z=y=a+bu', 'Đặt u=ln(x), z=y=a+b*u; a=c_0, b=c_1.')
+    w.text('Đặt N là số quan sát, p là số cơ sở; i=0,…,N−1, j=0,…,p−1. N là số dòng, không phải chỉ số cuối.')
+    w.formula(r'\widehat z_i=c_0\varphi_0(x_i)+c_1\varphi_1(x_i)+\cdots+c_{p-1}\varphi_{p-1}(x_i)',
+              'z_hat_i=c_0*phi_0(x_i)+c_1*phi_1(x_i)+…+c_(p−1)*phi_(p−1)(x_i).')
+    w.formula(r'J(c)=\sum_{i=0}^{N-1}w_i(\widehat z_i-z_i)^2',
+              'J(c)=w_0*(z_hat_0−z_0)^2+w_1*(z_hat_1−z_1)^2+…+w_(N−1)*(z_hat_(N−1)−z_(N−1))^2 → min.')
+    w.formula(r'\frac{\partial J}{\partial c_j}=2\sum_{i=0}^{N-1}w_i\varphi_j(x_i)(\widehat z_i-z_i)=0',
+              'Với từng j: ∂J/∂c_j=2*Σ_i w_i*phi_j(x_i)*(z_hat_i−z_i)=0; gom hệ số của từng c_k để lập hệ chuẩn.')
+    w.formula(r'G_{jk}=\sum_{i=0}^{N-1}w_i\varphi_j(x_i)\varphi_k(x_i),\quad b_j=\sum_{i=0}^{N-1}w_i\varphi_j(x_i)z_i',
+              'G_jk=w_0*phi_j(x_0)*phi_k(x_0)+…+w_(N−1)*phi_j(x_(N−1))*phi_k(x_(N−1)); b_j=w_0*phi_j(x_0)*z_0+…+w_(N−1)*phi_j(x_(N−1))*z_(N−1).')
+    labels=data['labels']
+    if len(labels)<=6:
+        unweighted=all(v==1 for v in data['weights'])
+        symbols=[]
+        for label in labels:
+            expr,names=expression(label)
+            symbols.append(expr.subs(names[0],sp.Symbol('x_i')))
+        def total(expr):
+            expr=sp.simplify(expr)
+            if unweighted and expr==1:return 'N'
+            text=str(expr).replace('**','^')
+            return ('Σ (' if unweighted else 'Σ w_i·(')+text+')'
+        w.table('Khuôn hệ chuẩn theo các cơ sở đã chọn',
+                ['ẩn']+[f'c_{k}: {label}' for k,label in enumerate(labels)]+['vế phải'],
+                [[f'c_{j}',*[total(a*b) for b in symbols],total(a*sp.Symbol('z_i'))] for j,a in enumerate(symbols)],
+                text_columns=tuple(range(len(labels)+2)))
+        w.text('Mọi dấu Σ trong bảng chạy trên đúng N dòng đã nhập; dòng trọng số 0 đóng góp 0. Thay các tổng này bằng bảng số ở bước kế tiếp; không dùng Φc=z như một hệ khớp đúng.')
+
+
 def _render(data):
     report=Report('Bình phương tối thiểu — '+str(data['kind']),value=data.get('predict'))
     report.presentation['worked_solution']=data
@@ -425,6 +483,7 @@ def _render(data):
     if data.get('theta') is not None:
         with w.group('columns'):
             with w.group('section','3. Bảng cơ sở, biến đổi và các tổng'):
+                _derivation(w,data)
                 w.text('Các cơ sở tạo số mũ; y là quan sát gốc, không giải hệ tuyến tính Φc=y.' if data['nonlinear'] else 'Biến mục tiêu dùng để giải: z = '+data['transform']+'.')
                 with w.details('Bảng cơ sở đầy đủ' if data['nonlinear'] else 'Ma trận thiết kế đầy đủ Φ'):
                     w.table('Giá trị cơ sở trong số mũ' if data['nonlinear'] else 'Φ_ij = φ_j(x_i)',

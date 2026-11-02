@@ -76,11 +76,15 @@ def tableau(a,b,c):
     return a,b,c
 
 
-def rkstep(f,t,y,h,tab):
+def rkstep(f,t,y,h,tab,trace=None):
     a,b,c=tab; stages=[]
     for i in range(len(b)):
         dy=sum((a[i][j]*stages[j] for j in range(i)),np.zeros_like(y))
         stages.append(f(t+c[i]*h,y+h*dy))
+        if trace is not None:
+            trace.append({'stage':i+1,'time':float(t+c[i]*h),
+                          'state':(y+h*dy).copy(),'slope':stages[-1].copy(),
+                          'increment':(h*b[i]*stages[-1]).copy()})
     return y+h*sum((b[j]*stages[j] for j in range(len(b))),np.zeros_like(y))
 
 
@@ -97,7 +101,7 @@ def ode(expressions,y0,a,b,h,method='RK4',tolerance=1e-10,custom=None):
     funcs=[function(s,variables) for s in expressions]
     def f(t,state):
         return np.array([float(fun(t,*state)) for fun in funcs])
-    vals=[y0.copy()]; stats=[]
+    vals=[y0.copy()]; stats=[]; step_trace=[]
     if method=='RK tùy chỉnh':
         if custom is None: raise ValueError('Cần nhập bảng hệ số RK.')
         tab=tableau(*custom)
@@ -122,25 +126,39 @@ def ode(expressions,y0,a,b,h,method='RK4',tolerance=1e-10,custom=None):
         singular=np.linalg.svd(jacobian(sol.x),compute_uv=False)
         if singular[-1]<=64*np.finfo(float).eps*max(1.,singular[0]):
             raise ValueError('Jacobian bước ẩn suy biến hoặc gần suy biến; không xác nhận nghiệm, hãy giảm |h|.')
+        step_trace[-1]['implicit']={'initial':guess.copy(),'nfev':int(sol.nfev),
+                                  'njev':int(getattr(sol,'njev',0)),
+                                  'message':' '.join(str(sol.message).split()),'success':bool(sol.success),
+                                  'residual':err,'min_singular':float(singular[-1])}
         return sol.x,err
     for i,t in enumerate(ts[:-1]):
         y=vals[-1]; tn=ts[i+1]; err=0.
-        if method in RK or method=='RK tùy chỉnh': new=rkstep(f,t,y,h,tab)
+        record={'step':i+1,'time':float(t),'state':y.copy(),'stages':[]}
+        step_trace.append(record)
+        if method in RK or method=='RK tùy chỉnh':
+            record['kind']=method
+            new=rkstep(f,t,y,h,tab,record['stages'])
         elif method in ('Euler ẩn','Hình thang'):
             initial=f(t,y); theta=1. if method=='Euler ẩn' else .5
+            record.update(kind=method,initial_slope=initial.copy(),theta=theta)
             new,err=implicit(lambda v:v-y-h*((1-theta)*initial+theta*f(tn,v)),y+h*initial,
                              lambda v:np.eye(len(y))-h*theta*jac(tn,v))
         else:
             s=int(method.split()[-1])
-            if i<s-1: new=rkstep(f,t,y,h,RK['RK4'])
+            if i<s-1:
+                record['kind']='RK4 khởi tạo Adams'
+                new=rkstep(f,t,y,h,RK['RK4'],record['stages'])
             else:
                 history=[f(ts[i-j],vals[i-j]) for j in range(s)]
                 predicted=y+h*sum((c*v for c,v in zip(AB[s],history)),np.zeros_like(y))
                 tail=sum((c*v for c,v in zip(AM[s][1:],history)),np.zeros_like(y))
+                record.update(kind=method,history=[v.copy() for v in history],
+                              predicted=predicted.copy(),tail=tail.copy())
                 new,err=implicit(lambda v:v-y-h*(AM[s][0]*f(tn,v)+tail),predicted,
                                  lambda v:np.eye(len(y))-h*AM[s][0]*jac(tn,v))
         if not np.all(np.isfinite(new)): raise ValueError('Nghiệm tràn số; giảm bước h hoặc kiểm tra phương trình.')
         vals.append(new.copy()); stats.append([i+1,tn,err])
+        record.update(result=new.copy(),next_time=float(tn),residual=err)
     vals=np.array(vals)
     names=['x','y','z'][:len(y0)]
     r=Report('Bài toán Cauchy — '+method,
@@ -162,6 +180,35 @@ def ode(expressions,y0,a,b,h,method='RK4',tolerance=1e-10,custom=None):
     from .math_view import symbolic_latex
     r.presentation={'formulas':[('Phương trình và điều kiện đầu',[
         rf'\frac{{d{names[j]}}}{{dt}}='+symbolic_latex(expressions[j],('t','x','y','z'))+rf',\qquad {names[j]}({fmt(a)})={fmt(y0[j])}' for j in range(len(y0))])]}
+    r.presentation['ode_trace']=step_trace
+    stage_rows=[];implicit_rows=[];adams_rows=[]
+    for step in step_trace:
+        for stage in step['stages']:
+            stage_rows.append([step['step'],stage['stage'],stage['time'],
+                               *stage['state'],*stage['slope'],*stage['increment']])
+        if 'implicit' in step:
+            item=step['implicit']
+            implicit_rows.append([step['step'],*item['initial'],*step['result'],
+                                  item['nfev'],item['njev'],item['residual'],item['min_singular'],item['message']])
+        if 'predicted' in step:
+            adams_rows.append([step['step'],*step['predicted'],*step['tail'],*step['result']])
+    if stage_rows:
+        r.table('Các tầng RK đã tính — K là độ dốc, chưa nhân h',
+                ['bước','tầng','t tầng']+[v+' tầng' for v in names]+['K_'+v for v in names]+['h b K_'+v for v in names],stage_rows)
+        r.presentation['formulas'].append(('Tầng và phép cộng Runge–Kutta',[
+            r'K_j=f(t_i+c_jh,u_i+h\sum_{\ell<j}a_{j\ell}K_\ell)',
+            r'u_{i+1}=u_i+h(b_1K_1+b_2K_2+\cdots+b_sK_s)']))
+    if adams_rows:
+        s=int(method.split()[-1])
+        r.table('Dự báo AB và hiệu chỉnh AM đã tính',
+                ['bước']+['dự báo '+v for v in names]+['tổng lịch sử AM '+v for v in names]+['hiệu chỉnh '+v for v in names],adams_rows)
+        r.table('Hệ số Adams — lịch sử theo f_i, f_(i−1), …',
+                ['vị trí','AB','AM'],[[j,float(AB[s][j]) if j<s else None,float(AM[s][j])] for j in range(s+1)])
+        r.lines.append('AM: vị trí 0 nhân f_(i+1); các vị trí 1,… nhân lần lượt f_i, f_(i−1), …; AB vị trí 0 nhân f_i.')
+    if implicit_rows:
+        r.table('Kiểm tra bộ giải bước ẩn — số đánh giá không phải số vòng Newton',
+                ['bước']+['đầu '+v for v in names]+['cuối '+v for v in names]+['nfev','njev','phần dư','σ_min Jacobian','thông báo'],implicit_rows)
+        r.lines.append('nfev/njev là số lần đánh giá hàm/Jacobian do SciPy báo. Tool chấp nhận bước theo phần dư và Jacobian, không chỉ cờ success; không có nhật ký các vòng Newton bên trong thư viện.')
     return r
 
 
@@ -249,4 +296,13 @@ def eigen(p,q,r,a,b,h,count=5):
     result.presentation={'formulas':[('Bài toán trị riêng',[
         r'-\frac{d}{dx}\left(p(x)\frac{du}{dx}\right)+q(x)u=\lambda r(x)u',r'u(a)=u(b)=0'])],
         'omit_prefixes':('-(p(x)',)}
+    result.table('Toán tử đối xứng thực sự đưa vào bộ giải',
+                 ['i trong','x_i','r_i','T_ii','T_i,i+1','T_ii / scale','T_i,i+1 / scale'],
+                 [[i+1,inside[i],weights[i],str(raw_diag[i]),str(raw_off[i]) if i<len(raw_off) else None,
+                   scaled_diag[i],scaled_off[i] if i<len(scaled_off) else None] for i in range(len(inside))])
+    result.presentation['formulas'].append(('Đổi bài toán trị riêng tổng quát thành đối xứng',[
+        r'K v=\lambda Rv,\quad R=\operatorname{diag}(r_i),\quad T=R^{-1/2}KR^{-1/2}',
+        r'T_{ii}=\frac{p_{i-1/2}+p_{i+1/2}}{h^2r_i}+\frac{q_i}{r_i}',
+        r'T_{i,i+1}=-\frac{p_{i+1/2}}{h^2\sqrt{r_i r_{i+1}}}']))
+    result.lines.append('Đổi thang chung trước khi gọi eigh_tridiagonal: scale='+str(matrix_scale)+'. Nhân trị riêng của T/scale với scale; đổi vectơ bằng R^(−1/2), thêm hai biên 0 rồi chuẩn hóa max|u|=1.')
     return result

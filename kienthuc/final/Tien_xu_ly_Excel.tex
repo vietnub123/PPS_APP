@@ -1,0 +1,240 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage{fontspec}
+\setmainfont{Times New Roman}
+\setmonofont[Scale=.85]{Consolas}
+\usepackage{amsmath,amssymb,booktabs,array,longtable,xcolor,geometry,fancyhdr,hyperref}
+\geometry{margin=20mm,headheight=15pt}
+\hypersetup{unicode=true,colorlinks=true,linkcolor=teal!60!black,urlcolor=blue!60!black,pdftitle={Tiền xử lý dữ liệu PPS bằng Excel}}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt}
+\setlength{\emergencystretch}{2em}
+\renewcommand{\arraystretch}{1.2}
+\allowdisplaybreaks
+\pagestyle{fancy}\fancyhf{}\fancyhead[L]{TIỀN XỬ LÝ DỮ LIỆU PPS BẰNG EXCEL}\fancyfoot[R]{\thepage}
+\newcommand{\xl}[1]{{\ttfamily\small\detokenize{#1}}}
+\begin{document}
+\begin{center}
+{\LARGE\bfseries Tiền xử lý dữ liệu bằng Excel}\par\medskip
+{\large Làm trước khi nhập vào tool; luôn có đường đổi về bài toán gốc}
+\end{center}
+Tài liệu riêng này dùng các phép tính Excel cơ bản. Đi kèm là
+\texttt{Tien\_xu\_ly\_Excel.xlsx}, gồm dữ liệu tự dựng và các công thức có thể kéo xuống.
+Giữ sheet dữ liệu gốc nguyên trạng. Các biến đổi không được xem là bước ngầm của bộ giải.
+
+\tableofcontents
+\section{Quy trình sáu bước}
+\begin{enumerate}
+\item Đọc đề: tìm giá trị hàm, đạo hàm, nghiệm ngược, mô hình thực nghiệm hay tích phân? Đề bắt buộc phương pháp nào, bao nhiêu mốc và điều kiện biên nào?
+\item Giữ cột ID, $x_i,y_i$ gốc; ghi số quan sát $N$, đơn vị, hai giá trị đích và quy ước làm tròn. Với $N$ dòng, chỉ số là $0,\ldots,N-1$.
+\item Kiểm tra ô số, ô thiếu, dấu, mốc trùng, khoảng cách và nhánh. Sắp \emph{cả bảng}, không chỉ riêng cột $x$.
+\item Chọn phép xử lý có lý do; ghi công thức thuận, công thức ngược và đại lượng bị thay đổi. Lọc quan sát là một quyết định riêng, không phải phép tương đương đại số.
+\item Nhập đúng dữ liệu và mục tiêu vào tool; kiểm tra bảng mốc/cơ sở/điều kiện biên của lượt chạy trước khi dùng kết quả.
+\item Đổi về biến gốc; thế lại dữ liệu gốc. Khi khớp, ghi sai số được tính trên tập nào và trên thang nào.
+\end{enumerate}
+
+\section{Bố trí và kiểm tra bảng gốc}
+Giả sử hàng 1 là tiêu đề, cột A là ID, B là $x$, C là $y$; dữ liệu ở hàng 2 đến 105. Cần sửa số hàng cuối theo dữ liệu thực.
+\begin{center}\small
+\begin{tabular}{p{.27\linewidth}p{.66\linewidth}}
+\toprule Kiểm tra & Công thức tại hàng 2 hoặc công thức tổng hợp\\\midrule
+Hai ô đều là số & \xl{=AND(ISNUMBER(B2),ISNUMBER(C2))}\\
+Số dòng có $x$ dạng số & \xl{=COUNT(B2:B105)}; phải đối chiếu cả cột $y$\\
+Mốc trùng & \xl{=COUNTIF($B$2:$B$105,B2)>1}\\
+Bước kế tiếp & \xl{=B3-B2}, kéo đến khoảng cuối\\
+Đều theo bước gốc & \xl{=ABS((B3-B2)-$J$2)<=1E-8*ABS($J$2)}\\
+Số tung độ âm/dương/0 & \xl{=COUNTIF(C2:C105,"<0")}, đổi điều kiện thành \xl{">0"} hoặc \xl{"=0"}\\
+Đổi dấu quanh mức $y^*$ & \xl{=(C2-$J$3)*(C3-$J$3)<0}\\
+Trùng đúng mức & \xl{=C2=$J$3}; kiểm tra riêng cả mốc cuối\\
+\bottomrule
+\end{tabular}\end{center}
+Đặt J2 là bước tham chiếu $h$, J3 là mức $y^*$. Công thức dùng tên hàm Excel tiếng Anh và dấu phẩy; máy dùng dấu chấm phẩy thì đổi dấu phân cách đối số, không đổi dấu thập phân của ô số.
+
+Vào \textbf{Data $\to$ Sort}, chọn toàn vùng A:C và sắp cột B tăng dần.
+Nếu Excel hỏi mở rộng vùng, chọn \emph{Expand the selection}. Hai cột $x,y$ phải luôn đi cùng nhau.
+Không dùng \emph{Remove Duplicates} tùy tiện: nội suy/spline cần xử lý mốc trùng, nhưng bình phương tối thiểu có thể giữ các phép đo tại cùng $x$.
+
+\section{Tịnh tiến và đổi đơn vị: phải đổi cả mục tiêu}
+\subsection{Công thức chung}
+Chọn $s\ne0,r\ne0$; để thao tác và thứ tự mốc dễ theo dõi thường chọn $s,r>0$:
+\[
+u=\frac{x-c}{s},\qquad v=\frac{y-d}{r},\qquad
+x=c+su,\qquad y=d+rv.
+\]
+Tịnh tiến thuần túy là $s=r=1$. Đổi gốc $x$ giúp xử lý năm/thời gian hoặc tọa độ lớn; đổi đơn vị giúp các số có cỡ hợp lý.
+Không thể lấy lại chữ số đã mất trong tệp gốc hay trong ô Excel vốn chỉ giữ khoảng 15 chữ số có nghĩa.
+
+Đặt J2=$c$, J3=$s$, J4=$d$, J5=$r$ trong sheet biến đổi:
+\begin{center}
+D2: \xl{=(B2-$J$2)/$J$3},\quad
+E2: \xl{=(C2-$J$4)/$J$5}.
+\end{center}
+Kéo xuống đến dòng cuối. Điểm cần tính và mức ngược phải đổi theo cùng công thức:
+\[
+\bar u=(\bar x-c)/s,\qquad \bar v=(\bar y-d)/r.
+\]
+Ví dụ $x=1000,1002,1004$; $y=5,9,17$. Chọn $c=1000,s=2,d=5,r=4$,
+được $(u,v)=(0,0),(1,1),(2,3)$. Muốn tính ở $x=1003$ phải nhập $u=1.5$.
+Nếu tool trả $V(1.5)=1.875$, đổi lại $y=5+4(1.875)=12.5$.
+Muốn tìm $x$ ứng với $y=12.5$ phải nhập mức $v=1.875$; từ nghiệm $u$ đổi lại $x=1000+2u$.
+
+\subsection{Nội suy, spline và đạo hàm}
+Đa thức/mảnh spline tương ứng có quan hệ
+\[
+P(x)=d+rV\left(\frac{x-c}{s}\right),\qquad
+P^{(k)}(x)=\frac{r}{s^k}V^{(k)}(u)\quad(k\ge1).
+\]
+Nếu đề cho đạo hàm ở biên, dữ liệu biên nhập vào bài theo $u,v$ là
+\[
+V^{(k)}(u_\text{biên})=\frac{s^k}{r}P^{(k)}(x_\text{biên}).
+\]
+Với ví dụ trên, nếu $V'(1.5)=2$ thì $P'(1003)=(4/2)2=4$.
+Đổi riêng $x$ mà giữ nguyên trị số của đạo hàm biên sẽ tạo một bài spline khác.
+Điều kiện tự nhiên (đạo hàm bậc hai bằng 0) vẫn là 0; điều kiện khác 0 phải đổi thang.
+Horner không tự biết đa thức đang theo $u$ hay $x$: phải nhập hệ số theo đúng biến và điểm thế tương ứng.
+
+\subsection{Tích phân}
+Với $u_a=(a-c)/s,u_b=(b-c)/s$:
+\[
+\int_a^b P(x)\,dx=s\left[d(u_b-u_a)+r\int_{u_a}^{u_b}V(u)\,du\right].
+\]
+Không chỉ nhân $rs$ khi đã trừ một mức nền $d\ne0$.
+Cận đạo hàm cũng đổi: $M_{k,V}=|s|^kM_{k,P}/|r|$ nếu dùng để chọn lưới theo cận lý thuyết.
+
+\subsection{Phương trình vi phân và biên}
+Cho $t=c+s\tau$, $y=d+rv$, phương trình $dy/dt=f(t,y)$ trở thành
+\[
+\frac{dv}{d\tau}=\frac{s}{r}f(c+s\tau,d+rv).
+\]
+Đổi cả khoảng thời gian, bước, điều kiện đầu và biểu thức vế phải. Với hệ nhiều thành phần, mỗi thành phần có thể có mức nền và thang riêng.
+
+Điều kiện $\alpha y'(a)+\beta y(a)=\gamma$ đổi thành
+\[
+\frac{\alpha r}{s}v'(u_a)+\beta r v(u_a)=\gamma-\beta d.
+\]
+Với bài $-(p y')'+qy=f$, đặt $\widetilde p(u)=p(c+su)$ và tương tự cho $q,f$:
+\[
+-(\widetilde p v')'+s^2\widetilde q v
+=\frac{s^2}{r}(\widetilde f-\widetilde q d).
+\]
+Đây là bài mới phải nhập đủ các hệ số đã đổi, không chỉ thay bảng mốc.
+Với trị riêng và biên đồng nhất, giữ $d=0$; tịnh tiến tung độ khác 0 nói chung phá dạng bài trị riêng đồng nhất.
+
+\section{Logarit và dấu: quyết định trước khi chạy khớp}
+\subsection{Mô hình hàm mũ có biên độ âm}
+Với $y=Ae^{bx+c/x}$ và $x_i\ne0$, dấu $y$ luôn là dấu $A$.
+Nếu \emph{toàn bộ} $y_i<0$:
+\[
+-y=(-A)e^{bx+c/x}
+\ \Longrightarrow\ \ln(-y)=\ln(-A)+bx+\frac cx.
+\]
+Đặt $Z=\ln(-y)$, $C_0=\ln(-A)$; cơ sở $1,x,1/x$.
+Trong Excel dùng \xl{=IF(C2<0,LN(-C2),NA())} để hiện lỗi miền thay vì giấu dữ liệu.
+Trong tool chọn \textbf{Hàm mũ}, nhập cơ sở \xl{x;1/x}, và vẫn đưa \emph{dữ liệu $x,y$ gốc} vào; tool tự lấy $\ln|y|$ và thêm cột 1.
+Nếu đã đưa cột log vào một bài \textbf{Tuyến tính theo cơ sở} thì phải khôi phục $A=-e^{C_0}$ thủ công; không chọn Hàm mũ thêm lần nữa để tránh log hai lần.
+
+Nếu mọi $y_i>0$, thay $\ln(-y)$ bằng $\ln y$, $A=+e^{C_0}$.
+Nếu $y$ lẫn dấu hoặc có 0, phép tuyến tính hóa log không dùng được cho toàn bảng.
+\textbf{Không âm thầm đổi dấu từng điểm bằng ABS rồi khớp như cùng một hàm.}
+
+\subsection{Loại điểm và đặt trọng số 0}
+Trong mẫu người dùng gửi, có 104 điểm và hai điểm cuối dương; bài mẫu chỉ khớp 102 điểm âm.
+Đó là \textbf{một lựa chọn tập dữ liệu khác}, không suy ra được chỉ từ việc muốn lấy log.
+Nếu đề cho phép loại: ghi ID, lý do, số dòng trước/sau, mô hình trước/sau và mẫu tính sai số.
+Với bộ log của tool, đặt trọng số 0 vẫn không làm một quan sát sai miền trở thành hợp lệ: kiểm tra miền chạy trên các quan sát đã nhập.
+
+Nếu cần giữ bảng lẫn dấu, nhánh \textbf{Hàm mũ — SSE thang y} có thể tối ưu trực tiếp trên $y$ với tham số đầu phù hợp.
+Mô hình vẫn có một dấu; nó có thể xấp xỉ dữ liệu lẫn dấu bằng phần dư, nhưng không đi qua tất cả các điểm và không tối ưu cùng mục tiêu với bài log đã lọc.
+
+\subsection{Không tịnh tiến để ``cứu'' log rồi gọi là cùng mô hình}
+Nếu đặt $v=y+K>0$ rồi khớp $v=Ae^{bx}$, hàm khôi phục là
+\[
+y=Ae^{bx}-K,
+\]
+khác họ $y=Ae^{bx}$ ban đầu. Chỉ làm khi đề cho họ có mức nền tương ứng.
+Với mô hình $A x^b$, tịnh tiến $x$ cho $(x-c)^b$, nói chung không còn là $x^b$.
+Với $Ae^{bx+c/x}$, tịnh tiến $x=c_0+su$ buộc cơ sở là $c_0+su$ và $1/(c_0+su)$; không được tự thay bằng $u,1/u$.
+Với hàm mũ đơn $Ae^{bx}$, đổi $x=c_0+su$ vẫn cùng họ:
+\[
+y=\underbrace{Ae^{bc_0}}_{\widetilde A}e^{(bs)u},\qquad
+b=\widetilde b/s,\quad A=\widetilde A e^{-\widetilde b c_0/s}.
+\]
+
+\subsection{Bảng quyết định theo từng mô hình khớp}
+\begin{center}\small
+\begin{tabular}{p{.27\linewidth}p{.66\linewidth}}\toprule
+Họ ban đầu & Điều cần giữ khi tiền xử lý\\\midrule
+Tuyến tính theo cơ sở & Đổi $x=c+su$ thì đổi mỗi cơ sở thành $\varphi_j(c+su)$. Trừ mức nền của $y$ cần biểu diễn lại phần hằng; mô hình không có cơ sở 1 có thể đổi họ.\\
+Đa thức đủ bậc 0 đến $p$ & Tịnh tiến/đổi thang $x,y$ vẫn cùng họ đủ bậc; phải khai triển lại tham số khi viết theo $x$.\\
+$A x^b$ & Với $x=su$, $s>0$, biên độ theo $u$ là $\widetilde A=A s^b$, nên $A=\widetilde A/s^b$. Tịnh tiến $x$ hoặc trừ mức nền $y$ nói chung đổi họ.\\
+$A B^x$ & Với $x=c+su$, $\widetilde A=A B^c$, $\widetilde B=B^s$; khôi phục $B=\widetilde B^{1/s}$, $A=\widetilde A/B^c$.\\
+$A\exp(\sum b_j\varphi_j)$ & Đổi từng cơ sở theo biến mới; cột hằng trong số mũ biểu diễn log của biên độ. Không trừ mức nền $y$ nếu họ không chứa mức nền.\\
+$\ln(\sum c_j\varphi_j)$ & Cần tổng bên trong log dương ở điểm đánh giá. Trừ $d$ trên $y$ tương ứng chia tổng bên trong cho $e^d$; nhân $y$ bởi một hệ số khác 1 nói chung đổi dạng tổ hợp cơ sở.\\
+$1/(a+bx)$ & Với $x=c+su$, mẫu số là $(a+bc)+(bs)u$. Tịnh tiến $y$ nói chung không còn dạng nghịch đảo đường thẳng này.\\
+$x/(a+bx)$ & Tịnh tiến $x=c+su$ đổi cả tử và mẫu; không thay tử bằng $u$ một cách ngầm định.\\
+$a+b\ln x$ & Đổi $x=su$, $s>0$, thành $(a+b\ln s)+b\ln u$. Tịnh tiến $x$ khác 0 cho $\ln(c+su)$, không phải $\ln u$.\\
+Hai nhánh SSE thang $y$ & Giữ hàm gốc và thang mục tiêu; tham số đầu đổi cùng biến. Khớp log chỉ là một cách khởi tạo khi đủ miền, không thay mục tiêu LM.\\\bottomrule
+\end{tabular}\end{center}
+Với cùng một phép đổi $v=(y-d)/r$ cho mọi dòng và họ mô hình đã đổi đúng,
+SSE trên $v$ bằng SSE trên $y$ chia $r^2$, nên có cùng nghiệm cực tiểu sau ánh xạ về.
+Điều này không áp dụng cho log, nghịch đảo hoặc những phép đổi phi tuyến của tung độ.
+
+\section{Lập bảng tổng bằng Excel}
+Ví dụ đã giữ hợp lệ $N$ dòng cho mô hình $Z=C_0+bx+c/x$.
+Đặt B=$x$, C=$y$, D=$Z=\ln|y|$, E=$x^2$, F=$1/x$, G=$1/x^2$, H=$xZ$, I=$Z/x$.
+\begin{center}\small
+\begin{tabular}{llll}
+\toprule D2 & E2 & F2 & G2\\\midrule
+\xl{=LN(ABS(C2))}&\xl{=B2^2}&\xl{=1/B2}&\xl{=1/B2^2}\\\bottomrule
+\end{tabular}\par\smallskip
+H2: \xl{=B2*D2},\quad I2: \xl{=D2/B2}.
+\end{center}
+Dùng \xl{=SUM(B2:B103)}, \xl{=SUM(E2:E103)}, v.v. nếu có đúng 102 dòng dữ liệu.
+Viết vào bài thi:
+\[
+\sum x_i=x_0+x_1+\cdots+x_{N-1},\quad
+\sum x_iZ_i=x_0Z_0+x_1Z_1+\cdots+x_{N-1}Z_{N-1}.
+\]
+\[
+\begin{bmatrix}N&\sum x_i&\sum1/x_i\\
+\sum x_i&\sum x_i^2&N\\
+\sum1/x_i&N&\sum1/x_i^2\end{bmatrix}
+\begin{bmatrix}C_0\\b\\c\end{bmatrix}=
+\begin{bmatrix}\sum Z_i\\\sum x_iZ_i\\\sum Z_i/x_i\end{bmatrix}.
+\]
+Hai ô chéo là $N$ vì $x_i(1/x_i)=1$ trên từng dòng. Có trọng số thì các ô này là $\sum w_i$, không phải số dòng.
+
+Sau khi có tham số, thêm cột $\widehat y=A\exp(bx+c/x)$ và $e=y-\widehat y$:
+\[
+\operatorname{RMSE}_y=\sqrt{\frac{e_0^2+\cdots+e_{N-1}^2}{N}}.
+\]
+Excel có thể dùng \xl{=SQRT(SUMSQ(L2:L103)/COUNT(L2:L103))} với cột L là phần dư.
+Đây là RMSE trên $y$; mục tiêu được tối thiểu hóa bằng log là tổng bình phương trên $Z$, hai đại lượng không giống nhau.
+Không thay mẫu số bằng $N-p$ rồi vẫn gọi là RMSE; đó là một định nghĩa thống kê khác.
+
+\section{Chọn mốc và nhánh trong Excel}
+\textbf{Nội suy thuận.} Tìm mốc gần $\bar x$, rồi chọn đủ mốc theo đề.
+Stirling cần số mốc lẻ và đối xứng quanh mốc giữa; Bessel dùng số mốc chẵn.
+Không chọn một tập lỗ chỗ rồi coi vẫn có bước lưới cũ.
+Ghi bảng ngang: chỉ số cục bộ, ID nguồn, $x_j,y_j$; số mốc quyết định bậc tối đa.
+
+\textbf{Nội suy ngược.} Quét các mốc đúng mức và các cặp đổi dấu quanh $\bar y$.
+Kiểm tra chiều tăng/giảm của $y$ trên từng nhánh; cùng mức có thể có nhiều nghiệm.
+Không sắp cột $y$ toàn cục độc lập để biến dữ liệu nhiều nhánh thành một hàm ngược.
+Trong tool, khoảng nghiệm không thay thế tập mốc: chọn ID hoặc nhập riêng các cặp muốn dùng.
+Lặp tiến/lùi vẫn lấy gốc đầu/cuối tập đã chọn, không tự đổi sang gốc ngay cạnh nghiệm.
+
+Nếu không đổi dấu, chỉ kết luận \emph{phép quét không tìm thấy khoảng đổi dấu}; nghiệm tiếp xúc giữa các mốc vẫn có thể tồn tại.
+Nếu hai mốc liên tiếp bằng mức đích, dữ liệu chỉ cho thấy một đoạn phẳng trên mẫu, chưa chứng minh hàm thật hằng trên đoạn đó.
+
+\section{Nhập vào tool và kiểm tra ngược}
+\begin{enumerate}
+\item Lưu vùng dùng để nhập thành hai cột đầu $x,y$. Workbook kèm có ba sheet nhập dữ liệu:\par
+\texttt{Nhap\_tool\_goc}, \texttt{Nhap\_tool\_doi}, \texttt{Nhap\_tool\_log\_goc}.\par
+Các sheet này tránh nhập nhầm ID thành $x$. Nếu tool đọc file Excel, ID và các cột phụ đặt sau hai cột này hoặc giữ ở sheet khác.
+\item Nếu biến đổi, đặt tên sheet rõ ràng, ghi $c,s,d,r$, điểm/mức đích mới và đơn vị. Khi dùng một mô hình có phép biến đổi bên trong, nhập dữ liệu gốc đúng như hướng dẫn của mô hình.
+\item Mở kết quả và đọc tập mốc thực dùng, cơ sở, gốc, điều kiện biên, bộ giải, thang mục tiêu và tiêu chí dừng.
+\item Đổi kết quả về biến gốc; kiểm tra vài mốc gốc, đạo hàm biên gốc và phần dư ở mức đích gốc.
+\item Ghi rõ mọi dòng loại, mọi đổi đơn vị và sai số trên đúng tập. Giữ đủ chữ số trung gian; làm tròn ở phần trình bày cuối.
+\end{enumerate}
+Các công thức trong workbook là công thức Excel, không có giá trị cache giả. Excel sẽ tính lại khi mở; đọc bằng thư viện với chế độ chỉ lấy giá trị trước khi Excel lưu lại có thể thấy ô công thức trống.
+\end{document}

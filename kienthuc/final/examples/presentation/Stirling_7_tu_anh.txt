@@ -1,0 +1,304 @@
+Stirling
+
+================================================================
+
+Dữ liệu → lập luận → kết quả
+
+Các cặp x,y lấy từ bảng đã nhập; tập thực dùng và ID nguồn được công bố trong phần tính.
+
+Điểm cần tính x: 4.15; Cấp đạo hàm (0 = giá trị hàm): 1; Số mốc dùng (để trống: toàn bảng): 7.
+
+Cách lập bài và thứ tự các bước
+
+B1. Công bố tập mốc thực dùng và ID nguồn; kiểm tra x phân biệt, điều kiện lưới và số mốc của phương pháp.
+
+B2. Đặt biến và gốc: với mốc cách đều dùng t=(x−x_gốc)/h; với Lagrange/Newton bất kỳ giữ biến x.
+
+B3. Lập bảng sai phân; cấp lẻ lấy trung bình hai ô kề tâm, cấp chẵn lấy một ô giữa. Ghi rõ nguồn của từng hệ số và mẫu chia.
+
+B4. Viết đa thức dưới dạng tổng các hệ số nhân cơ sở; khai triển từng tích và cộng theo cột khi cần dạng chính tắc.
+
+B5. Thế điểm tính, cộng đủ các hạng; tính đạo hàm trên cùng đa thức. Nếu đổi biến, P^(r)(x)=Q^(r)(t)/h^r.
+
+B6. Thế lại các mốc và đối chiếu cách đánh giá; kết luận giá trị, đạo hàm và phạm vi sai số.
+
+Output cần đọc: Tập mốc, bảng hệ số, đa thức, giá trị tại điểm tính và đạo hàm được yêu cầu; cận sai số chỉ khi có giả thiết bổ sung.
+
+1. Đọc dữ liệu, chọn mốc và kiểm tra điều kiện
+
+Yêu cầu và điều kiện áp dụng
+
+Phương pháp Stirling; dùng 7/7 mốc, bậc tối đa 6; cấp đạo hàm yêu cầu 1.
+
+Các cặp hữu hạn, x phân biệt và được sắp tăng; ID dòng nguồn bắt đầu từ 0. Không tự bỏ hoặc gộp mốc.
+
+Dùng toàn bộ tập mốc đã nhập; không tự giảm bậc.
+
+Số mốc lẻ 2N+1=7, N=3; gốc là mốc giữa. Khoảng |t|≤1/4 là gợi ý thuận lợi, không phải điều kiện cấm.
+
+Đã kiểm tra các bước: rtol=10⁻⁸, atol=0 theo bước h, không theo độ lớn x. h trình bày lấy từ hai đầu của tập chọn.
+
+h=0.115; độ lệch lớn nhất so với x_đầu+i·h: 0.
+
+Tập mốc thực sự sử dụng
+
+Mốc tính và ánh xạ nguồn
+================================================================
+
+Mốc tính và ánh xạ nguồn
+đại lượng  -3       -2       -1      0        1        2        3
+ID nguồn   0        1        2       3        4        5        6
+x_j        3.76     3.875    3.99    4.105    4.22     4.335    4.45
+y_j        -0.9384  -0.8979  -0.811  -0.8056  -0.7548  -0.7416  -0.7049
+
+
+2. Ký hiệu, đổi biến và công thức
+
+x_0=4.105; h=0.115; t=(x−x_0)/h; Q(t)=P(x_0+ht).
+
+Tại z=4.15, t_z=0.3913043.
+
+Chỉ số j đếm quanh gốc giữa, không phải ID dòng của toàn bộ bảng nhập.
+
+Q(t)=y_0+S_lẻ(t)+S_chẵn(t).
+
+Hạng lẻ 2r+1: trung bình Δ^(2r+1)y_(−r−1), Δ^(2r+1)y_(−r), chia (2r+1)!, nhân t·∏(t²−j²), j=1..r.
+
+Hạng chẵn 2r: Δ^(2r)y_(−r)/(2r)! nhân t²·∏(t²−j²), j=1..r−1.
+
+Tích rỗng bằng 1. Mỗi hạng được lấy đủ đến bậc tối đa; hệ số bằng 0 vẫn được giữ trong bảng.
+
+3. Lập bảng trung gian theo từng cấp
+
+Sai phân: Δ^0y_i=y_i; Δ^ky_i=Δ^(k−1)y_(i+1)−Δ^(k−1)y_i.
+
+Mỗi ô cùng hàng mốc bắt đầu. Ô trống ngoài tam giác không phải số 0; các ô dùng trong công thức được đánh dấu.
+
+Bảng sai phân tiến đầy đủ
+================================================================
+
+Bảng sai phân tiến đầy đủ
+j   xⱼ     yⱼ       Δ¹      Δ²       Δ³       Δ⁴       Δ⁵       Δ⁶
+-3  3.76   -0.9384  0.0405  0.0464   -0.1279  0.2548   -0.4647  0.8187
+-2  3.875  -0.8979  0.0869  -0.0815  0.1269   -0.2099  0.354    —
+-1  3.99   -0.811   0.0054  0.0454   -0.083   0.1441   —        —
+0   4.105  -0.8056  0.0508  -0.0376  0.0611   —        —        —
+1   4.22   -0.7548  0.0132  0.0235   —        —        —        —
+2   4.335  -0.7416  0.0367  —        —        —        —        —
+3   4.45   -0.7049  —       —        —        —        —        —
+
+
+Từng phép tính trong các cấp của bảng
+
+Lập từng ô
+================================================================
+
+Lập từng ô
+k  i bắt đầu  ô phải cấp k−1  ô trái cấp k−1  hiệu     mẫu chia  ô cấp k
+1  0          -0.8979         -0.9384         0.0405   1         0.0405
+1  1          -0.811          -0.8979         0.0869   1         0.0869
+1  2          -0.8056         -0.811          0.0054   1         0.0054
+1  3          -0.7548         -0.8056         0.0508   1         0.0508
+1  4          -0.7416         -0.7548         0.0132   1         0.0132
+1  5          -0.7049         -0.7416         0.0367   1         0.0367
+2  0          0.0869          0.0405          0.0464   1         0.0464
+2  1          0.0054          0.0869          -0.0815  1         -0.0815
+2  2          0.0508          0.0054          0.0454   1         0.0454
+2  3          0.0132          0.0508          -0.0376  1         -0.0376
+2  4          0.0367          0.0132          0.0235   1         0.0235
+3  0          -0.0815         0.0464          -0.1279  1         -0.1279
+3  1          0.0454          -0.0815         0.1269   1         0.1269
+3  2          -0.0376         0.0454          -0.083   1         -0.083
+3  3          0.0235          -0.0376         0.0611   1         0.0611
+4  0          0.1269          -0.1279         0.2548   1         0.2548
+4  1          -0.083          0.1269          -0.2099  1         -0.2099
+4  2          0.0611          -0.083          0.1441   1         0.1441
+5  0          -0.2099         0.2548          -0.4647  1         -0.4647
+5  1          0.1441          -0.2099         0.354    1         0.354
+6  0          0.354           -0.4647         0.8187   1         0.8187
+
+
+4. Lấy hệ số, ghép từng hạng và dựng đa thức
+
+Duyệt hạng k=0,…,n, lấy đúng ô nguồn, chia đúng mẫu một lần, nhân cơ sở rồi cộng. Đây là các bước tính hữu hạn, không phải vòng hội tụ.
+
+Các hạng của công thức đã chọn
+================================================================
+
+Các hạng của công thức đã chọn
+k  nguồn σₖ           các ô nguồn     σₖ        mẫu chia  βₖ          Bₖ
+0  y₀                 -0.8056         -0.8056   1         -0.8056     1
+1  (Δ¹y₋₁ + Δ¹y₀)/2   0.0054; 0.0508  0.0281    1         0.0281      t
+2  Δ²y₋₁              0.0454          0.0454    2         0.0227      t²
+3  (Δ³y₋₂ + Δ³y₋₁)/2  0.1269; -0.083  0.02195   6         0.0036583   t(t²−1)
+4  Δ⁴y₋₂              -0.2099         -0.2099   24        -0.0087458  t²(t²−1)
+5  (Δ⁵y₋₃ + Δ⁵y₋₂)/2  -0.4647; 0.354  -0.05535  120       -0.0004612  t(t²−1)(t²−4)
+6  Δ⁶y₋₃              0.8187          0.8187    720       0.0011371   t²(t²−1)(t²−4)
+
+
+Bảng tích khai triển — hệ số theo bậc giảm dần
+
+Các tích cơ sở chưa chia giai thừa và chưa nhân sai phân; không chia k! thêm lần nữa khi đã dùng β_k.
+
+Bảng tích: chưa chia giai thừa — hệ số theo bậc giảm dần
+================================================================
+
+Bảng tích: chưa chia giai thừa — hệ số theo bậc giảm dần
+k  bậc 6  bậc 5  bậc 4  bậc 3  bậc 2  bậc 1  bậc 0
+0  0      0      0      0      0      0      1
+1  0      0      0      0      0      1      0
+2  0      0      0      0      1      0      0
+3  0      0      0      1      0      -1     0
+4  0      0      1      0      -1     0      0
+5  0      1      0      -5     0      4      0
+6  1      0      -5     0      4      0      0
+
+
+Nhân mỗi hàng với β_k tương ứng, rồi cộng theo từng cột cùng lũy thừa để được dạng chính tắc. Phép khai triển chỉ đổi cách viết của cùng đa thức.
+
+Q(t) = (-0.8056)·1 + (0.0281)·t + (0.0227)·t² + (0.0036583)·t(t²−1) + (-0.0087458)·t²(t²−1) + (-0.0004612)·t(t²−1)(t²−4) + (0.0011371)·t²(t²−1)(t²−4)
+
+Tiếp các hạng của cùng đa thức.
+
+Tiếp các hạng của cùng đa thức.
+
+Tiếp các hạng của cùng đa thức.
+
+Tiếp các hạng của cùng đa thức.
+
+P(x_0+th) = 0.0011371·t^6 - 0.0004613·t^5 - 0.0144312·t^4 + 0.0059646·t^3 + 0.0359942·t^2 + 0.0225967·t - 0.8056
+
+P(x_0+th) = 0.0011371·t^6 - 0.0004613·t^5 - 0.0144312·t^4 + 0.0059646·t^3 + 0.0359942·t^2 + 0.0225967·t - 0.8056
+
+5. Thế số và cộng kết quả
+
+Giá trị của đa thức
+
+Đóng góp từng hạng vào P(z)
+================================================================
+
+Đóng góp từng hạng vào P(z)
+k  Bₖ tại điểm tính  βₖ Bₖ       tổng
+0  1                 -0.8056     -0.8056
+1  0.3913043         0.0109957   -0.7946043
+2  0.1531191         0.0034758   -0.7911285
+3  -0.3313882        -0.0012123  -0.7923409
+4  -0.1296736        0.0011341   -0.7912068
+5  1.2748109         -0.000588   -0.7917948
+6  0.498839          0.0005672   -0.7912276
+
+
+P(4.15)=-0.7912276.
+
+Đạo hàm cấp 1 theo x
+
+Đạo hàm theo x: chia đạo hàm theo t cho h^1.
+
+Đóng góp từng hạng vào đạo hàm
+================================================================
+
+Đóng góp từng hạng vào đạo hàm
+k  Bₖ′         βₖ·Bₖ′      đóng góp theo x  tổng
+0  0           0           0                0
+1  1           0.0281      0.2443478        0.2443478
+2  0.7826087   0.0177652   0.1544802        0.398828
+3  -0.5406427  -0.0019779  -0.0171987       0.3816293
+4  -0.542944   0.0047485   0.0412913        0.4229206
+5  1.8204409   -0.0008397  -0.0073016       0.415619
+6  1.9871573   0.0022596   0.0196484        0.4352674
+
+
+Đạo hàm theo t: Q^(1)(t_z)=0.0500557.
+
+Đổi sang x: P^(1)(4.15)=0.0500557/(0.115)^1=0.4352674.
+
+Thuật toán đạo hàm cơ sở tích, kể cả tại nghiệm của tích
+
+Khởi tạo g_0=1, g_l=0 (l>0). Khi nhân (t−r), cập nhật từ cấp cao xuống thấp: g_l←(t_z−r)g_l+l·g_(l−1), rồi g_0←(t_z−r)g_0. Không chia cho t_z−r nên không lỗi khi trùng mốc.
+
+k=0: 1; đạo hàm cơ sở cấp 1 = 0.
+
+k=1: t; đạo hàm cơ sở cấp 1 = 1.
+
+k=2: t²; đạo hàm cơ sở cấp 1 = 0.7826087.
+
+k=3: t(t²−1); đạo hàm cơ sở cấp 1 = -0.5406427.
+
+k=4: t²(t²−1); đạo hàm cơ sở cấp 1 = -0.542944.
+
+k=5: t(t²−1)(t²−4); đạo hàm cơ sở cấp 1 = 1.8204409.
+
+k=6: t²(t²−1)(t²−4); đạo hàm cơ sở cấp 1 = 1.9871573.
+
+Horner trên dạng chính tắc — kiểm tra giá trị và đạo hàm
+
+Đây là phép đánh giá đối chiếu trên chính đa thức vừa khai triển. Dùng hệ số đầy đủ, không dùng dãy số đã làm tròn trong công thức in.
+
+Chép A_0; ở mỗi cột sau nhân b trước với c rồi cộng A_j. Chia lặp phần thương; đạo hàm cấp r bằng r! lần số dư s_r.
+
+Horner theo t, lượt 1, c=0.3913043
+================================================================
+
+Horner theo t, lượt 1, c=0.3913043
+hàng       bậc 6      bậc 5          bậc 4          bậc 3       bậc 2      bậc 1      bậc 0
+A_j        0.0011371  -0.0004612     -0.0144312     0.0059646   0.0359942  0.0225967  -0.8056
+c·b trước  —          0.0004449      -6.3799622e-6  -0.0056495  0.0001233  0.0141329  0.0143724
+b_j        0.0011371  -1.6304348e-5  -0.0144376     0.0003151   0.0361175  0.0367296  -0.7912276
+
+
+Số dư s_0=-0.7912276; đạo hàm theo t cấp 0: 0!·s_0=-0.7912276.
+
+Horner theo t, lượt 2, c=0.3913043
+================================================================
+
+Horner theo t, lượt 2, c=0.3913043
+hàng       bậc 5      bậc 4          bậc 3       bậc 2       bậc 1       bậc 0
+A_j        0.0011371  -1.6304348e-5  -0.0144376  0.0003151   0.0361175   0.0367296
+c·b trước  —          0.0004449      0.0001677   -0.0055839  -0.0020617  0.0133262
+b_j        0.0011371  0.0004286      -0.0142699  -0.0052688  0.0340558   0.0500557
+
+
+Số dư s_1=0.0500557; đạo hàm theo t cấp 1: 1!·s_1=0.0500557. Đổi sang x: chia cho h^1=0.115, được 0.4352674.
+
+6. Đối chiếu và phạm vi kết luận
+
+Sai lệch lớn nhất P(x_i)−y_i theo chính công thức đã chọn: 1.0000000e-50.
+
+Kiểm tra đa thức tại từng mốc đã chọn
+
+Đối chiếu điều kiện nội suy
+================================================================
+
+Đối chiếu điều kiện nội suy
+x_i    y_i      P(x_i)   |P(x_i)−y_i|
+3.76   -0.9384  -0.9384  1.0000000e-50
+3.875  -0.8979  -0.8979  0
+3.99   -0.811   -0.811   0
+4.105  -0.8056  -0.8056  0
+4.22   -0.7548  -0.7548  0
+4.335  -0.7416  -0.7416  0
+4.45   -0.7049  -0.7049  1.0000000e-50
+
+
+Công thức đã chọn và Horner Newton ổn định trên các mốc nhập
+================================================================
+
+Công thức đã chọn và Horner Newton ổn định trên các mốc nhập
+cấp  tổng theo công thức  Horner Newton  độ chênh       đối chiếu
+0    -0.7912276           -0.7912276     5.4924201e-17  Đạt
+1    0.4352674            0.4352674      2.8207890e-17  Đạt
+
+
+Tính trung gian với 50 chữ số; số trong bảng chỉ làm tròn khi hiển thị. Dạng tích là mô hình chính, không bắt buộc khai triển theo x.
+
+Nếu dữ liệu chính xác và |f^(m)|≤M_m trên đoạn chứa m mốc và điểm tính: |f(z)−P(z)|≤M_m·|∏(z−x_i)|/m!. Chưa được cho M_m thì chưa có cận sai số hàm thật.
+
+Sai lệch tại mốc chỉ kiểm tra nội suy; không là cận giữa mốc. Đạo hàm cần cận riêng, không đạo hàm phần dư chứa ξ như hằng số. Nhiều mốc/bậc cao có thể khuếch đại nhiễu.
+
+Kết quả của lượt tính
+
+P(4.15)=-0.7912276.
+
+P^(1)(4.15) = 0.4352674
+
+Kết quả của đa thức nội suy trên tập mốc công bố dưới đây. Chưa có cận sai số với hàm thật nếu chưa biết đạo hàm cao hơn.

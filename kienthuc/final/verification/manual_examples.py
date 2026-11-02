@@ -153,7 +153,7 @@ def main():
                 if method=='Đạo hàm từ bảng':chapter='05_dao_ham_tich_phan.tex'
                 w.writerow([tool,method,chapter,desc])
     source_paths=list((ROOT/'pps').glob('*.py'))+list((OUT.parent/'chapters').glob('*.tex'))
-    source_paths+=[OUT.parent/'So_tay_PPS.tex']+list(OUT.glob('*.py'))
+    source_paths+=list(OUT.parent.glob('*.tex'))+list(OUT.glob('*.py'))
     source_paths+=list(OUT.glob('*.tex'))
     source_paths+=list((ROOT/'kienthuc'/'real').glob('*'))
     source_paths += [ROOT/'kienthuc'/v for v in ('20241_MI3042_GK.jpg','20241GKtest2.xlsx','20251_MI3042_GK.jpg','20251GKtest2.xlsx')]

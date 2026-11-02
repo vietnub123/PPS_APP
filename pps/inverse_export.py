@@ -152,6 +152,14 @@ def export_inverse_html(report, path):
 '''
     style += '\n.print-table{display:none}@media print{.screen-table{display:none}.print-table{display:block}.keep-together{break-inside:avoid}}\n'
     style += '''
+body{font-family:"Times New Roman",Times,serif;font-size:18px;line-height:1.5;color:#17232b;max-width:1200px}
+h1{border-bottom:1px solid #6c818b;padding-bottom:12px}h2{font-size:22px}h3{font-size:18px}
+.column-card{border-radius:0;border-color:#ccdbe1;background:#fbfdfe}
+.formula img{margin-left:auto;margin-right:auto}table{font-family:Arial,sans-serif;font-size:13px}
+.used{box-shadow:inset 0 0 0 1px #476b7d;background:#e5f0f5!important}
+@media print{body{font-family:"Times New Roman",Times,serif}.column-card{background:white}table{font-size:8.5pt}}
+'''
+    style += '''
 @page{margin:12mm}
 @media print{body{font-size:10pt;line-height:1.28}.section{margin-bottom:10px}
 p{margin:4px 0 6px}.columns{gap:9px;margin-bottom:10px}.column-card{padding:6px}

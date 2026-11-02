@@ -2,6 +2,26 @@ Nội suy ngược — Newton tiến
 
 ================================================================
 
+Dữ liệu → lập luận → kết quả
+
+Các cặp x,y lấy từ bảng đã nhập; tập thực dùng và ID nguồn được công bố trong phần tính.
+
+Giá trị y cần tìm ngược: 2; Cận x trái của khoảng nghiệm: 0; Cận x phải của khoảng nghiệm: 1; Dung sai vị trí: 1e-06; Dung sai phần dư: 1e-06; Hướng nội suy: Tiến; Số vòng tối đa: 100; Quy tắc khởi tạo: Tuyến tính tại gốc; Mức trình bày: Tổng hợp.
+
+Cách lập bài và thứ tự các bước
+
+B1. Công bố mức y*, các mốc được chọn và nhánh/khoảng nghiệm; kiểm tra trường hợp trùng mốc, nghiệm nhiều nhánh và dữ liệu phẳng.
+
+B2. Giữ toàn bộ tập mốc đã chọn; dựng đa thức thuận p. Lặp tiến lấy gốc đầu tập, lặp lùi lấy gốc cuối tập; khoảng nghiệm có thể nằm giữa.
+
+B3. Đặt t=(x−x_gốc)/h, t_0 theo quy tắc khởi tạo; tách hạng tuyến tính để viết t_(k+1)=H(t_k), cố định các sai phân.
+
+B4. Mỗi vòng ghi t_k, từng tích và đóng góp phi tuyến, H(t_k), x_(k+1), độ đổi theo x và phần dư |p(x)−y*|.
+
+B5. Dừng thực hành cần đạt cả độ đổi theo x và phần dư. Chế độ có cận co còn kiểm tra miền bất biến, q<1 và cận sai số; giữ nhật ký thất bại.
+
+Output cần đọc: Nghiệm x xấp xỉ hoặc lý do chưa đạt, tập mốc/gốc thực dùng, bảng hệ số, toàn bộ vòng lặp và tiêu chí dừng.
+
 1. Bài toán và lựa chọn
 
 Thông số của lượt chạy

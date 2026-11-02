@@ -38,6 +38,17 @@ test_regression_plot_domain_does_not_discard_valid_fit (test_edge_cases.Numerica
 test_scaled_linear_systems_do_not_become_singular (test_edge_cases.NumericalBoundaryTests.test_scaled_linear_systems_do_not_become_singular) ... ok
 test_small_numbers_and_domain_errors_are_visible (test_edge_cases.NumericalBoundaryTests.test_small_numbers_and_domain_errors_are_visible) ... ok
 test_every_method_has_a_working_example_without_creating_a_tk_window (test_edge_cases.OfflineDispatchExamples.test_every_method_has_a_working_example_without_creating_a_tk_window) ... ok
+test_adams_keeps_startup_and_actual_predictor_corrector (test_exam_style.ExamStyleTests.test_adams_keeps_startup_and_actual_predictor_corrector) ... ok
+test_double_integral_reports_main_grid_not_the_probe (test_exam_style.ExamStyleTests.test_double_integral_reports_main_grid_not_the_probe) ... ok
+test_eigen_operator_table_matches_returned_pairs (test_exam_style.ExamStyleTests.test_eigen_operator_table_matches_returned_pairs) ... ok
+test_every_gui_choice_has_its_own_algorithm_outline (test_exam_style.ExamStyleTests.test_every_gui_choice_has_its_own_algorithm_outline) ... ok
+test_horner_horizontal_shift_and_remainder_are_explicit (test_exam_style.ExamStyleTests.test_horner_horizontal_shift_and_remainder_are_explicit) ... ok
+test_image_stirling_exact_oracle_detects_missing_terms (test_exam_style.ExamStyleTests.test_image_stirling_exact_oracle_detects_missing_terms) ... ok
+test_ls_symbolic_system_simplifies_x_times_reciprocal (test_exam_style.ExamStyleTests.test_ls_symbolic_system_simplifies_x_times_reciprocal) ... ok
+test_new_layout_exports_all_saved_tables_and_implicit_details (test_exam_style.ExamStyleTests.test_new_layout_exports_all_saved_tables_and_implicit_details) ... ok
+test_numpy_input_and_legacy_newton_remain_supported (test_exam_style.ExamStyleTests.test_numpy_input_and_legacy_newton_remain_supported) ... ok
+test_rk_stage_table_matches_actual_step_without_extra_rhs_calls (test_exam_style.ExamStyleTests.test_rk_stage_table_matches_actual_step_without_extra_rhs_calls) ... ok
+test_spline_coordinate_transform_includes_boundary_derivatives (test_exam_style.ExamStyleTests.test_spline_coordinate_transform_includes_boundary_derivatives) ... ok
 test_all_three_worked_reports_export_offline_with_trace (test_exam_workflow_2025.ExamWorkflow2025.test_all_three_worked_reports_export_offline_with_trace) ... ok
 test_exponential_json_without_basis_keeps_the_standard_two_parameter_model (test_exam_workflow_2025.ExamWorkflow2025.test_exponential_json_without_basis_keeps_the_standard_two_parameter_model) ... ok
 test_nonuniform_spline_boundary_derivative_and_integral_in_one_run (test_exam_workflow_2025.ExamWorkflow2025.test_nonuniform_spline_boundary_derivative_and_integral_in_one_run) ... ok
@@ -224,6 +235,6 @@ test_reports_render_all_formulas_and_export_full_trace (test_spline_real.SplineR
 test_right_quadratic_and_mixed_boundary_reproduce_known_polynomial (test_spline_real.SplineReal.test_right_quadratic_and_mixed_boundary_reproduce_known_polynomial) ... ok
 
 ----------------------------------------------------------------------
-Ran 223 tests in 979.951s
+Ran 234 tests in 167.546s
 
 OK (skipped=1)

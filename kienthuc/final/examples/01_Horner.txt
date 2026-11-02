@@ -2,15 +2,23 @@ Horner
 
 ================================================================
 
-Kết quả
+Dữ liệu → lập luận → kết quả
 
-P^(0)(2)=19.
+Hệ số theo bậc giảm dần: 3 0 -2 -1; Điểm x: 2; Đạo hàm đến cấp: 3.
 
-P^(1)(2)=34.
+Cách lập bài và thứ tự các bước
 
-P^(2)(2)=36.
+B1. Đọc hệ số theo bậc giảm, giữ các hệ số 0 giữa/cuối; viết lại P(x) và điểm c.
 
-P^(3)(2)=18.
+B2. Lập bảng ngang: hàng A_j; hàng c·b_(j−1) dịch sang phải một ô; hàng cộng b_j=A_j+c·b_(j−1).
+
+B3. Phần tử cuối là số dư s_0=P(c); các phần tử trước tạo thương Q_1.
+
+B4. Chia tiếp thương cho x−c, lấy s_r; P^(r)(c)=r!s_r. Công bố số dư và thương của từng lượt.
+
+B5. Kết luận giá trị và các đạo hàm; đây là tính hữu hạn, không có điều kiện hội tụ.
+
+Output cần đọc: Giá trị/đạo hàm, bảng nhân–cộng hoặc trọng số và đối chiếu; đạo hàm vượt bậc đa thức bằng 0.
 
 1. Đọc đa thức và yêu cầu
 
@@ -34,6 +42,20 @@ Lượt r+1 tính s_r. Đây là phép tính hữu hạn; không cần dung sai 
 
 Lượt 1: Q_0, lấy s_0
 
+Đọc từ trái sang phải: chép hệ số đầu xuống hàng cộng; nhân với c, viết lệch sang cột kế, rồi cộng với hệ số ở cột đó. Ô cuối là số dư, các ô trước là thương.
+
+Sơ đồ Horner ngang — lượt 1
+================================================================
+
+Sơ đồ Horner ngang — lượt 1
+hàng       bậc 3  bậc 2  bậc 1  bậc 0
+Hệ số A_j  3      0      -2     -1
+Nhân c=2   —      6      12     20
+Cộng b_j   3      6      10     19
+
+
+Đọc riêng từng phép nhân và cộng của lượt 1
+
 Nhân–cộng trong lượt 1
 ================================================================
 
@@ -53,6 +75,20 @@ Bỏ phần tử số dư; dùng toàn bộ dãy thương này làm hệ số A_
 
 Lượt 2: Q_1, lấy s_1
 
+Đọc từ trái sang phải: chép hệ số đầu xuống hàng cộng; nhân với c, viết lệch sang cột kế, rồi cộng với hệ số ở cột đó. Ô cuối là số dư, các ô trước là thương.
+
+Sơ đồ Horner ngang — lượt 2
+================================================================
+
+Sơ đồ Horner ngang — lượt 2
+hàng       bậc 2  bậc 1  bậc 0
+Hệ số A_j  3      6      10
+Nhân c=2   —      6      24
+Cộng b_j   3      12     34
+
+
+Đọc riêng từng phép nhân và cộng của lượt 2
+
 Nhân–cộng trong lượt 2
 ================================================================
 
@@ -71,6 +107,20 @@ Bỏ phần tử số dư; dùng toàn bộ dãy thương này làm hệ số A_
 
 Lượt 3: Q_2, lấy s_2
 
+Đọc từ trái sang phải: chép hệ số đầu xuống hàng cộng; nhân với c, viết lệch sang cột kế, rồi cộng với hệ số ở cột đó. Ô cuối là số dư, các ô trước là thương.
+
+Sơ đồ Horner ngang — lượt 3
+================================================================
+
+Sơ đồ Horner ngang — lượt 3
+hàng       bậc 1  bậc 0
+Hệ số A_j  3      12
+Nhân c=2   —      6
+Cộng b_j   3      18
+
+
+Đọc riêng từng phép nhân và cộng của lượt 3
+
 Nhân–cộng trong lượt 3
 ================================================================
 
@@ -87,6 +137,20 @@ s_2=18; 2!·s_2=36.
 Bỏ phần tử số dư; dùng toàn bộ dãy thương này làm hệ số A_j ở lượt sau.
 
 Lượt 4: Q_3, lấy s_3
+
+Đọc từ trái sang phải: chép hệ số đầu xuống hàng cộng; nhân với c, viết lệch sang cột kế, rồi cộng với hệ số ở cột đó. Ô cuối là số dư, các ô trước là thương.
+
+Sơ đồ Horner ngang — lượt 4
+================================================================
+
+Sơ đồ Horner ngang — lượt 4
+hàng       bậc 0
+Hệ số A_j  3
+Nhân c=2   —
+Cộng b_j   3
+
+
+Đọc riêng từng phép nhân và cộng của lượt 4
 
 Nhân–cộng trong lượt 4
 ================================================================
@@ -120,3 +184,13 @@ Mỗi dãy b bỏ phần tử cuối là thương; phần tử cuối là số d
 Đã có đủ hệ số Taylor: s_0=19, s_1=34, s_2=18, s_3=3.
 
 Phép tính dùng hệ số đầy đủ, bảng làm tròn ở khâu hiển thị. Kết quả thuộc đa thức đã nhập; độ chính xác của hệ số dữ liệu được xét riêng.
+
+Kết quả
+
+P^(0)(2)=19.
+
+P^(1)(2)=34.
+
+P^(2)(2)=36.
+
+P^(3)(2)=18.
