@@ -1,5 +1,7 @@
 # Sổ tay thuật toán PPS
 
+**Chưa biết bắt đầu từ file nào? Đọc [Lộ trình giải bài](LO_TRINH_GIAI_BAI.md): mỗi bước phân tích, chọn phương pháp, viết thuật toán, nhập JSON và diễn giải kết quả dùng đúng tài liệu nào.**
+
 Mở **[So_tay_PPS.pdf](So_tay_PPS.pdf)** để đọc và in. Bản theo mẫu bài thi có **141 trang, 118 bookmark**, mục lục bấm được, công thức và bảng được dàn trang bằng LaTeX.
 
 **Mở trước:** [thư viện 58 bài HTML ngoại tuyến](examples/presentation/index.html), [bài Stirling đúng 7 mốc trên ảnh](examples/presentation/Stirling_7_tu_anh.html), [những khác biệt với mẫu](Doi_chieu_mau_20251.md). Phụ lục C giải thích trật tự trình bày, kiểm tra hệ chuẩn 102 điểm từ các tổng trên ảnh và giải đầy đủ ví dụ Stirling. Giá trị hàm đúng là **−0.791227553804**; giá trị −0.791128 trên ảnh thiếu đóng góp của các hạng cao.
