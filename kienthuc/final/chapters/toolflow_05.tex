@@ -1,0 +1,91 @@
+\section{Tool Đạo hàm từ bảng: dữ liệu qua bảng trọng số}
+\paragraph{Input trên GUI.} Trong nhóm \emph{Đạo hàm \& Horner}, chọn \textbf{Đạo hàm từ bảng}. Nhập hai dãy $x,y$; ô \emph{Điểm x} là $z$; \emph{Bậc p} dùng đúng $p+1$ mốc; \emph{Cấp đạo hàm} là $s$. Các $x$ phải phân biệt, không cần đều; $p$ không phải cấp đạo hàm. Tên khóa JSON là \texttt{target}, \texttt{degree}, \texttt{order}.
+\paragraph{Quá trình.} Chọn $p+1$ mốc theo quy tắc của tool $\to$ lập từng cơ sở Lagrange $L_j$ $\to$ tính trọng số $w_j=L_j^{(s)}(z)$ $\to$ nhân với $y_j$ $\to$ cộng. Mẫu bảng tổng quát:
+\begin{center}\small\begin{tabular}{clllll}\toprule
+Mốc&$x_j$&$y_j$&$w_j$&Đóng góp $w_jy_j$&Tổng dồn\\\midrule
+0&$x_0$&$y_0$&$L_0^{(s)}(z)$&$w_0y_0$&$w_0y_0$\\
+$j$&$x_j$&$y_j$&$L_j^{(s)}(z)$&$w_jy_j$&$w_0y_0+\cdots+w_jy_j$\\
+$p$&$x_p$&$y_p$&$L_p^{(s)}(z)$&$w_py_p$&Kết quả cuối\\\bottomrule
+\end{tabular}\end{center}
+\[
+f^{(s)}(z)\approx\sum_{j=0}^pw_jy_j=w_0y_0+w_1y_1+\cdots+w_py_p.
+\]
+\textbf{Output}: tập mốc thực sự dùng, bảng tạo trọng số/đóng góp, đạo hàm gần đúng và kiểm các moment. Nếu đã chọn đạo hàm trong tool nội suy thì đọc đạo hàm của chính đa thức đó; đây là lựa chọn riêng có thể dùng tập mốc khác.
+
+\section{Các tool Tích phân: input và bảng tổng quát trước ví dụ}
+\input{verification/inputs_calculus.tex}
+\paragraph{Hai kiểu input.} Nguồn \emph{Hàm}: nhập biểu thức, cận, số khoảng $n$; tool tự đánh giá hàm. Nguồn \emph{Bảng}: $x,y$ phải khớp đúng lưới mà quy tắc cần; không tự tạo thêm dữ liệu ở điểm chưa biết. Ô \emph{Dung sai tự chia lưới} chỉ dùng với hàm. Ô $n$ là số khoảng, thường có $n+1$ nút; trung điểm dùng $n$ tâm.
+
+\subsection{Hình thang: từ n+1 nút đến một tổng có trọng số}
+\textbf{Input riêng}: $n\ge1$, $h=(b-a)/n$, $x_i=a+ih$.
+\begin{center}\small\begin{tabular}{cllll}\toprule
+Dòng&Vị trí&Giá trị&Trọng số $W_i$&Đóng góp\\\midrule
+0&$a$&$y_0=f(a)$&$1/2$&$y_0/2$\\
+$i$, $1\le i<n$&$a+ih$&$y_i$&1&$y_i$\\
+$n$&$b$&$y_n=f(b)$&$1/2$&$y_n/2$\\\bottomrule
+\end{tabular}\end{center}
+Cộng cột đóng góp rồi nhân $h$:
+\[
+I_n=h\sum_{i=0}^nW_iy_i=h(y_0/2+y_1+y_2+\cdots+y_{n-1}+y_n/2).
+\]
+\textbf{Output}: lưới, bảng đóng góp, $I_n$; nếu yêu cầu tinh chỉnh còn có bảng Runge/cận và trạng thái.
+
+\subsection{Trung điểm: giá trị phải nằm ở tâm từng khoảng}
+\textbf{Input riêng}: $n\ge1$, $h=(b-a)/n$. Tâm $\xi_i=a+(i+1/2)h$, $i=0,\ldots,n-1$.
+\begin{center}\small\begin{tabular}{clll}\toprule
+Khoảng&Hai đầu&Tâm lấy hàm&Đóng góp\\\midrule
+0&$a,a+h$&$a+h/2$&$f(a+h/2)$\\
+$i$&$a+ih,a+(i+1)h$&$a+(i+1/2)h$&$f(\xi_i)$\\
+$n-1$&$b-h,b$&$b-h/2$&$f(b-h/2)$\\\bottomrule
+\end{tabular}\end{center}
+\[
+I_n=h\sum_{i=0}^{n-1}f(\xi_i)=h[f(a+h/2)+f(a+3h/2)+\cdots+f(b-h/2)].
+\]
+\textbf{Output}: $n$ tâm và các giá trị tại tâm, tổng đóng góp, kết quả. Bảng chỉ biết hai đầu khoảng chưa tự có tung độ ở tâm.
+
+\subsection{Simpson: kiểm n chẵn trước khi điền trọng số}
+\textbf{Input riêng}: $n$ chẵn, $n\ge2$; $n+1$ nút đều kể cả hai đầu.
+\begin{center}\small\begin{tabular}{clll}\toprule
+Vị trí dòng&Giá trị&Trọng số nguyên&Đóng góp trong ngoặc\\\midrule
+Đầu $i=0,n$&$y_i$&1&$y_i$\\
+Trong, $i$ lẻ&$y_i$&4&$4y_i$\\
+Trong, $i$ chẵn&$y_i$&2&$2y_i$\\\bottomrule
+\end{tabular}\end{center}
+\[
+I_n=\frac h3\big[y_0+4y_1+2y_2+4y_3+\cdots+2y_{n-2}+4y_{n-1}+y_n\big].
+\]
+Nếu bảng tool đã dùng trọng số $1/3,4/3,2/3,\ldots$, chỉ nhân $h$ ở ngoài, không chia 3 lần nữa. \textbf{Output}: bảng lưới/trọng số, kết quả và thông tin sai số nếu đã yêu cầu.
+
+\subsection{Newton--Cotes: ghép các khối bậc d}
+\textbf{Input riêng}: bậc $1\le d\le10$, $n$ chia hết cho $d$. Một khối gồm $d$ khoảng, $d+1$ nút; trọng số $w_0,\ldots,w_d$ trong bảng bậc đã bao gồm hệ số chung.
+\[
+I_{\text{khối }k}=h(w_0y_{kd}+w_1y_{kd+1}+\cdots+w_dy_{kd+d}).
+\]
+\begin{center}\small\begin{tabular}{clll}\toprule
+Khối&Chỉ số mốc&Đóng góp&Thông tin chuyển tiếp\\\midrule
+0&$0,1,\ldots,d$&$h(w_0y_0+\cdots+w_dy_d)$&Cộng vào tổng\\
+$k$&$kd,\ldots,kd+d$&$h(w_0y_{kd}+\cdots+w_dy_{kd+d})$&Nút chung nhận hai trọng số\\\bottomrule
+\end{tabular}\end{center}
+\textbf{Output}: trọng số chuẩn của bậc $d$, trọng số ghép trên toàn lưới, giá trị $I_n$. Các bậc 1--10 và ví dụ Boole nằm ở phần giải thích sau.
+
+\subsection{Tự chia lưới: bảng tổng quát của quá trình kiểm sai số}
+Có ngưỡng $\varepsilon$ và nguồn hàm thì tool tính lại trên lưới mịn, không chỉ làm tròn $I_n$. Bậc dùng Runge là $p=2$ cho hình thang/trung điểm, $p=4$ cho Simpson; Newton--Cotes tùy bậc.
+\begin{center}\small\begin{tabular}{cllll}\toprule
+Lượt&Lưới thô/mịn&Hai giá trị&Ước lượng lưới mịn&Quyết định\\\midrule
+$k$&$n_k,2n_k$&$I_{n_k},I_{2n_k}$&$|I_{2n_k}-I_{n_k}|/(2^p-1)$&Đạt ngưỡng?\\\bottomrule
+\end{tabular}\end{center}
+App còn kiểm một lưới thăm dò không lồng để tránh kết luận từ hiệu hai lưới tình cờ nhỏ. Không đạt thì chuyển lưới mịn thành lưới thô của lượt sau. \textbf{Output}: số khoảng cuối, kết quả, lịch sử các lưới và lý do dừng. Runge là ước lượng theo mô hình hội tụ; cận lý thuyết chỉ dùng khi có cận đạo hàm phù hợp.
+
+\subsection{Tích phân kép: ghép trọng số theo hai chiều}
+\textbf{Input}: $f(x,y)$, hình chữ nhật $[a,b]\times[c,d]$, số khoảng $n$ mỗi chiều, quy tắc Simpson/hình thang và dung sai. Không dùng hai cột $x,y$ như một bảng giá trị hàm hai biến.
+\textbf{Quá trình}: lập các nút $x_i,y_j$ $\to$ tính ma trận $f_{ij}=f(x_i,y_j)$ $\to$ nhân trọng số tích $W_iV_j$ $\to$ cộng. $W_i,V_j$ ở công thức dưới là trọng số \emph{đã chứa hệ số chung}: Simpson dùng $(1,4,2,\ldots,4,1)/3$ ở mỗi chiều, nên hệ số $1/9$ đã nằm trong tích; hình thang dùng $(1/2,1,\ldots,1,1/2)$.
+\begin{align*}
+I_n&=h_xh_y\sum_{i=0}^n\sum_{j=0}^nW_iV_jf_{ij}\\
+ &=h_xh_y\{W_0[V_0f_{00}+\cdots+V_nf_{0n}]\\
+ &\qquad+W_1[V_0f_{10}+\cdots+V_nf_{1n}]+\cdots+W_n[V_0f_{n0}+\cdots+V_nf_{nn}]\}.
+\end{align*}
+\begin{center}\small\begin{tabular}{clll}\toprule
+Hàng $x_i$&Các giá trị cần có&Tổng theo y&Đóng góp hàng\\\midrule
+$i$&$f_{i0},f_{i1},\ldots,f_{in}$&$T_i=V_0f_{i0}+\cdots+V_nf_{in}$&$W_iT_i$\\\bottomrule
+\end{tabular}\end{center}
+\textbf{Output}: giá trị tích phân, lưới và lịch sử tinh chỉnh theo dung sai; miền được hỗ trợ là chữ nhật. Các mục sau cho chi tiết cách tạo trọng số và ví dụ số.

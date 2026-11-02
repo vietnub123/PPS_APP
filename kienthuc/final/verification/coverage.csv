@@ -1,0 +1,59 @@
+﻿Nhóm GUI,Phương pháp,Chương nguồn,Nội dung
+Nội suy đa thức,Lagrange,01_noi_suy_horner.tex,Đa thức theo đúng tập mốc; Newton 4 lựa chọn mốc/hướng
+Nội suy đa thức,Newton,01_noi_suy_horner.tex,Đa thức theo đúng tập mốc; Newton 4 lựa chọn mốc/hướng
+Nội suy đa thức,Gauss I,01_noi_suy_horner.tex,Đa thức theo đúng tập mốc; Newton 4 lựa chọn mốc/hướng
+Nội suy đa thức,Gauss II,01_noi_suy_horner.tex,Đa thức theo đúng tập mốc; Newton 4 lựa chọn mốc/hướng
+Nội suy đa thức,Stirling,01_noi_suy_horner.tex,Đa thức theo đúng tập mốc; Newton 4 lựa chọn mốc/hướng
+Nội suy đa thức,Bessel,01_noi_suy_horner.tex,Đa thức theo đúng tập mốc; Newton 4 lựa chọn mốc/hướng
+Spline,Tuyến tính,03_spline.tex,"Biên, hệ số mảnh, khử/thế, đạo hàm/tích phân và giới hạn"
+Spline,Bậc hai — biên trái,03_spline.tex,"Biên, hệ số mảnh, khử/thế, đạo hàm/tích phân và giới hạn"
+Spline,Bậc hai — biên phải,03_spline.tex,"Biên, hệ số mảnh, khử/thế, đạo hàm/tích phân và giới hạn"
+Spline,Cubic tự nhiên,03_spline.tex,"Biên, hệ số mảnh, khử/thế, đạo hàm/tích phân và giới hạn"
+Spline,Cubic kẹp,03_spline.tex,"Biên, hệ số mảnh, khử/thế, đạo hàm/tích phân và giới hạn"
+Spline,Cubic đạo hàm bậc hai,03_spline.tex,"Biên, hệ số mảnh, khử/thế, đạo hàm/tích phân và giới hạn"
+Spline,Cubic hỗn hợp,03_spline.tex,"Biên, hệ số mảnh, khử/thế, đạo hàm/tích phân và giới hạn"
+Spline,Cubic tuần hoàn,03_spline.tex,"Biên, hệ số mảnh, khử/thế, đạo hàm/tích phân và giới hạn"
+Spline,Cubic not-a-knot,03_spline.tex,"Biên, hệ số mảnh, khử/thế, đạo hàm/tích phân và giới hạn"
+Spline,Bậc 4 — đạo hàm trái,03_spline.tex,"Biên, hệ số mảnh, khử/thế, đạo hàm/tích phân và giới hạn"
+Spline,Biên tổng quát,03_spline.tex,"Biên, hệ số mảnh, khử/thế, đạo hàm/tích phân và giới hạn"
+Bình phương tối thiểu,Tuyến tính theo cơ sở,04_binh_phuong_toi_thieu.tex,"Input từng mô hình, bảng biến đổi và tổng quát, lập hệ, khôi phục tham số, vòng LM và output"
+Bình phương tối thiểu,Lũy thừa,04_binh_phuong_toi_thieu.tex,"Input từng mô hình, bảng biến đổi và tổng quát, lập hệ, khôi phục tham số, vòng LM và output"
+Bình phương tối thiểu,Hàm mũ,04_binh_phuong_toi_thieu.tex,"Input từng mô hình, bảng biến đổi và tổng quát, lập hệ, khôi phục tham số, vòng LM và output"
+Bình phương tối thiểu,Lũy thừa — SSE thang y,04_binh_phuong_toi_thieu.tex,"Input từng mô hình, bảng biến đổi và tổng quát, lập hệ, khôi phục tham số, vòng LM và output"
+Bình phương tối thiểu,Hàm mũ — SSE thang y,04_binh_phuong_toi_thieu.tex,"Input từng mô hình, bảng biến đổi và tổng quát, lập hệ, khôi phục tham số, vòng LM và output"
+Bình phương tối thiểu,Log của tổ hợp cơ sở,04_binh_phuong_toi_thieu.tex,"Input từng mô hình, bảng biến đổi và tổng quát, lập hệ, khôi phục tham số, vòng LM và output"
+Bình phương tối thiểu,1/(a+b*x),04_binh_phuong_toi_thieu.tex,"Input từng mô hình, bảng biến đổi và tổng quát, lập hệ, khôi phục tham số, vòng LM và output"
+Bình phương tối thiểu,x/(a+b*x),04_binh_phuong_toi_thieu.tex,"Input từng mô hình, bảng biến đổi và tổng quát, lập hệ, khôi phục tham số, vòng LM và output"
+Bình phương tối thiểu,a+b*ln(x),04_binh_phuong_toi_thieu.tex,"Input từng mô hình, bảng biến đổi và tổng quát, lập hệ, khôi phục tham số, vòng LM và output"
+Bình phương tối thiểu,A*b^x,04_binh_phuong_toi_thieu.tex,"Input từng mô hình, bảng biến đổi và tổng quát, lập hệ, khôi phục tham số, vòng LM và output"
+Nội suy ngược,Lặp tiến,02_noi_suy_nguoc.tex,"Chọn nhánh, mô hình, khởi tạo, tiêu chuẩn dừng và lịch sử"
+Nội suy ngược,Lặp lùi,02_noi_suy_nguoc.tex,"Chọn nhánh, mô hình, khởi tạo, tiêu chuẩn dừng và lịch sử"
+Nội suy ngược,Lặp có cận co,02_noi_suy_nguoc.tex,"Chọn nhánh, mô hình, khởi tạo, tiêu chuẩn dừng và lịch sử"
+Nội suy ngược,Hàm ngược — Newton,02_noi_suy_nguoc.tex,"Chọn nhánh, mô hình, khởi tạo, tiêu chuẩn dừng và lịch sử"
+Nội suy ngược,Hàm ngược — Lagrange,02_noi_suy_nguoc.tex,"Chọn nhánh, mô hình, khởi tạo, tiêu chuẩn dừng và lịch sử"
+Nội suy ngược,Chia đôi đa thức,02_noi_suy_nguoc.tex,"Chọn nhánh, mô hình, khởi tạo, tiêu chuẩn dừng và lịch sử"
+Chọn mốc,Mốc cách đều,01_noi_suy_horner.tex,Cửa sổ/đảo mức/Chebyshev; quét nhánh ở chương02
+Chọn mốc,Mốc nội suy ngược,01_noi_suy_horner.tex,Cửa sổ/đảo mức/Chebyshev; quét nhánh ở chương02
+Chọn mốc,Chebyshev,01_noi_suy_horner.tex,Cửa sổ/đảo mức/Chebyshev; quét nhánh ở chương02
+Đạo hàm & Horner,Đạo hàm từ bảng,05_dao_ham_tich_phan.tex,Horner; đạo hàm trực tiếp từ bảng ở chương05
+Đạo hàm & Horner,Horner,01_noi_suy_horner.tex,Horner; đạo hàm trực tiếp từ bảng ở chương05
+Tích phân,Hình thang,05_dao_ham_tich_phan.tex,"Hàm/bảng, trọng số, cận sai số/Runge; hình chữ nhật 2D"
+Tích phân,Simpson,05_dao_ham_tich_phan.tex,"Hàm/bảng, trọng số, cận sai số/Runge; hình chữ nhật 2D"
+Tích phân,Trung điểm,05_dao_ham_tich_phan.tex,"Hàm/bảng, trọng số, cận sai số/Runge; hình chữ nhật 2D"
+Tích phân,Newton-Cotes,05_dao_ham_tich_phan.tex,"Hàm/bảng, trọng số, cận sai số/Runge; hình chữ nhật 2D"
+Tích phân,Tích phân kép,05_dao_ham_tich_phan.tex,"Hàm/bảng, trọng số, cận sai số/Runge; hình chữ nhật 2D"
+Phương trình vi phân,Euler hiện,06_phuong_trinh_vi_phan.tex,"Công thức từng bước/tầng, Adams2..5, RK tham số/tùy chỉnh"
+Phương trình vi phân,Euler ẩn,06_phuong_trinh_vi_phan.tex,"Công thức từng bước/tầng, Adams2..5, RK tham số/tùy chỉnh"
+Phương trình vi phân,Hình thang,06_phuong_trinh_vi_phan.tex,"Công thức từng bước/tầng, Adams2..5, RK tham số/tùy chỉnh"
+Phương trình vi phân,RK2,06_phuong_trinh_vi_phan.tex,"Công thức từng bước/tầng, Adams2..5, RK tham số/tùy chỉnh"
+Phương trình vi phân,RK3,06_phuong_trinh_vi_phan.tex,"Công thức từng bước/tầng, Adams2..5, RK tham số/tùy chỉnh"
+Phương trình vi phân,RK4,06_phuong_trinh_vi_phan.tex,"Công thức từng bước/tầng, Adams2..5, RK tham số/tùy chỉnh"
+Phương trình vi phân,Adams 2,06_phuong_trinh_vi_phan.tex,"Công thức từng bước/tầng, Adams2..5, RK tham số/tùy chỉnh"
+Phương trình vi phân,Adams 3,06_phuong_trinh_vi_phan.tex,"Công thức từng bước/tầng, Adams2..5, RK tham số/tùy chỉnh"
+Phương trình vi phân,Adams 4,06_phuong_trinh_vi_phan.tex,"Công thức từng bước/tầng, Adams2..5, RK tham số/tùy chỉnh"
+Phương trình vi phân,Adams 5,06_phuong_trinh_vi_phan.tex,"Công thức từng bước/tầng, Adams2..5, RK tham số/tùy chỉnh"
+Phương trình vi phân,RK2 tham số,06_phuong_trinh_vi_phan.tex,"Công thức từng bước/tầng, Adams2..5, RK tham số/tùy chỉnh"
+Phương trình vi phân,RK3 tham số,06_phuong_trinh_vi_phan.tex,"Công thức từng bước/tầng, Adams2..5, RK tham số/tùy chỉnh"
+Phương trình vi phân,RK tùy chỉnh,06_phuong_trinh_vi_phan.tex,"Công thức từng bước/tầng, Adams2..5, RK tham số/tùy chỉnh"
+Bài toán biên,Biên tổng quát,07_bien_tri_rieng.tex,"Nửa ô Robin; ma trận trị riêng đối xứng, sai số lưới"
+Bài toán biên,Trị riêng,07_bien_tri_rieng.tex,"Nửa ô Robin; ma trận trị riêng đối xứng, sai số lưới"

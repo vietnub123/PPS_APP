@@ -1,0 +1,35 @@
+\section{Input, bảng tổng quát và output của hai tool bài toán biên}
+\input{verification/inputs_bvp.tex}
+\paragraph{Chọn đúng nhánh trước khi nhập.} \emph{Biên tổng quát} nhận $p,q,f$ và hai bộ $\alpha,\beta,\gamma$. \emph{Trị riêng} nhận $p,q,r$, số trị riêng; biên cố định $u(a)=u(b)=0$. Ô thứ ba cùng khóa JSON \texttt{f} nhưng nhãn trên GUI đổi thành $r(x)$ ở trị riêng.
+
+\subsection{Biên tổng quát: dữ liệu hàm thành từng hàng hệ sai phân}
+\textbf{Input}: phương trình $(pu')'-qu=-f$, đoạn $a<b$, $h>0$ chia hết đoạn, hai điều kiện $\alpha u'+\beta u=\gamma$. Đạo hàm ở cả hai đầu theo chiều $x$ tăng. Không dùng dấu pháp tuyến đầu trái khi chưa đổi về $u'$.
+\textbf{Quá trình}: tạo $N+1$ nút $\to$ tính hệ số tại nút/nửa bước $\to$ lập bảng hệ $\to$ thay hai hàng biên $\to$ giải $\to$ thế lại kiểm phần dư.
+\begin{center}\small\begin{tabular}{cllll}\toprule
+Hàng&$A_i$ nhân $u_{i-1}$&$B_i$ nhân $u_i$&$C_i$ nhân $u_{i+1}$&Vế phải $F_i$\\\midrule
+0&0&Hệ số biên trái&Hệ số biên trái&Biên trái\\
+$1\le i<N$&$p(x_i-h/2)$&$-(A_i+C_i+h^2q(x_i))$&$p(x_i+h/2)$&$-h^2f(x_i)$\\
+$N$&Hệ số biên phải&Hệ số biên phải&0&Biên phải\\\bottomrule
+\end{tabular}\end{center}
+Hàng trong nghĩa là $A_iu_{i-1}+B_iu_i+C_iu_{i+1}=F_i$, không có phép tổng ngầm nào khác. Công thức Robin nửa ô và Dirichlet được viết đầy đủ ở phần sau.
+\begin{center}\small\begin{tabular}{cllll}\toprule
+Nút&Hoành độ&Nghiệm&Vế trái đã thế lại&Phần dư\\\midrule
+$i$&$x_i=a+ih$&$u_i$&$A_iu_{i-1}+B_iu_i+C_iu_{i+1}$&Vế trái $-F_i$\\\bottomrule
+\end{tabular}\end{center}
+\textbf{Output}: bảng hệ số/nghiệm theo nút, phần dư lớn nhất và đồ thị. Đây là nghiệm hệ sai phân; cần giảm $h$ để khảo sát sai số so với nghiệm liên tục. Không có ô dung sai lặp trong tool BVP.
+
+\subsection{Trị riêng: dữ liệu hàm thành ma trận và các mode}
+\textbf{Input}: $-(pu')'+qu=\lambda ru$, biên 0 tại hai đầu, $p$ dương trên các mặt lưới và $r$ dương tại nút trong, số trị riêng $1\le k\le N-1$.
+\textbf{Quá trình}: bỏ hai giá trị biên 0 $\to$ lập $Ku=\lambda Ru$ $\to$ đổi sang ma trận đối xứng $R^{-1/2}KR^{-1/2}$ $\to$ lấy các trị riêng nhỏ nhất $\to$ trả hàm riêng ra các nút.
+\begin{center}\small\begin{tabular}{clll}\toprule
+Nút trong&Đường chéo K&Đường chéo phụ K&Trọng số R\\\midrule
+$i$&$[p(x_i-h/2)+p(x_i+h/2)]/h^2+q(x_i)$&$-p(x_i+h/2)/h^2$&$r(x_i)$\\\bottomrule
+\end{tabular}\end{center}
+Đường chéo phụ của ma trận đối xứng sau đổi biến phải chia thêm $\sqrt{r_ir_{i+1}}$. Sau khi giải, thêm 0 ở hai đầu và chuẩn hóa mỗi mode có $\max_i|u_i|=1$.
+\begin{center}\small\begin{tabular}{cllll}\toprule
+Nút&$x_i$&Mode 1&Mode 2&$\cdots$, mode $k$\\\midrule
+0&$a$&0&0&0\\
+$i$&$a+ih$&$u_i^{(1)}$&$u_i^{(2)}$&$\cdots,u_i^{(k)}$\\
+$N$&$b$&0&0&0\\\bottomrule
+\end{tabular}\end{center}
+\textbf{Output}: bảng $\lambda_1,\ldots,\lambda_k$ và bảng hàm riêng trên lưới. Dấu mode tùy ý; không coi hai vector khác nhau bởi dấu là hai nghiệm khác nhau. Sai số ma trận nhỏ không tự là cận sai số bài liên tục.

@@ -1,0 +1,15 @@
+Bài toán biên — sai phân hữu hạn
+================================================================
+[p(x)u']' - q(x)u = -f(x)
+Biên: alpha*u' + beta*u = gamma.
+Sai phân tại nút trong: A*u[i-1] + B*u[i] + C*u[i+1] = F.
+Biên Robin dùng công thức nửa ô: p tại biên nhân đạo hàm biên; p tại nửa bước nhân thông lượng trong ô.
+Phần dư nhỏ xác nhận hệ sai phân; sai số so với nghiệm liên tục cần xét khi giảm h.
+Phần dư hệ tuyến tính lớn nhất: 0
+Min u = 0; max u = 1
+
+Bảng hệ số và nghiệm
+x    A  B     C  F      u
+0    0  -0.5  1  0.25   0
+0.5  1  -2    1  0.5    0.25
+1    1  -1.5  0  -1.25  1

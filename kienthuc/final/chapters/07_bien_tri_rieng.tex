@@ -1,0 +1,186 @@
+\chapter{Bài toán biên và trị riêng Sturm--Liouville}
+\label{ch:bvp}
+\input{chapters/toolflow_07.tex}
+
+\section{Nhận dạng phương trình và ô nhập}
+Nhóm \textbf{Bài toán biên} có hai nhánh khác nhau. Nhánh \textbf{Biên tổng quát} tìm một hàm $u$ từ vế phải và điều kiện tại hai đầu. Nhánh \textbf{Trị riêng} tìm các số $\lambda$ sao cho tồn tại nghiệm khác 0 với biên thuần nhất. Cùng nhập $p,q$, nhưng ô thứ ba là $f$ ở bài toán biên và là trọng số $r$ ở trị riêng.
+
+\begin{center}\small
+\begin{tabular}{@{}p{.20\linewidth}p{.35\linewidth}p{.35\linewidth}@{}}\toprule
+Ô nhập & Biên tổng quát & Trị riêng\\\midrule
+$p,q$ & Hệ số của $(pu')'-qu$ & Hệ số của $-(pu')'+qu$\\
+$f$ hoặc $r$ & Vế phải $-f$ & Trọng số $r$ trong $\lambda r u$\\
+$a,b,h$ & $a<b$, $h>0$, lưới chia đúng đoạn & Như cột trái, ít nhất một nút trong\\
+Biên trái/phải & Ba số $\alpha,\beta,\gamma$ & Cố định $u(a)=u(b)=0$\\
+Số trị riêng & Không dùng & Từ 1 đến số nút trong\\\bottomrule
+\end{tabular}\end{center}
+
+\textbf{Kiểm tra lưới}: $N=(b-a)/h$ phải là số nguyên trong dung sai máy; tool không tạo một bước cuối ngắn hơn. Lưới $x_i=a+ih$, $i=0,\ldots,N$. Hai nhánh giới hạn 10\,000 khoảng. Hàm và các giá trị trên lưới phải hữu hạn; $p$ còn được lấy tại nửa bước.
+
+\section{Sai phân hữu hạn cho bài toán biên}
+\subsection{Phương trình đang được giải}
+\[
+ (p(x)u'(x))'-q(x)u(x)=-f(x),\qquad a<x<b,
+\]
+\[
+ \alpha_Lu'(a)+\beta_Lu(a)=\gamma_L,\qquad
+ \alpha_Ru'(b)+\beta_Ru(b)=\gamma_R.
+\]
+Đạo hàm $u'$ tại \emph{cả hai đầu} đều theo chiều $x$ tăng. Nếu đề dùng đạo hàm pháp tuyến ngoài thì tại đầu trái phải đổi dấu trước khi nhập. Không nhập dấu phương trình theo trí nhớ: bài $-u''=2$ tương ứng $p=1,q=0,f=2$.
+
+\subsection{Nút trong: tính thông lượng rồi lập hàng}
+Tại $x_i$, $i=1,\ldots,N-1$, đặt $p_{i\pm1/2}=p(x_i\pm h/2)$. Xấp xỉ
+\[
+ (pu')'(x_i)\simeq
+ \frac{p_{i+1/2}(u_{i+1}-u_i)-p_{i-1/2}(u_i-u_{i-1})}{h^2}.
+\]
+Nhân $h^2$ và chuyển vế:
+\begin{align*}
+ A_i&=p_{i-1/2},&C_i&=p_{i+1/2},\\
+ B_i&=-(A_i+C_i+h^2q_i),&F_i&=-h^2f_i,\\
+ A_iu_{i-1}+B_iu_i+C_iu_{i+1}&=F_i.
+\end{align*}
+Mỗi hàng dùng hai giá trị $p$ tại nửa bước và một giá trị $q,f$ tại nút. Không thế $p(x_i)$ thay cho cả hai giá trị nửa bước nếu $p$ biến thiên.
+
+\subsection{Biên Dirichlet và biên Robin nửa ô}
+Nếu $\alpha=0$ thì cần $\beta\ne0$, biên cho trực tiếp $u=\gamma/\beta$. Hàng ma trận tương ứng có đường chéo 1, vế phải $\gamma/\beta$, hệ số ngoài đường chéo bằng 0.
+
+Nếu $\alpha\ne0$, đặt $d=+1$ tại trái, $d=-1$ tại phải; $x_b$ là đầu biên và $p_h=p(x_b+dh/2)$. Công thức nửa ô trong mã cho
+\begin{align*}
+ B_b&=-p_h-\frac{h^2q(x_b)}2
+          +dh\frac\beta\alpha p(x_b),\\
+ F_b&=-\frac{h^2f(x_b)}2
+          +dh\frac\gamma\alpha p(x_b).
+\end{align*}
+Tại trái, $C_0=p_h$, $A_0=0$; tại phải, $A_N=p_h$, $C_N=0$. Đây là công thức thông lượng trên nửa ô; không phải hàng đạo hàm một phía $(u_1-u_0)/h$ đơn thuần. Hạng $h^2f/2$ và dấu $d$ cần được giữ.
+
+\subsection{Trình tự giải và tiêu chuẩn hoàn tất}
+\begin{enumerate}
+\item Kiểm tra dữ liệu, tạo $N+1$ nút, lấy $p$ tại các mặt và $q,f$ tại nút.
+\item Lập từng hàng nút trong theo $A_i,B_i,C_i,F_i$.
+\item Thay hàng đầu và cuối bằng điều kiện biên đúng loại.
+\item Giải hệ ba đường chéo bằng \texttt{scipy.linalg.solve\_banded}. Báo cáo không chứa nhật ký từng phép khử của bộ giải thư viện; không được gọi một bảng tự tính tay là nhật ký Thomas thực tế của nhánh này.
+\item Kiểm tra nghiệm hữu hạn và tính phần dư $r_i=A_iu_{i-1}+B_iu_i+C_iu_{i+1}-F_i$; xuất $\max_i|r_i|$ cùng bảng hệ số/nghiệm.
+\end{enumerate}
+Đây là phép giải hữu hạn, không nhập dung sai vòng lặp. Phần dư đánh giá hệ rời rạc. Muốn đánh giá nghiệm liên tục, so với nghiệm biết trước hoặc tính lại khi giảm $h$ với giả thiết trơn phù hợp.
+
+\section{Ví dụ Dirichlet: thấy đủ mọi hàng}
+\textbf{Ví dụ tự dựng}: $u''=2$, $u(0)=0$, $u(1)=1$, chọn $h=0.5$. Nhập $p=1,q=0,f=-2$, biên trái \texttt{0 1 0}, biên phải \texttt{0 1 1}. Nghiệm liên tục để đối chiếu là $u=x^2$.
+
+$N=2$, nút $0,0.5,1$. Hàng trong: $A=C=1$, $B=-2$, $F=-0.25(-2)=0.5$.
+\[
+ \begin{bmatrix}1&0&0\\1&-2&1\\0&0&1\end{bmatrix}
+ \begin{bmatrix}u_0\\u_1\\u_2\end{bmatrix}
+ =\begin{bmatrix}0\\0.5\\1\end{bmatrix}.
+\]
+Từ biên, $u_0=0,u_2=1$; hàng giữa cho $-2u_1+1=0.5$, nên $u_1=0.25$.
+\begin{center}\begin{tabular}{rrrrrrr}\toprule
+$x_i$&$A_i$&$B_i$&$C_i$&$F_i$&$u_i$&$r_i$\\\midrule
+0&0&1&0&0&0&0\\
+0.5&1&-2&1&0.5&0.25&0\\
+1&0&1&0&1&1&0\\\bottomrule
+\end{tabular}\end{center}
+Ví dụ bậc hai này cho giá trị nút đúng trong số học chính xác; không suy ra bài toán bất kỳ đều có sai số bằng 0.
+
+\section{Ví dụ Robin: kiểm tra dấu ở hai đầu}
+Vẫn $u=x^2$, $p=1,q=0,f=-2$, nhưng biên
+\[
+ u'(0)+u(0)=0,\qquad u'(1)+u(1)=3.
+\]
+Nhập trái \texttt{1 1 0}, phải \texttt{1 1 3}; $h=0.5$. Tại trái $d=+1$:
+\[
+ B_0=-1+0.5=-0.5,\quad C_0=1,\quad F_0=0.25.
+\]
+Tại phải $d=-1$:
+\[
+ A_2=1,\quad B_2=-1-0.5=-1.5,\quad F_2=0.25-0.5(3)=-1.25.
+\]
+Toàn hệ:
+\[
+ \begin{bmatrix}-.5&1&0\\1&-2&1\\0&1&-1.5\end{bmatrix}
+ \begin{bmatrix}u_0\\u_1\\u_2\end{bmatrix}
+ =\begin{bmatrix}.25\\.5\\-1.25\end{bmatrix}.
+\]
+Từ hàng đầu $u_1=.25+.5u_0$; hàng giữa suy ra $u_2=1$; hàng cuối suy ra $u_1=.25$, rồi $u_0=0$. Thế lại ba hàng lần lượt cho $0.25,0.5,-1.25$, nên phần dư đều bằng 0 trong số học chính xác.
+
+\subsection{Các trường hợp phải dừng hoặc xem lại}
+Hai biên không được có đồng thời $\alpha=\beta=0$. Hai biên Neumann thuần ($\beta_L=\beta_R=0$) với $q=0$ bị tool từ chối vì nghiệm không duy nhất nếu tồn tại: cộng một hằng số vẫn thỏa phương trình và biên. Bài toán đó cần điều kiện tương thích và một chuẩn hóa bổ sung, chưa có ô nhập ở nhánh này.
+
+$p>0$, $q\ge0$ và biên phù hợp là các giả thiết thường giúp bài toán elliptic có tính đặt đúng; mã BVP không bắt buộc mọi hàm $p,q$ theo đúng hai bất đẳng thức này. Hệ vẫn có thể suy biến với các hệ số/biên khác. Không hiểu việc dữ liệu được chấp nhận là một chứng minh tồn tại/duy nhất của bài toán liên tục.
+
+\section{Trị riêng: từ phương trình vi phân đến ma trận đối xứng}
+\subsection{Bài toán duy nhất được hỗ trợ ở GUI}
+\[
+ -(p(x)u')'+q(x)u=\lambda r(x)u,\qquad u(a)=u(b)=0.
+\]
+Các giá trị $p_{i+1/2}>0$ và $r_i>0$ trên lưới được kiểm tra; $q_i$ phải hữu hạn. Tool chưa có lựa chọn biên Robin/tuần hoàn ở nhánh trị riêng. Số trị riêng trả về là số nhỏ nhất theo thứ tự đại số, không phải số nhỏ nhất theo trị tuyệt đối.
+
+Bỏ hai nút biên bằng 0, vector chưa biết là $u=(u_1,\ldots,u_{N-1})^T$. Lập
+\[
+ Ku=\lambda Ru,\qquad R=\operatorname{diag}(r_1,\ldots,r_{N-1}),
+\]
+\[
+ K_{ii}=\frac{p_{i-1/2}+p_{i+1/2}}{h^2}+q_i,
+ \qquad K_{i,i+1}=K_{i+1,i}=-\frac{p_{i+1/2}}{h^2}.
+\]
+Đặt $v=R^{1/2}u$, ta có bài toán đối xứng chuẩn
+\[
+ Bv=\lambda v,\quad B=R^{-1/2}KR^{-1/2},\quad
+ B_{ii}=\frac{K_{ii}}{r_i},\quad
+ B_{i,i+1}=\frac{K_{i,i+1}}{\sqrt{r_ir_{i+1}}}.
+\]
+Không được chỉ chia đường chéo cho $r_i$ rồi giữ nguyên đường chéo phụ khi $r$ không hằng.
+
+\subsection{Các bước bộ tính thực hiện}
+\begin{enumerate}
+\item Tạo lưới; kiểm tra số trị riêng không vượt $N-1$.
+\item Tính đường chéo và đường chéo phụ của $B$ bằng số thập phân độ chính xác 80 chữ số, từ các giá trị hàm đã được đánh giá bằng số máy.
+\item Chọn $s=\max|B_{ij}|$ (nếu tất cả bằng 0 thì lấy 1), đưa $B/s$ về số máy. Chia thang trước khi gọi thư viện giúp tránh mất độ lớn quá nhỏ/lớn; không biến toàn bộ phép đánh giá hàm thành độ chính xác tùy ý.
+\item Gọi \texttt{eigh\_tridiagonal}, chỉ lấy các chỉ số trị riêng được yêu cầu. Trả lại $\lambda=s\widetilde\lambda$.
+\item Đổi $u=R^{-1/2}v$, thêm 0 tại hai đầu, chuẩn hóa từng hàm riêng sao cho $\max_i|u_i|=1$.
+\end{enumerate}
+Dấu của hàm riêng tùy ý: $u$ và $-u$ biểu diễn cùng một mode. App không lưu vòng lặp nội bộ của LAPACK. Các bảng trị riêng và hàm riêng là kết quả giải ma trận; sổ tay chỉ diễn giải bằng tay các ví dụ nhỏ.
+
+\section{Ví dụ hai trị riêng và hai hàm riêng}
+\textbf{Ví dụ tự dựng}: $p=1,q=0,r=1$, $[a,b]=[0,1]$, $h=1/3$, yêu cầu 2 trị riêng. Có hai nút trong, $h^{-2}=9$:
+\[
+ K=B=\begin{bmatrix}18&-9\\-9&18\end{bmatrix},\quad R=I.
+\]
+Giải tay
+\[
+ \det(B-\lambda I)=(18-\lambda)^2-81=0
+ \Longrightarrow\lambda_1=9,\quad\lambda_2=27.
+\]
+Với $\lambda_1=9$, phương trình cho $u_1=u_2$; với $\lambda_2=27$, $u_1=-u_2$. Sau chuẩn hóa (chọn dấu để dễ đọc):
+\begin{center}\begin{tabular}{rrr}\toprule
+$x_i$&Mode 1, $\lambda=9$&Mode 2, $\lambda=27$\\\midrule
+0&0&0\\
+$1/3$&1&1\\
+$2/3$&1&-1\\
+1&0&0\\\bottomrule
+\end{tabular}\end{center}
+Thế lại: $B(1,1)^T=9(1,1)^T$ và $B(1,-1)^T=27(1,-1)^T$. Nếu đổi $r=4$ thì $B=K/4$, trị riêng thành $2.25,6.75$; các hàm riêng sau chuẩn hóa cực đại vẫn như bảng.
+
+\subsection{Sai số rời rạc và giảm bước}
+Với ví dụ $p=r=1,q=0$, nghiệm liên tục có $\lambda_k=(k\pi)^2$. Trị riêng \emph{rời rạc} đúng là
+\[
+ \lambda_{k,h}=\frac4{h^2}\sin^2\!\left(\frac{k\pi}{2N}\right),
+ \qquad k=1,\ldots,N-1.
+\]
+Do đó $9$ và $27$ ở lưới thô không phải lỗi bộ giải khi khác $\pi^2$ và $4\pi^2$. Khai triển $\sin$ cho sai số bậc $h^2$ khi giữ $k$ cố định trong ví dụ trơn này.
+\begin{center}\begin{tabular}{rrr}\toprule
+$h$&$\lambda_{1,h}$&Sai lệch tuyệt đối so với $\pi^2$\\\midrule
+$1/4$&9.37258300203&0.497021399414\\
+$1/8$&9.74341983856&0.126184562534\\
+$1/16$&9.83793643355&0.0316679675433\\\bottomrule
+\end{tabular}\end{center}
+Tỷ số sai lệch gần 4 khi giảm nửa bước phù hợp bậc hai. Đây là kiểm tra theo một nghiệm biết trước, không phải chứng nhận sai số cho mọi bài. Muốn so hàm riêng giữa hai lưới cần thống nhất dấu, chuẩn hóa và các nút so sánh.
+
+\section{Bảng tự kiểm trước khi chép bài}
+\begin{enumerate}
+\item Viết lại đúng dấu $-f$ hoặc dấu $-(pu')'$ theo nhánh đã chọn.
+\item Kiểm tra $N,h$, số nút trong, $p$ tại nửa bước và $r$ tại nút.
+\item Với Robin, kiểm tra thứ tự $\alpha,\beta,\gamma$ và dấu đạo hàm đầu trái.
+\item Với BVP, thế nghiệm vào từng hàng biên và hàng trong; ghi phần dư hệ.
+\item Với trị riêng, kiểm tra $Ku-\lambda Ru$, biên 0, chuẩn hóa và dấu tương đương. Không nhận phần dư ma trận là sai số của phương trình liên tục.
+\end{enumerate}

@@ -1,0 +1,18 @@
+Trị riêng Sturm–Liouville
+================================================================
+-(p(x)u')' + q(x)u = lambda*r(x)*u; u(a)=u(b)=0.
+Dùng dấu của phép tính trong mã gốc; sửa nhãn phương trình vốn không nhất quán.
+Hàm riêng được chuẩn hóa max |u| = 1; dấu hàm riêng tùy ý.
+Đây là trị riêng của hệ sai phân; phải xét giảm h để đánh giá sai số so với bài toán liên tục.
+
+Trị riêng
+k  lambda
+1  9
+2  27
+
+Hàm riêng
+x               u1  u2
+0               0   0
+0.333333333333  1   1
+0.666666666667  1   -1
+1               0   0

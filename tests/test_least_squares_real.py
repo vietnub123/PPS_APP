@@ -16,6 +16,16 @@ def data(report):return report.presentation['worked_solution']
 
 
 class LeastSquaresReal(unittest.TestCase):
+    def test_weighted_qr_labels_the_actual_weighted_target(self):
+        report=solve([0,1,2,3],[1,2,2,4],weights=[1,2,1,3],solver='qr')
+        d=data(report)
+        self.assertIsNone(d['failure'])
+        q=np.asarray(d['solver_trace']['Q'],float)
+        actual=q@np.asarray(d['weighted_target'],float)
+        assert_allclose(actual,list(map(float,d['solver_trace']['qt_target'])),atol=1e-13)
+        self.assertIn('z̃=sqrt(W/max(w))·z',report.text())
+        self.assertTrue(any('Qᵀ z̃' in name for name,_,_ in report.tables))
+
     def test_pdf_line_gauss_actual_pivot_trace_and_optimality(self):
         r=solve([0,1,2,3],[1,2,2,4],solver='normal_gauss');d=data(r)
         self.assertIsNone(d['failure']);assert_allclose(list(map(float,d['coefficients'])),[.9,.9],atol=1e-14)

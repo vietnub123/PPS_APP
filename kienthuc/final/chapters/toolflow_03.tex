@@ -1,0 +1,71 @@
+\section{Từ ô nhập đến các mảnh spline: khuôn làm cho mọi dữ liệu}
+\input{verification/inputs_spline.tex}
+\paragraph{Input chung.} Bảng $n+1$ cặp $(x_i,y_i)$ phân biệt, sắp tăng theo $x$; không cần cách đều. Chọn đúng tên biên, nhập giá trị đạo hàm mà đề cho. Điểm đánh giá và cặp cận tích phân là yêu cầu sau khi đã dựng spline, không phải điều kiện biên bổ sung. Muốn tích phân cần nhập cả hai cận.
+
+\subsection{Bước 1 -- bảng khoảng mốc tổng quát}
+\begin{center}\small\begin{tabular}{cllll}\toprule
+Đoạn&Hai đầu&Độ dài $h_i$&Hiệu tung độ&Độ dốc $\delta_i$\\\midrule
+0&$x_0,x_1$&$x_1-x_0$&$y_1-y_0$&$(y_1-y_0)/h_0$\\
+$i$&$x_i,x_{i+1}$&$x_{i+1}-x_i$&$y_{i+1}-y_i$&$(y_{i+1}-y_i)/h_i$\\
+$n-1$&$x_{n-1},x_n$&$x_n-x_{n-1}$&$y_n-y_{n-1}$&$(y_n-y_{n-1})/h_{n-1}$\\\bottomrule
+\end{tabular}\end{center}
+Các mảnh dùng $u=x-x_i$, không phải $t=u/h_i$. Những bước tiếp theo nhận bảng $h_i,\delta_i$ này.
+
+\subsection{Bước 2 -- chọn quy trình theo đúng loại spline}
+\begin{center}\small\begin{tabular}{@{}p{.28\linewidth}p{.30\linewidth}p{.33\linewidth}@{}}\toprule
+Tool được chọn&Input biên cần thêm&Các đại lượng phải tìm\\\midrule
+Tuyến tính&Không thêm biên&$S_i=y_i+\delta_i u$\\
+Bậc hai -- biên trái&$m_0=S'(x_0)$&Truyền $m_{i+1}=2\delta_i-m_i$ từ trái\\
+Bậc hai -- biên phải&$m_n=S'(x_n)$&Truyền $m_i=2\delta_i-m_{i+1}$ từ phải\\
+Cubic tự nhiên&Không nhập số biên&$M_0=M_n=0$, giải các moment còn lại\\
+Cubic kẹp&$S'(x_0),S'(x_n)$&Giải $M_i=S''(x_i)$ với hàng biên độ dốc\\
+Cubic đạo hàm bậc hai&$S''(x_0),S''(x_n)$&Ấn định hai moment biên\\
+Cubic hỗn hợp&Cấp 1/2 riêng ở từng đầu và giá trị&Chọn hàng biên theo từng đầu\\
+Cubic tuần hoàn&$y_0=y_n$&Khớp thêm $S'(x_0)=S'(x_n)$, $M_0=M_n$\\
+Cubic not-a-knot&Không nhập số biên&Ghép đạo hàm cấp ba tại hai nút gần biên\\
+Bậc 4 -- đạo hàm trái&$S',S'',S'''$ ở đầu trái&Truyền ba đạo hàm qua từng đoạn\\
+Biên tổng quát&Bậc $p$, danh sách điều kiện JSON&Lập hệ hệ số mảnh, kiểm hạng/tương thích\\\bottomrule
+\end{tabular}\end{center}
+
+\paragraph{Khuôn bảng bậc hai.}
+\begin{center}\small\begin{tabular}{cllll}\toprule
+Đoạn&$\delta_i$&$m_i$&$c_i=(\delta_i-m_i)/h_i$&Mảnh trả ra\\\midrule
+$i$&Từ bước 1&Nhận/truy ngược&Sau khi biết $m_i$&$S_i=y_i+m_iu+c_iu^2$\\\bottomrule
+\end{tabular}\end{center}
+Biên trái đi $i=0,1,\ldots,n-1$; biên phải đi ngược $i=n-1,\ldots,0$. Sau khi đủ $m_i$, công thức mảnh giống nhau.
+
+\paragraph{Khuôn bảng cubic.} Tại nút trong lập
+\[
+h_{i-1}M_{i-1}+2(h_{i-1}+h_i)M_i+h_iM_{i+1}=6(\delta_i-\delta_{i-1}).
+\]
+Thêm hai hàng biên đúng loại rồi giải. Từ nghiệm $M$ lập bảng tổng quát:
+\begin{center}\small\begin{tabular}{cllll}\toprule
+Đoạn&$a_i$&$b_i$&$c_i$&$d_i$\\\midrule
+$i$&$y_i$&$\delta_i-h_i(2M_i+M_{i+1})/6$&$M_i/2$&$(M_{i+1}-M_i)/(6h_i)$\\\bottomrule
+\end{tabular}\end{center}
+Mảnh là $S_i(x_i+u)=a_i+b_iu+c_iu^2+d_iu^3$. Hệ moment, hàng biên và các hệ số là ba bảng khác nhau; không lấy một hàng hệ phương trình làm hệ số mảnh.
+
+\paragraph{Khuôn bảng bậc p biết đạo hàm trái.} Nhận $v_r=S^{(r)}(x_i)$, $r=1,\ldots,p-1$:
+\[
+a_{i,0}=y_i,\quad a_{i,1}=v_1,\quad a_{i,2}=v_2/2!,\quad\ldots,\quad a_{i,p-1}=v_{p-1}/(p-1)!.
+\]
+Tính $K_i=a_{i,0}+a_{i,1}h_i+\cdots+a_{i,p-1}h_i^{p-1}$, rồi $a_{i,p}=(y_{i+1}-K_i)/h_i^p$. Tính tất cả đạo hàm đầu phải từ cùng bộ hệ số trước khi truyền sang đoạn kế.
+\begin{center}\small\begin{tabular}{clll}\toprule
+Đoạn&Đạo hàm nhận&Hệ số mảnh tìm được&Đạo hàm truyền tiếp\\\midrule
+$i$&$(v_1,\ldots,v_{p-1})$&$(a_{i,0},\ldots,a_{i,p})$&$(S_i'(x_{i+1}),\ldots,S_i^{(p-1)}(x_{i+1}))$\\\bottomrule
+\end{tabular}\end{center}
+Biên phải/trộn của bậc 4 nhập qua \emph{Biên tổng quát}; không dùng công thức truyền trái với các số biên phải. Điều kiện tổng quát được chuyển thành hệ trên mọi $a_{i,r}$; đủ số điều kiện chưa thay việc kiểm hạng.
+
+\subsection{Bước 3 -- đánh giá và output}
+\begin{enumerate}
+\item Điểm $z$ thuộc đoạn $i$: lấy $u=z-x_i$, tính
+\[
+S(z)=a_{i,0}+a_{i,1}u+\cdots+a_{i,p}u^p.
+\]
+\item Đạo hàm: $S_i'(z)=a_{i,1}+2a_{i,2}u+\cdots+pa_{i,p}u^{p-1}$; cấp khác lấy đúng giai thừa. Tại nút trong phải kiểm hai phía trước khi trả đạo hàm chung.
+\item Tích phân qua nhiều đoạn: cắt tại các nút; đoạn con từ $u$ đến $v$ đóng góp
+\[
+a_{i,0}(v-u)+\frac{a_{i,1}}2(v^2-u^2)+\cdots+\frac{a_{i,p}}{p+1}(v^{p+1}-u^{p+1}).
+\]
+\end{enumerate}
+\textbf{Output}: loại spline/biên, bảng hệ và nghiệm nếu có, hệ số từng mảnh theo biến cục bộ, kiểm khớp và độ trơn, giá trị/đạo hàm/tích phân được hỏi, trạng thái lỗi nếu thiếu/thừa mâu thuẫn điều kiện. Đây là phép dựng hữu hạn; không có ngưỡng hội tụ spline. Các mục bên dưới viết rõ từng hàng biên và ví dụ số.

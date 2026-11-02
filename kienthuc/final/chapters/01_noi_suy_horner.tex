@@ -1,0 +1,555 @@
+\chapter{Nội suy đa thức, chọn mốc và Horner}
+\label{ch:interp}
+\input{chapters/toolflow_01.tex}
+
+\section{Đọc bài toán trước khi bấm Tính}
+
+Cho bảng $m$ cặp $(x_i,y_i)$, ta dựng một đa thức $P$ đi qua các cặp được chọn rồi dùng $P$ để tính giá trị hoặc đạo hàm. Đặt $n=m-1$: bậc của $P$ \emph{không quá} $n$, không nhất thiết bằng $n$. Các hệ số bậc cao có thể bằng 0.
+
+\begin{center}\small
+\begin{tabular}{@{}p{.25\linewidth}p{.32\linewidth}p{.31\linewidth}@{}}
+\toprule
+Đề cho/hỏi & Lựa chọn trong tool & Kiểm tra trước khi tính\\
+\midrule
+Mốc bất kỳ, cần $P(z)$ & Lagrange hoặc Newton, loại mốc bất kỳ & $x_i$ phân biệt; giữ đúng cặp $x,y$\\
+Mốc đều, gần đầu/cuối bảng & Newton tiến/lùi & Có bước $h$ chung; gốc đúng đầu đã chọn\\
+Mốc đều quanh một mốc giữa & Gauss I, Gauss II, Stirling & Stirling cần số mốc lẻ\\
+Mốc đều quanh giữa hai mốc & Bessel & Số mốc chẵn, ít nhất 2\\
+Đề đã cho đa thức & Đạo hàm \& Horner $\to$ Horner & Nhập đủ các hệ số theo bậc giảm\\
+Đề hỏi $f^{(s)}(z)$ qua nội suy & Giữ đúng $P$ vừa dựng & Đạo hàm theo $t$ phải chia $h^s$\\
+\bottomrule
+\end{tabular}\end{center}
+
+\paragraph{Điều kiện toán học.} Với $m$ hoành độ phân biệt có đúng một đa thức bậc không quá $m-1$ nội suy các cặp. Nếu hai đa thức cùng thỏa điều kiện thì hiệu của chúng có $m$ nghiệm phân biệt nhưng bậc không quá $m-1$, nên hiệu bằng 0. Vì vậy Lagrange, các dạng Newton, Gauss, Stirling và Bessel cho cùng một $P$ nếu dùng \textbf{cùng tập mốc và đủ số hạng}. Thay tên công thức không tự làm sai số nội suy nhỏ hơn.
+
+\paragraph{Không có vòng hội tụ.} Lập bảng sai phân, nhân các tích và cộng các hạng là những phép tính hữu hạn. Số bước do số mốc quyết định; không cần $\varepsilon$ để dừng. Vấn đề sai số là độ chính xác của dữ liệu, độ nhạy của nội suy và số học máy, không phải ``lặp chưa hội tụ''.
+
+\subsection{Các ô nhập chung}
+\begin{enumerate}
+\item Nhập hai dãy $x,y$ cùng độ dài. Dấu thập phân là dấu chấm. Tool sắp \emph{cả cặp} theo $x$ tăng; các hoành độ trùng phải được xử lý ở dữ liệu nguồn.
+\item \textbf{Điểm cần tính} là $z$. Để trống thì chỉ dựng đa thức; nếu yêu cầu chọn ít mốc hơn bảng nhập thì phải có $z$.
+\item \textbf{Cấp đạo hàm}: $s=0$ là giá trị, $s=1$ là đạo hàm một, v.v. Khi $s>0$, báo cáo mới có cả $P(z)$ và $P^{(s)}(z)$ trên cùng tập mốc.
+\item \textbf{Số mốc dùng}: để trống nghĩa là toàn bộ bảng. Nhập $K$ nghĩa là chọn đúng $K$ cặp, bậc tối đa $K-1$. Đề chỉ định rõ các mốc thì nhập đúng các cặp đó.
+\item Với Newton, còn phải chọn \textbf{mốc cách đều/mốc bất kỳ} và \textbf{tiến/lùi}. Hai lựa chọn này quyết định cả bảng hệ số và tích cơ sở.
+\end{enumerate}
+
+Một bảng 100 mốc không tự dùng được với Stirling toàn bảng vì 100 là số chẵn. Có thể chọn công khai 9 mốc theo đề; tool không tự bỏ một mốc để tạo 99 mốc. Một mốc cho đa thức hằng; Bessel cần ít nhất hai mốc.
+
+\section{Chọn mốc: biết số nào thực sự được đưa vào đa thức}
+\label{sec:node-selection}
+
+\subsection{Cửa sổ liên tiếp trên lưới đều}
+\textbf{Đầu vào}: toàn bảng, điểm $z$ và số mốc $K$. Với mỗi cửa sổ $K$ mốc liên tiếp, tính tâm hai đầu rồi so khoảng cách đến $z$:
+\[
+ c_j=\frac{x_j+x_{j+K-1}}2,\qquad d_j=|c_j-z|.
+\]
+Chọn cửa sổ có $d_j$ nhỏ nhất; hòa thì lấy cửa sổ bên trái. Kết quả vẫn là lưới đều, có đủ $K$ mốc và không làm lệch cặp.
+
+\textbf{Ví dụ tự dựng}: $x=0,1,\ldots,6$, $y=x^2$, $z=3.2$, $K=3$.
+\begin{center}\small
+\begin{tabular}{@{}crrr@{}}\toprule
+Cửa sổ & Tâm & Khoảng cách đến $3.2$ & Kết luận\\\midrule
+$[0,1,2]$ & 1 & 2.2 & bỏ\\
+$[1,2,3]$ & 2 & 1.2 & bỏ\\
+$[2,3,4]$ & 3 & 0.2 & chọn\\
+$[3,4,5]$ & 4 & 0.8 & bỏ\\
+$[4,5,6]$ & 5 & 1.8 & bỏ\\\bottomrule
+\end{tabular}\end{center}
+Đưa các cặp $(2,4),(3,9),(4,16)$ sang thuật toán nội suy. Bảng gốc có 7 cặp nhưng đa thức của lượt này chỉ dựng từ 3 cặp.
+
+\subsection{Mốc bất kỳ và điểm nằm sát biên}
+Nếu lưới không đều, tool xếp các mốc theo $|x_i-z|$, hòa theo thứ tự $x$ tăng; lấy $K$ mốc đầu rồi sắp tập chọn tăng dần. Ví dụ $x=[0,1,3,8]$, $z=2.2$, $K=3$ có các khoảng cách $[2.2,1.2,0.8,5.8]$, nên chọn $x=[0,1,3]$. Tập này dùng Lagrange hoặc Newton tỉ sai phân, không dùng công thức sai phân đều.
+
+Ở đầu bảng, cửa sổ có thể lệch về một phía. Không yêu cầu thêm mốc nằm ngoài tập đã chọn. Nếu $z$ nằm ngoài đoạn của tập mốc dùng thì đang \textbf{ngoại suy}; đa thức vẫn đánh giá được nhưng không có bảo đảm chính xác của hàm thật chỉ từ bảng.
+
+\subsection{Quét mốc cho mức cần tìm ngược}
+Lựa chọn \textbf{Chọn mốc $\to$ Mốc nội suy ngược} nhận mức $\bar y$. Tool tìm các cặp kề có mức nằm giữa hai tung độ, mở rộng theo dấu của sai phân cấp một và liệt kê các đoạn đơn điệu trên \emph{mẫu}. Ví dụ $x=[0,1,2,3,4]$, $y=[0,1,2,1,0]$, mức $1.5$ tạo hai nhánh mẫu $[0,2]$ và $[2,4]$. Phải chọn nhánh của bài toán trước khi giải ngược.
+
+Đơn điệu trên các mẫu chưa chứng minh hàm thật đơn điệu giữa mọi mốc. Quét đổi dấu có thể bỏ sót nghiệm tiếp xúc. Phần này chọn dữ liệu; chưa tính nghiệm.
+
+\subsection{Sinh mốc Chebyshev khi được quyền lấy mẫu mới}
+\label{sec:chebyshev}
+\textbf{Đầu vào}: bậc $n\ge0$, đoạn $a<b$. Tool sinh $m=n+1$ mốc nghiệm:
+\[
+ \theta_i=\frac{(2i+1)\pi}{2m},\qquad
+ x_i=\frac{a+b}{2}+\frac{b-a}{2}\cos\theta_i,
+ \qquad i=0,\ldots,m-1.
+\]
+\begin{enumerate}
+\item Tính $m=n+1$, trung điểm và nửa độ dài đoạn.
+\item Với từng $i$, tính góc $\theta_i$, cosin, rồi $x_i$.
+\item Sắp các $x_i$ tăng. Kiểm tra chúng còn phân biệt trong biểu diễn máy.
+\item Tính hoặc đo \emph{tung độ mới} tại các mốc mới; lúc đó mới nội suy.
+\end{enumerate}
+Ví dụ $n=2$, $[a,b]=[-1,1]$:
+\begin{center}\begin{tabular}{@{}crr@{}}\toprule
+$i$ & $\theta_i$ & $x_i$ trước sắp\\\midrule
+0 & $\pi/6$ & $\sqrt3/2$\\
+1 & $\pi/2$ & $0$\\
+2 & $5\pi/6$ & $-\sqrt3/2$\\\bottomrule
+\end{tabular}\end{center}
+Đầu ra tăng là $[-\sqrt3/2,0,\sqrt3/2]$. Đây là mốc \emph{nghiệm}, không chứa hai đầu đoạn; khác mốc cực trị Chebyshev. Không được ghép lại các $y$ cũ vào các $x$ mới.
+
+Nếu $|f^{(m)}|\le M_m$ trên $[a,b]$, dùng đúng $m$ nghiệm trên thì
+\[
+ \|f-P\|_\infty\le
+ \frac{M_m(b-a)^m}{2^{2m-1}m!}.
+\]
+Tính tối ưu ở đây là chuẩn của tích mốc monic; không khẳng định sai số thực nhỏ nhất cho mọi hàm. Công cụ Python \texttt{chebyshev\_value} tính $T_n$ qua $T_0=1,T_1=u,T_{k+1}=2uT_k-T_{k-1}$; đó là phép tính hữu hạn khác với việc sinh các mốc.
+
+\section{Hai bảng phải phân biệt: sai phân và tỉ sai phân}
+\label{sec:difference-tables}
+Giữ chỉ số mốc bắt đầu của mỗi ô. Ô ngoài tam giác không được tính, để trống chứ không ghi 0.
+
+\subsection{Sai phân tiến cho mốc cách đều}
+\[
+ A_{i,0}=y_i,\qquad
+ A_{i,k}=A_{i+1,k-1}-A_{i,k-1}=\Delta^ky_i.
+\]
+\textbf{Thứ tự}: tính hết cột cấp 1 từ $y$; sau đó hết cấp 2 từ cấp 1; tiếp tục đến cấp $n$. Cấp $k$ có $m-k$ phép trừ.
+
+\textbf{Bảng mẫu dùng xuyên suốt các công thức trung tâm}:
+\[
+ x=[-2,-1,0,1,2],\qquad y=[17,1,1,5,25].
+\]
+Chọn mốc giữa làm $x_0=0$, đánh chỉ số $j=-2,-1,0,1,2$.
+\begin{center}\small
+\begin{tabular}{@{}rrrrrrr@{}}\toprule
+$j$ & $x_j$ & $y_j$ & $\Delta y_j$ & $\Delta^2y_j$ & $\Delta^3y_j$ & $\Delta^4y_j$\\\midrule
+$-2$ & $-2$ & 17 & $-16$ & 16 & $-12$ & 24\\
+$-1$ & $-1$ & 1 & 0 & 4 & 12 & \\
+0 & 0 & 1 & 4 & 16 & & \\
+1 & 1 & 5 & 20 & & & \\
+2 & 2 & 25 & & & & \\\bottomrule
+\end{tabular}\end{center}
+Các phép tính thực hiện theo thứ tự:
+\begin{align*}
+\Delta^1 &: 1-17=-16,\quad1-1=0,\quad5-1=4,\quad25-5=20;\\
+\Delta^2 &: 0-(-16)=16,\quad4-0=4,\quad20-4=16;\\
+\Delta^3 &: 4-16=-12,\quad16-4=12;\\
+\Delta^4 &: 12-(-12)=24.
+\end{align*}
+Một ô $\Delta^2y_{-1}=4$ có nghĩa là bắt đầu ở $j=-1$ và dùng ba tung độ $y_{-1},y_0,y_1$.
+
+\subsection{Tỉ sai phân cho mốc bất kỳ}
+\[
+ D_{i,0}=y_i,\qquad
+ D_{i,k}=\frac{D_{i+1,k-1}-D_{i,k-1}}{x_{i+k}-x_i}
+        =f[x_i,\ldots,x_{i+k}].
+\]
+Tính như sai phân nhưng chia cho khoảng giữa hai mốc ngoài cùng của ô. Không chia thêm $k!$. Với lưới đều mới có đẳng thức $D_{i,k}=\Delta^ky_i/(k!h^k)$.
+
+Ví dụ $x=[0,1,3]$, $y=[1,3,13]$:
+\begin{center}\begin{tabular}{@{}rrrr@{}}\toprule
+$x_i$ & $y_i$ & $D_{i,1}$ & $D_{i,2}$\\\midrule
+0 & 1 & 2 & 1\\
+1 & 3 & 5 & \\
+3 & 13 & & \\\bottomrule
+\end{tabular}\end{center}
+Ở đây $(3-1)/(1-0)=2$, $(13-3)/(3-1)=5$, rồi $(5-2)/(3-0)=1$. Toàn bộ hệ số cần dùng đã có trong bảng.
+
+\section{Lagrange: dựng từng đa thức cơ sở}
+\label{sec:lagrange}
+\textbf{Đầu vào}: các $x_i$ phân biệt, $y_i$, điểm $z$ nếu cần đánh giá; không cần lưới đều. Đặt
+\[
+ W_i(x)=\prod_{j\ne i}(x-x_j),\quad
+ d_i=\prod_{j\ne i}(x_i-x_j),\quad
+ L_i(x)=\frac{W_i(x)}{d_i},\quad
+ P(x)=\sum_{i=0}^ny_iL_i(x).
+\]
+Vì $L_i(x_j)=\delta_{ij}$ nên từng hạng chỉ giữ đúng tung độ của mốc tương ứng.
+
+\subsection{Các bước và số chuyển sang bước sau}
+\begin{enumerate}
+\item Với từng $i$, bỏ mốc $x_i$ khỏi tích để lập $W_i$. Tử số này là một đa thức bậc $n$.
+\item Thế $x=x_i$ vào $W_i$ để có mẫu $d_i\ne0$; giữ dấu các hiệu.
+\item Tính $C_i=y_i/d_i$. Hạng của đa thức là $C_iW_i(x)$.
+\item Cộng tất cả các hạng để có $P$. Có thể giữ dạng tích, không cần khai triển theo $x$.
+\item Tại $z$, tính từng $W_i(z)$ rồi từng đóng góp $C_iW_i(z)$ và cộng. Nếu $z=x_i$, dùng tích bỏ mốc trực tiếp, không tính biểu thức $W(z)/(z-x_i)$ dạng $0/0$.
+\end{enumerate}
+
+\subsection{Ví dụ đầy đủ trên ba mốc không đều}
+Dùng bảng $[0,1,3]$, $[1,3,13]$ để tính $P(2)$.
+\begin{center}\small
+\begin{tabular}{@{}crrlr@{}}\toprule
+$i$ & $d_i$ & $C_i$ & $W_i(x)$ & $C_iW_i(2)$\\\midrule
+0 & 3 & $1/3$ & $(x-1)(x-3)$ & $-1/3$\\
+1 & $-2$ & $-3/2$ & $x(x-3)$ & $3$\\
+2 & 6 & $13/6$ & $x(x-1)$ & $13/3$\\\bottomrule
+\end{tabular}\end{center}
+Mẫu $d_1=(1-0)(1-3)=-2$ phải âm. Cộng các hạng:
+\[
+ P(x)=\frac{(x-1)(x-3)}3-\frac32x(x-3)+\frac{13}6x(x-1)
+     =x^2+x+1.
+\]
+Tại $z=2$: $P(2)=-1/3+3+13/3=7$. Kiểm tra $P(0)=1$, $P(1)=3$, $P(3)=13$ và $\sum_iL_i(2)=1$.
+
+\paragraph{Bảng tích/thương.} Một cách tương đương là lập $W(x)=\prod_j(x-x_j)$ rồi chia Horner cho từng $(x-x_i)$ để lấy $W_i$. Số dư phải bằng 0. Hệ số của bảng tích phải được đọc đúng nhãn bậc tăng/giảm; không coi một dãy hệ số chưa định nghĩa thứ tự là công thức hoàn chỉnh.
+
+\section{Newton với mốc bất kỳ: tiến và lùi}
+\label{sec:newton-divided}
+\subsection{Tiến: lấy đường hệ số đầu bảng}
+Sau khi lập bảng $D$, lấy $c_k=D_{0,k}$. Đặt $B_0=1$, $B_{k+1}(x)=B_k(x)(x-x_k)$:
+\[
+ P(x)=\sum_{k=0}^nc_kB_k(x)
+ =y_0+f[x_0,x_1](x-x_0)+\cdots.
+\]
+Mỗi bước $k$ lấy một ô hệ số, nhân tích đang có, cộng vào tổng; tích cho bước sau được nhân thêm $(x-x_k)$.
+
+Với ví dụ ba mốc, $c=[1,2,1]$ nên
+\[
+ P(x)=1+2x+x(x-1).
+\]
+Tại 2, các đóng góp là $1,4,2$, tổng 7. Ở hạng cuối, hệ số là $1$, không phải $1/2!$.
+
+\subsection{Lùi: lấy hệ số theo đường chéo cuối bảng}
+Từ cùng bảng $D$, lấy $\tilde c_k=D_{n-k,k}$ và
+\[
+ \tilde B_0=1,\qquad
+ \tilde B_k(x)=\prod_{j=0}^{k-1}(x-x_{n-j}),\qquad
+ P(x)=\sum_{k=0}^n\tilde c_k\tilde B_k(x).
+\]
+Thứ tự mốc trong các tích là từ phải sang trái. Với bảng mẫu, $\tilde c=[13,5,1]$:
+\[
+ P(x)=13+5(x-3)+(x-3)(x-1).
+\]
+Tại 2, các đóng góp $13,-5,-1$ cho tổng 7. Hệ số lùi phải đi cùng tích lùi; không trộn với đường hệ số tiến.
+
+\subsection{Horner Newton: đánh giá dạng lồng}
+Viết theo đúng thứ tự mốc $\xi_0,\xi_1,\ldots$:
+\[
+ P(x)=c_0+(x-\xi_0)\{c_1+(x-\xi_1)[\cdots+(x-\xi_{n-1})c_n]\}.
+\]
+\begin{enumerate}
+\item Bắt đầu $v=c_n$.
+\item Với $k=n-1,n-2,\ldots,0$, tính $d=z-\xi_k$, tích $d\,v_{\rm cũ}$, rồi $v_{\rm mới}=c_k+d\,v_{\rm cũ}$.
+\item Số cuối cùng là $P(z)$.
+\end{enumerate}
+Ví dụ tiến tại $z=2$: $v=1$; bước $k=1$ cho $v=2+(2-1)1=3$; bước $k=0$ cho $v=1+(2-0)3=7$. Đây là Horner theo cơ sở Newton, không phải sơ đồ lấy hệ số lũy thừa và nhân cùng một $c$ ở mọi lượt.
+
+\subsection{Thêm một mốc mà không phá thứ tự cũ}
+Nếu cần bổ sung $(x_{n+1},y_{n+1})$, tính
+\[
+ c_{n+1}=\frac{y_{n+1}-P_n(x_{n+1})}{\prod_{j=0}^n(x_{n+1}-\xi_j)}.
+\]
+Ví dụ từ $(0,1),(1,2)$ có $P_1=1+x$. Thêm $(2,5)$: $P_1(2)=3$, tích mẫu $2(2-1)=2$, nên hệ số mới $(5-3)/2=1$ và $P_2=1+x+x(x-1)=1+x^2$. Mốc mới phải khác mọi mốc cũ. API \texttt{newton\_append} trả các mốc và hệ số đã nối; đây không phải một vòng tìm nghiệm.
+
+\section{Newton trên lưới đều: giai thừa và đổi gốc}
+\label{sec:newton-uniform}
+Gọi $h=x_{i+1}-x_i>0$. Tool kiểm tra các bước theo thang $h$, không theo trị tuyệt đối của $x$. Trong lời giải, luôn ghi gốc, $h$ và $t$ trước khi lấy hệ số.
+
+\subsection{Tiến từ đầu trái}
+\[
+ t=\frac{x-x_0}{h},\qquad
+ P(x_0+ht)=\sum_{k=0}^n\frac{\Delta^ky_0}{k!}
+              \prod_{j=0}^{k-1}(t-j).
+\]
+Lấy hàng đầu của mỗi cấp; chia $k!$; tích lần lượt nhân $t,t-1,t-2,\ldots$. Dùng bảng năm mốc ở trên, lần này gốc \emph{đầu trái} là $-2$, $h=1$, nên tại $z=1/4$ có $t=9/4$.
+\begin{center}\small
+\begin{tabular}{@{}rrrrr@{}}\toprule
+$k$ & $\Delta^ky_{\rm đầu}$ & $\beta_k=\Delta^k/k!$ & $B_k(9/4)$ & $\beta_kB_k$\\\midrule
+0 & 17 & 17 & 1 & 17\\
+1 & $-16$ & $-16$ & $9/4$ & $-36$\\
+2 & 16 & 8 & $45/16$ & $45/2$\\
+3 & $-12$ & $-2$ & $45/64$ & $-45/32$\\
+4 & 24 & 1 & $-135/256$ & $-135/256$\\\bottomrule
+\end{tabular}\end{center}
+Tổng bằng $401/256=1.56640625$. Giá trị $t=2.25$ không làm công thức mất hiệu lực; khoảng $[0,1]$ chỉ là miền tính thuận lợi gần đầu, không phải điều kiện tồn tại của đa thức.
+
+\subsection{Lùi từ đầu phải}
+\[
+ t=\frac{x-x_n}{h},\qquad
+ P(x_n+ht)=\sum_{k=0}^n\frac{\Delta^ky_{n-k}}{k!}
+              \prod_{j=0}^{k-1}(t+j).
+\]
+Đẳng thức $\nabla^ky_n=\Delta^ky_{n-k}$ cho phép đọc bảng $\Delta$ mà không dựng thêm bảng. Gốc đầu phải là 2; tại $z=1/4$, $t=-7/4$.
+\begin{center}\small
+\begin{tabular}{@{}rrrrr@{}}\toprule
+$k$ & $\Delta^ky_{n-k}$ & $\beta_k$ & $B_k(-7/4)$ & $\beta_kB_k$\\\midrule
+0 & 25 & 25 & 1 & 25\\
+1 & 20 & 20 & $-7/4$ & $-35$\\
+2 & 16 & 8 & $21/16$ & $21/2$\\
+3 & 12 & 2 & $21/64$ & $21/32$\\
+4 & 24 & 1 & $105/256$ & $105/256$\\\bottomrule
+\end{tabular}\end{center}
+Tổng cũng bằng $401/256$. Dùng $t=-7/4$ nhưng lấy các sai phân của gốc trái sẽ cho một công thức sai.
+
+\section{Gauss I và Gauss II: thứ tự kết nạp quyết định tích}
+\label{sec:gauss-central}
+Đổi sang chỉ số quanh gốc: $x_j=a+jh$, $t=(x-a)/h$. Đặt $r_0,r_1,\ldots$ là thứ tự các độ lệch mốc được kết nạp, $B_0=1$, $B_{k+1}=B_k(t-r_k)$.
+\begin{center}\small
+\begin{tabular}{@{}lll@{}}\toprule
+ & Gauss I & Gauss II\\\midrule
+Thứ tự $r_j$ & $0,1,-1,2,-2,\ldots$ & $0,-1,1,-2,2,\ldots$\\
+Nguồn sai phân bậc $k$ & $\Delta^ky_{-\lfloor k/2\rfloor}$ & $\Delta^ky_{-\lceil k/2\rceil}$\\
+Hệ số nhân $B_k$ & sai phân chia $k!$ & sai phân chia $k!$\\\bottomrule
+\end{tabular}\end{center}
+Giữ các mốc có trong tập. Với $m$ mốc tăng, vị trí gốc trong mảng là $c=\lfloor(m-1)/2\rfloor$ cho Gauss I, $c=\lfloor m/2\rfloor$ cho Gauss II. Khi $m$ lẻ, hai gốc trùng nhau; khi $m$ chẵn, chúng là hai mốc giữa khác nhau. Công thức đầy đủ:
+\[
+ Q_{\rm I}(t)=\sum_{k=0}^n\frac{\Delta^ky_{-\lfloor k/2\rfloor}}{k!}B_k(t),\qquad
+ Q_{\rm II}(t)=\sum_{k=0}^n\frac{\Delta^ky_{-\lceil k/2\rceil}}{k!}B_k(t).
+\]
+
+\subsection{Năm mốc: theo dõi từng nguồn và từng tích}
+Với bảng mẫu năm mốc, cả hai có $a=0,h=1,t_z=1/4$.
+\begin{center}\small
+\begin{tabular}{@{}rllrr@{}}\toprule
+$k$ & Nguồn Gauss I & $B_k(t)$ & $\beta_k$ & đóng góp tại $1/4$\\\midrule
+0 & $y_0=1$ & $1$ & 1 & 1\\
+1 & $\Delta y_0=4$ & $t$ & 4 & 1\\
+2 & $\Delta^2y_{-1}=4$ & $t(t-1)$ & 2 & $-3/8$\\
+3 & $\Delta^3y_{-1}=12$ & $t(t-1)(t+1)$ & 2 & $-15/32$\\
+4 & $\Delta^4y_{-2}=24$ & $t(t-1)(t+1)(t-2)$ & 1 & $105/256$\\\bottomrule
+\end{tabular}\end{center}
+Tổng $1+1-3/8-15/32+105/256=401/256$.
+\begin{center}\small
+\begin{tabular}{@{}rllrr@{}}\toprule
+$k$ & Nguồn Gauss II & $B_k(t)$ & $\beta_k$ & đóng góp tại $1/4$\\\midrule
+0 & $y_0=1$ & 1 & 1 & 1\\
+1 & $\Delta y_{-1}=0$ & $t$ & 0 & 0\\
+2 & $\Delta^2y_{-1}=4$ & $t(t+1)$ & 2 & $5/8$\\
+3 & $\Delta^3y_{-2}=-12$ & $t(t+1)(t-1)$ & $-2$ & $15/32$\\
+4 & $\Delta^4y_{-2}=24$ & $t(t+1)(t-1)(t+2)$ & 1 & $-135/256$\\\bottomrule
+\end{tabular}\end{center}
+Tổng vẫn bằng $401/256$. Các hệ số bằng 0 phải được giữ để thấy bậc đó đã xét.
+
+\subsection{Bốn mốc: Gauss vẫn hợp lệ nhưng hai gốc khác nhau}
+Cho $x=[-1,0,1,2]$, $y=[0,1,2,9]$. Bảng có $\Delta=[1,1,7]$, $\Delta^2=[0,6]$, $\Delta^3=[6]$. Đa thức là $P=x^3+1$.
+
+Gauss I lấy gốc 0, $t=x$, các hệ số $[1,1,0,1]$:
+\[
+ Q_{\rm I}(t)=1+t+0\,t(t-1)+t(t-1)(t+1)=1+t^3.
+\]
+Tại $z=1/2$, các đóng góp $1,1/2,0,-3/8$ cho $9/8$.
+
+Gauss II lấy gốc 1, $t=x-1$, các hệ số $[2,1,3,1]$:
+\[
+ Q_{\rm II}(t)=2+t+3t(t+1)+t(t+1)(t-1).
+\]
+Tại $t=-1/2$, các đóng góp $2,-1/2,-3/4,3/8$ cũng cho $9/8$. Không dùng cùng một $t$ cho hai bảng khi gốc đã khác.
+
+\section{Stirling: lẻ lấy trung bình, chẵn lấy một ô giữa}
+\label{sec:stirling}
+\textbf{Đầu vào}: $2N+1$ mốc đều, đánh chỉ số $-N,\ldots,N$, gốc $a=x_0$, $t=(x-a)/h$. Công thức đầy đủ:
+\begin{align}
+ Q(t)={}&y_0+\sum_{r=0}^{N-1}
+ \frac{\Delta^{2r+1}y_{-r-1}+\Delta^{2r+1}y_{-r}}{2(2r+1)!}
+ t\prod_{j=1}^r(t^2-j^2)\notag\\
+ &+\sum_{r=1}^{N}\frac{\Delta^{2r}y_{-r}}{(2r)!}
+ t^2\prod_{j=1}^{r-1}(t^2-j^2).
+\end{align}
+Tích rỗng là 1. Các miền như $|t|\le1/4$ là gợi ý dùng thuận lợi; không phải điều kiện làm đa thức tồn tại hay không.
+
+\subsection{Quy trình từng bước}
+\begin{enumerate}
+\item Chọn đúng số mốc lẻ. Xác định mốc giữa, $h$ và $t_z$.
+\item Lập hết bảng $\Delta$ đến cấp $2N$.
+\item Với hạng lẻ $k=2r+1$, lấy hai ô đối xứng, tính trung bình $\sigma_k$; hạng chẵn $k=2r$ lấy một ô $\Delta^{2r}y_{-r}$.
+\item Chia $\sigma_k$ cho $k!$ đúng một lần để có $\beta_k$; dựng tích $B_k$ tương ứng.
+\item Ghép $Q=\sum\beta_kB_k$; thế $t_z$ vào từng hạng, cộng theo bảng. Nếu cần đạo hàm, lấy đạo hàm chính các hạng này.
+\end{enumerate}
+
+\subsection{Bài mẫu năm mốc, không bỏ một phép lấy hệ số}
+Từ bảng ở mục \ref{sec:difference-tables}, ta có:
+\begin{center}\small
+\begin{tabular}{@{}rllrr@{}}\toprule
+$k$ & Tính $\sigma_k$ từ bảng & $B_k(t)$ & $k!$ & $\beta_k$\\\midrule
+0 & $y_0=1$ & 1 & 1 & 1\\
+1 & $(0+4)/2=2$ & $t$ & 1 & 2\\
+2 & $\Delta^2y_{-1}=4$ & $t^2$ & 2 & 2\\
+3 & $(-12+12)/2=0$ & $t(t^2-1)$ & 6 & 0\\
+4 & $\Delta^4y_{-2}=24$ & $t^2(t^2-1)$ & 24 & 1\\\bottomrule
+\end{tabular}\end{center}
+Do đó $Q=1+2t+2t^2+t^2(t^2-1)=1+2t+t^2+t^4$. Tại $t=1/4$:
+\begin{center}\small
+\begin{tabular}{@{}rrrrr@{}}\toprule
+$k$ & $B_k(1/4)$ & đóng góp giá trị & tổng giá trị & đóng góp đạo hàm theo $t$\\\midrule
+0 & 1 & 1 & 1 & 0\\
+1 & $1/4$ & $1/2$ & $3/2$ & 2\\
+2 & $1/16$ & $1/8$ & $13/8$ & 1\\
+3 & $-15/64$ & 0 & $13/8$ & 0\\
+4 & $-15/256$ & $-15/256$ & $401/256$ & $-7/16$\\\bottomrule
+\end{tabular}\end{center}
+Ở hạng cuối, $[t^2(t^2-1)]'=4t^3-2t$, tại $1/4$ bằng $-7/16$. Vì $h=1$:
+\[
+ P(1/4)=\frac{401}{256}=1.56640625,\qquad
+ P'(1/4)=2+1-\frac7{16}=\frac{41}{16}=2.5625.
+\]
+
+\section{Bessel: chẵn lấy trung bình, lẻ lấy một ô}
+\label{sec:bessel}
+\textbf{Đầu vào}: $2N+2$ mốc đều, chỉ số $-N,\ldots,N+1$; gốc $a=x_0$ là mốc \emph{bên trái của cặp giữa}. Đặt
+\[
+ E_0=1,\qquad E_r(t)=\prod_{j=0}^{r-1}(t+j)(t-j-1).
+\]
+\begin{align}
+ Q(t)=\sum_{r=0}^{N}\bigg[
+ &\frac{\Delta^{2r}y_{-r}+\Delta^{2r}y_{-r+1}}{2(2r)!}E_r(t)\notag\\
+ &+\frac{\Delta^{2r+1}y_{-r}}{(2r+1)!}(t-\tfrac12)E_r(t)\bigg].
+\end{align}
+\begin{enumerate}
+\item Lập bảng $\Delta$ và xác định hai mốc giữa. Không chọn mốc phải làm gốc rồi vẫn dùng công thức trên.
+\item Với mỗi $r$, tính hạng chẵn từ trung bình hai ô; chia $(2r)!$ và nhân $E_r$.
+\item Tính hạng lẻ từ một ô; chia $(2r+1)!$ và nhân $(t-1/2)E_r$.
+\item Chuẩn bị cặp hạng sau bằng $E_{r+1}=E_r(t+r)(t-r-1)$.
+\item Thế số và cộng. Với đạo hàm, vẫn phải đạo hàm các hạng lẻ ngay cả khi $t_z=1/2$.
+\end{enumerate}
+
+Ví dụ bốn mốc $[-1,0,1,2]$, $y=[0,1,2,9]$, gốc 0, $h=1$:
+\begin{center}\small
+\begin{tabular}{@{}rllrr@{}}\toprule
+$k$ & $\sigma_k$ & $B_k(t)$ & $\beta_k$ & đóng góp tại $t=1/2$\\\midrule
+0 & $(1+2)/2=3/2$ & 1 & $3/2$ & $3/2$\\
+1 & $\Delta y_0=1$ & $t-1/2$ & 1 & 0\\
+2 & $(0+6)/2=3$ & $t(t-1)$ & $3/2$ & $-3/8$\\
+3 & $\Delta^3y_{-1}=6$ & $(t-1/2)t(t-1)$ & 1 & 0\\\bottomrule
+\end{tabular}\end{center}
+Ghép rồi rút gọn:
+\[
+ Q(t)=\frac32+(t-\tfrac12)+\frac32t(t-1)+(t-\tfrac12)t(t-1)=1+t^3.
+\]
+Kết quả $P(1/2)=9/8$. Đóng góp đạo hàm lần lượt là $0,1,0,-1/4$, nên $P'(1/2)=3/4$. Hạng cuối có giá trị 0 nhưng đạo hàm $-1/4$, không được bỏ nó trước khi lấy đạo hàm. Với hai mốc, Bessel trở về nội suy tuyến tính qua hai mốc đó.
+
+\section{Lấy đạo hàm từ chính đa thức đã dựng}
+\label{sec:interp-derivative}
+Nếu $Q(t)=\sum_k\beta_kB_k(t)$ và $x=a+ht$, thì
+\[
+ P^{(s)}(z)=\frac{Q^{(s)}(t_z)}{h^s}
+          =\sum_k\frac{\beta_kB_k^{(s)}(t_z)}{h^s},\qquad t_z=\frac{z-a}{h}.
+\]
+\textbf{Bốn việc riêng biệt}: đổi điểm $z$ sang $t_z$; đạo hàm $Q$ theo $t$; thế $t_z$; chia cho $h^s$. Ví dụ $x=4+2t$ và $Q=16+16t+4t^2$: tại $x=4$, $t=0$, $Q'(0)=16$, $P'(4)=16/2=8$; $Q''(0)=8$, $P''(4)=8/2^2=2$.
+
+Với tích $B(t)=\prod_j(t-r_j)$, công thức $B'=B\sum1/(t-r_j)$ có dạng không xác định khi $t=r_j$. Tool dùng truy hồi đạo hàm của tích, không chia cho các nhân tử:
+\begin{enumerate}
+\item Lưu $g_0=1$, $g_1=\cdots=g_s=0$.
+\item Khi nhân thêm $(t-r)$, cập nhật từ $l=s$ xuống 1: $g_l\leftarrow(t_z-r)g_l+l\,g_{l-1}$, sau đó $g_0\leftarrow(t_z-r)g_0$.
+\item Sau nhân tử cuối, $g_l=B^{(l)}(t_z)$; nhân với $\beta_k$ rồi chia $h^s$ nếu dùng biến chuẩn hóa.
+\end{enumerate}
+Các giá trị cũ phải được dùng trong cùng lần cập nhật; vì vậy đi từ cấp cao xuống thấp. Nếu $s$ lớn hơn bậc đa thức, đạo hàm của mô hình bằng 0; không suy ra đạo hàm của hàm thật cũng bằng 0.
+
+\section{Horner: hạ hệ số đầu, nhân sang phải, cộng xuống}
+\label{sec:horner}
+\textbf{Đầu vào}: hệ số của đa thức theo bậc \emph{giảm}, điểm $c$, cấp đạo hàm lớn nhất. Ví dụ
+\[
+ P(x)=3x^3-2x-1=3x^3+0x^2-2x-1
+\]
+có dãy \texttt{3 0 -2 -1}. Nếu bỏ 0 của $x^2$ thì đã nhập một đa thức khác.
+
+\subsection{Một lượt tính $P(c)$ và thương của phép chia}
+Với $P(x)=a_0x^n+\cdots+a_n$:
+\[
+ b_0=a_0,\qquad b_j=a_j+c\,b_{j-1}.
+\]
+\textbf{Đọc bằng số}: với $c=2$, làm bảng ngang ba hàng sau. Vạch đứng tách ô dư cuối khỏi các hệ số thương ở hàng cuối.
+\begin{center}\small
+\begin{tabular}{@{}lrrr|r@{}}\toprule
+$c=2$ & Cột 1 & Cột 2 & Cột 3 & Cột 4: dư\\\midrule
+Hệ số đầu vào & 3 & 0 & $-2$ & $-1$\\
+Nhân $2$, chuyển phải & --- & 6 & 12 & 20\\\midrule
+Cộng xuống & \textbf{3} & \textbf{6} & \textbf{10} & \textbf{19}\\\bottomrule
+\end{tabular}\end{center}
+\begin{enumerate}
+\item Hạ 3 xuống hàng Cộng; ô đầu hàng Nhân để trống.
+\item Lấy 3 vừa hạ nhân 2: $2\cdot3=6$; đặt sang cột 2 rồi cộng $0+6=6$.
+\item Lấy 6 vừa cộng nhân 2: $2\cdot6=12$; đặt sang cột 3 rồi cộng $-2+12=10$.
+\item Lấy 10 vừa cộng nhân 2: $2\cdot10=20$; đặt sang cột 4 rồi cộng $-1+20=19$.
+\end{enumerate}
+Ô cuối là số dư $P(2)=19$. Các ô trước nó, $3,6,10$, là hệ số của thương $Q_1=3x^2+6x+10$:
+\[
+ P(x)=(x-2)Q_1(x)+19.
+\]
+Tool hiện có thể trình bày cùng vết tính bằng bảng dọc nhân--cộng; sơ đồ ngang ở sổ tay biểu diễn đúng các phép tính đó. Giao diện Horner chính nhận đa thức lũy thừa; API chia riêng \texttt{horner\_division} nhận hệ số \emph{bậc tăng}, khác thứ tự nhập GUI.
+
+\subsection{Lấy đạo hàm bằng các lượt chia tiếp}
+Chia liên tiếp cho cùng $(x-c)$:
+\[
+ Q_r(x)=(x-c)Q_{r+1}(x)+s_r,\qquad Q_0=P.
+\]
+Sau mỗi lượt, ghi riêng số dư; đưa \emph{chỉ các hệ số thương} lên hàng đầu của lượt sau. Không đưa số dư vào dãy hệ số mới.
+
+\begin{center}\small
+\begin{tabular}{@{}lrr|r@{}}\toprule
+Lượt 2, vẫn $c=2$ & 1 & 2 & 3: dư\\\midrule
+Hệ số thương trước & 3 & 6 & 10\\
+Nhân 2 & --- & 6 & 24\\\midrule
+Cộng & \textbf{3} & \textbf{12} & \textbf{34}\\\bottomrule
+\end{tabular}\qquad
+\begin{tabular}{@{}lr|r@{}}\toprule
+Lượt 3 & 1 & 2: dư\\\midrule
+Hệ số & 3 & 12\\
+Nhân 2 & --- & 6\\\midrule
+Cộng & \textbf{3} & \textbf{18}\\\bottomrule
+\end{tabular}\end{center}
+Lượt 2: $6+2\cdot3=12$, $10+2\cdot12=34$. Lượt 3: $12+2\cdot3=18$. Lượt 4 chỉ còn hằng số 3 nên số dư là 3.
+
+\begin{center}\begin{tabular}{@{}rrrrr@{}}\toprule
+Lượt & $r$ & Số dư $s_r$ & Nhân $r!$ & $P^{(r)}(2)$\\\midrule
+1 & 0 & 19 & 1 & 19\\
+2 & 1 & 34 & 1 & 34\\
+3 & 2 & 18 & 2 & 36\\
+4 & 3 & 3 & 6 & 18\\\bottomrule
+\end{tabular}\end{center}
+Vì thế $P''(2)=36$, không phải 18. Lý do: thay các đẳng thức chia vào nhau cho
+\[
+ P(x)=s_0+s_1(x-c)+s_2(x-c)^2+\cdots+s_n(x-c)^n,
+ \qquad P^{(r)}(c)=r!s_r.
+\]
+Cấp $r\le n$ cần $r+1$ lượt, tính cả lượt đầu của $P(c)$. Các cấp lớn hơn bậc thực bằng 0, không cần dựng hàng nghìn lượt 0. Các số 0 đầu dãy không làm tăng bậc thực; số 0 giữa/cuối phải giữ.
+
+\subsection{Mẫu đề 20241: nhìn được từng dãy chuyển tiếp}
+Đa thức được in trong ảnh đề, không lấy từ workbook:
+\[
+P(x)=3.5x^5-2.78x^4+5.63x^3+0x^2-15.28x+1.54,\qquad c=2.57.
+\]
+Muốn cấp 2 và 3, thực hiện bốn lượt. Các dãy của đúng phép tính trong tool là:
+\begin{center}\small
+\begin{tabular}{@{}rl@{}}\toprule
+Lượt & Hệ số đầu vào $\longrightarrow$ toàn bộ hàng tích lũy\\\midrule
+1 & $(3.5,-2.78,5.63,0,-15.28,1.54)$\\
+ & $\longrightarrow(3.5,6.215,21.60255,55.5185535,127.402682495,328.96489401215)$\\
+2 & $(3.5,6.215,21.60255,55.5185535,127.402682495)$\\
+ & $\longrightarrow(3.5,15.21,60.69225,211.497636,670.951607015)$\\
+3 & $(3.5,15.21,60.69225,211.497636)$\\
+ & $\longrightarrow(3.5,24.205,122.8991,527.348323)$\\
+4 & $(3.5,24.205,122.8991)$\\
+ & $\longrightarrow(3.5,33.2,208.2231)$\\\bottomrule
+\end{tabular}\end{center}
+Chẳng hạn lượt 3: hạ $3.5$; $15.21+2.57\cdot3.5=24.205$; $60.69225+2.57\cdot24.205=122.8991$; $211.497636+2.57\cdot122.8991=527.348323$.
+\[
+ \boxed{P''(2.57)=2!\cdot527.348323=1054.696646},\qquad
+ \boxed{P'''(2.57)=3!\cdot208.2231=1249.3386}.
+\]
+Bảng tóm tắt này chỉ gom các lượt của cùng thuật toán; khi cần mọi phép nhân--cộng, mở bài JSON Horner đề 20241 để tool xuất đầy đủ.
+
+\section{Sai số, kiểm tra và các tình huống dễ hiểu sai}
+\label{sec:interp-errors}
+Nếu dữ liệu chính xác $y_i=f(x_i)$ và $f\in C^m$ trên đoạn chứa toàn bộ mốc cùng điểm $z$:
+\[
+ f(z)-P(z)=\frac{f^{(m)}(\xi_z)}{m!}\prod_{i=0}^{m-1}(z-x_i),\qquad
+ |f(z)-P(z)|\le\frac{M_m}{m!}\left|\prod_i(z-x_i)\right|.
+\]
+Phải có căn cứ cho $M_m$. Không có cận đạo hàm thì chưa có cận sai số số. Hạng đầu bỏ đi có thể là ước lượng khi có giả thiết phù hợp; không mặc định là cận bảo đảm.
+
+Nếu $|\delta y_i|\le\eta_i$, phần sai lệch do dữ liệu bị chặn bởi
+\[
+ |\delta P(z)|\le\sum_i|L_i(z)|\eta_i.
+\]
+Bậc cao có thể khuếch đại nhiễu hoặc dao động mạnh giữa các mốc. Tính nhiều chữ số trung gian không loại bỏ điều này. Sai lệch $P(x_i)-y_i$ nhỏ kiểm tra việc dựng đa thức; không là sai số của hàm thật giữa mốc. Không đạo hàm phần dư có $\xi_z$ như thể $\xi_z$ là hằng số.
+
+\begin{center}\small
+\begin{tabular}{@{}p{.30\linewidth}p{.60\linewidth}@{}}\toprule
+Tình huống & Cách xử lý đúng\\\midrule
+Hoành độ trùng & Dừng kiểm tra dữ liệu; không tự gộp hay lấy trung bình\\
+Không đều nhưng chọn Newton đều/Gauss/Stirling/Bessel & Đổi lựa chọn theo đề hoặc sửa dữ liệu nguồn; không tự nắn các $x$\\
+Stirling số mốc chẵn/Bessel số mốc lẻ & Chọn lại tập mốc công khai; không tự bỏ một mốc\\
+Điểm trùng mốc & Đánh giá bằng tích/lồng hợp lệ; không tạo $0/0$\\
+Ngoài dải mốc & Ghi ngoại suy; cận đạo hàm phải đúng cả đoạn mở rộng\\
+Mốc có gốc lớn, bước rất nhỏ & Kiểm tra hiệu mốc; đổi gốc/đơn vị khi cần\\
+Khai triển theo $x$ có hệ số lớn & Giữ dạng tích hoặc biến chuẩn hóa; đối chiếu Horner Newton ổn định\\
+Đạo hàm vượt bậc $P$ & Bằng 0 cho mô hình; không kết luận $f^{(s)}=0$\\
+\bottomrule
+\end{tabular}\end{center}
+
+\paragraph{Số học trong tool.} Bảng lớn được giữ dạng tích; phép đánh giá nội suy dùng Newton lồng với độ chính xác trung gian tăng theo số mốc/thang dữ liệu. Lời giải theo công thức đã chọn được đối chiếu với cách đánh giá này. Các lưới nhận là gần đều trong dung sai có thể làm hai cách tính lệch; đọc phần đối chiếu và cảnh báo trước khi chép số. Đây là kiểm tra số học, không là chứng nhận sai số của hàm thật.
+
+\paragraph{Nguồn đối chiếu trong repo.} Các đường tính chính: \texttt{pps/interpolation.py}, \texttt{pps/polynomial\_model.py}, \texttt{pps/polynomial\_worked.py}. Hỗ trợ: \texttt{chapter1\_tools.horner\_division}, \texttt{newton\_horner}, \texttt{newton\_append}, các hàm cận sai số và điền dữ liệu theo giả thiết bậc. Tài liệu nền: phần Lagrange, Newton, trung tâm và Horner của PDF Chương 1 trong \texttt{kienthuc/real}. Ví dụ số nhỏ ở chương này là tự dựng; đa thức Horner 20241 được ghi đúng từ ảnh đề trong repo.

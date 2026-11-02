@@ -1,0 +1,34 @@
+\subsection*{Input: các ô đúng tên trên giao diện}
+Bảng này được lấy từ biểu mẫu của tool. Giá trị mặc định là ví dụ nhập, cần thay bằng dữ liệu đề. Hai dãy $x,y$ là bảng dữ liệu riêng bên dưới nếu chức năng dùng bảng.
+\subsubsection*{Ô chung của các lựa chọn trong nhóm}
+\begin{center}\small\begin{tabular}{@{}p{.32\linewidth}p{.17\linewidth}p{.43\linewidth}@{}}\toprule
+Ô nhập & Khóa JSON & Cách nhập / mặc định\\\midrule
+Vế phải x′;\allowbreak{} y′;\allowbreak{} z′ (1–3 hàm) & \texttt{expr} & \texttt{x}
+\par Biến độc lập t;\allowbreak{} một phương trình x′=x nhập x. Hệ: y;\allowbreak{} -x\\[3pt]
+Giá trị đầu x,\allowbreak{} y,\allowbreak{} z & \texttt{initial} & \texttt{1}\\[3pt]
+Thời điểm đầu t0 & \texttt{a} & \texttt{0}\\[3pt]
+Thời điểm cuối & \texttt{b} & \texttt{1}\\[3pt]
+Bước h & \texttt{h} & \texttt{0.1}\\[3pt]
+Dung sai bước ẩn & \texttt{tol} & \texttt{1e-10}\\[3pt]
+\bottomrule\end{tabular}\end{center}
+\subsubsection*{Ô riêng: RK2 tham số}
+\begin{center}\small\begin{tabular}{@{}p{.32\linewidth}p{.17\linewidth}p{.43\linewidth}@{}}\toprule
+Ô nhập & Khóa JSON & Cách nhập / mặc định\\\midrule
+Tham số biết trước & \texttt{parameter} & \texttt{alpha2}
+\par alpha2,\allowbreak{} beta11,\allowbreak{} r1 hoặc r2.\\[3pt]
+Giá trị tham số & \texttt{value} & \texttt{1}\\[3pt]
+\bottomrule\end{tabular}\end{center}
+\subsubsection*{Ô riêng: RK3 tham số}
+\begin{center}\small\begin{tabular}{@{}p{.32\linewidth}p{.17\linewidth}p{.43\linewidth}@{}}\toprule
+Ô nhập & Khóa JSON & Cách nhập / mặc định\\\midrule
+alpha2 & \texttt{alpha2} & \texttt{0.5}\\[3pt]
+alpha3 & \texttt{alpha3} & \texttt{1}\\[3pt]
+\bottomrule\end{tabular}\end{center}
+\subsubsection*{Ô riêng: RK tùy chỉnh}
+\begin{center}\small\begin{tabular}{@{}p{.32\linewidth}p{.17\linewidth}p{.43\linewidth}@{}}\toprule
+Ô nhập & Khóa JSON & Cách nhập / mặc định\\\midrule
+Ma trận A (JSON) & \texttt{rk\_a} & \texttt{[[0,\allowbreak{}0],\allowbreak{}[1,\allowbreak{}0]]}\\[3pt]
+Trọng số b & \texttt{rk\_b} & \texttt{0.5 0.5}\\[3pt]
+Vị trí c & \texttt{rk\_c} & \texttt{0 1}
+\par Cho RK2/\allowbreak{}RK3 hoặc RK hiện nhiều tầng;\allowbreak{} A tam giác dưới.\\[3pt]
+\bottomrule\end{tabular}\end{center}

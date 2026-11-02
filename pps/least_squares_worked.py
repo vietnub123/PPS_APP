@@ -452,6 +452,8 @@ def _render(data):
                               'Mục tiêu F(p)=sum_i w_i*(g_i(p)−y_i)^2 trên thang y gốc.')
                     w.text('Bài này phi tuyến theo tham số. Mỗi bước LM lập lại Jacobian và giải hệ bình phương tối thiểu tăng cường bên dưới; không dùng hệ chuẩn Gc=b của mô hình tuyến tính theo cơ sở.')
                 else:
+                    w.formula(r'\Phi c\approx z,\qquad \min_c\|\sqrt{W}(\Phi c-z)\|_2^2',
+                              'Mô hình Φc≈z; cực tiểu hóa ||sqrt(W)(Φc−z)||², không ép khớp đúng mọi quan sát.')
                     w.formula(r'G=\Phi^TW\Phi,\quad b=\Phi^TWz,\quad Gc=b','G=Phi^T W Phi; b=Phi^T W z; hệ chuẩn Gc=b.')
                     if data.get('gram') is not None:
                         w.table('Hệ chuẩn và vế phải',['j']+[f'c_{j}' for j in range(len(data['labels']))]+['b_j'],([i,*row,b] for i,(row,b) in enumerate(zip(data['gram'],data['rhs']))))
@@ -465,13 +467,16 @@ def _render(data):
         with w.group('section','5. Trace bộ giải thực tế'):
             kind=trace['kind'];w.text(solver_name.get(kind,kind)+'.')
             if kind=='qr':
-                w.text('B = sqrt(W/max(w))·Φ; áp dụng QR hai lượt trực giao hóa, rồi giải R c = Qᵀ z. Giữ nguyên không gian mô hình.')
+                w.formula(r'B=\sqrt{W/w_{\max}}\,\Phi,\quad \widetilde z=\sqrt{W/w_{\max}}\,z',
+                          'B=sqrt(W/max(w))·Φ; z̃=sqrt(W/max(w))·z. Cả ma trận và vế phải đều nhân cùng căn trọng số.')
+                w.formula(r'B=QR,\qquad Rc=Q^T\widetilde z',
+                          'Trực giao hóa QR hai lượt trên B, rồi thế ngược R c = Qᵀ z̃; z̃ là mục tiêu đã nhân trọng số.')
                 for step in trace['steps']:
                     with w.details(f'Cột QR {step["column"]}'):
                         w.text('Chuẩn cột ban đầu '+w.number(step['original_norm'])+'; chuẩn còn lại '+w.number(step['remaining_norm'])+'; ngưỡng '+w.number(step['threshold'])+'.')
                         w.table('Các lần chiếu đã thực hiện',['lượt','cột chiếu','hệ số chiếu'],((a['pass'],a['onto'],a['projection']) for a in step['projections']))
                 if 'R' in trace:
-                    w.table('Hệ tam giác R c = Qᵀ z',[f'c_{i}' for i in range(len(coeffs))]+['Qᵀ z'],([*row,z] for row,z in zip(trace['R'],trace['qt_target'])))
+                    w.table('Hệ tam giác R c = Qᵀ z̃',[f'c_{i}' for i in range(len(coeffs))]+['Qᵀ z̃'],([*row,z] for row,z in zip(trace['R'],trace['qt_target'])))
                     with w.details('Các cột Q thực sự dùng'):w.table('Q',['i']+[f'q_{j}' for j in range(len(trace['Q']))],([i]+[c[i] for c in trace['Q']] for i in range(len(data['x']))))
             elif kind=='normal_gauss':
                 for step in trace['steps']:

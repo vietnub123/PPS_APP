@@ -1,0 +1,14 @@
+{
+  "tool": "Tích phân",
+  "method": "Hình thang",
+  "values": {
+    "expr": "x^2",
+    "a": 0,
+    "b": 1,
+    "n": 2,
+    "tol": 0.001,
+    "source": "Hàm"
+  },
+  "x": "",
+  "y": ""
+}

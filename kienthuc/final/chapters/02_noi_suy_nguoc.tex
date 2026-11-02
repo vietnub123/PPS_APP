@@ -1,0 +1,398 @@
+\chapter{Nội suy ngược: chọn đúng mô hình và theo dõi từng vòng}
+\label{ch:inverse}
+\input{chapters/toolflow_02.tex}
+
+\section{Cùng câu hỏi tìm x, nhưng có hai mô hình khác nhau}
+Cho bảng $(x_i,y_i)$ và một mức $\bar y$. Bài toán hỏi hoành độ $x$ sao cho $f(x)=\bar y$. Trước khi tính, phải quyết định đang làm việc gì:
+\begin{center}\small
+\begin{tabular}{@{}p{.24\linewidth}p{.34\linewidth}p{.31\linewidth}@{}}\toprule
+Mô hình & Phép tính thực hiện & Kết quả mang nghĩa gì?\\\midrule
+Nội suy hàm ngược & Đảo cặp thành $(y_i,x_i)$, dựng $Q(y)$ rồi tính $Q(\bar y)$ & Giá trị của đa thức xấp xỉ $g=f^{-1}$ trên nhánh đã chọn\\
+Giải đa thức thuận & Dựng $P(x)$ từ $(x_i,y_i)$ rồi giải $P(x)=\bar y$ bằng lặp hoặc chia đôi & Nghiệm gần đúng của mô hình thuận $P$\\\bottomrule
+\end{tabular}\end{center}
+
+Thông thường $Q$ \textbf{không phải nghịch đảo chính xác} của $P$. Vì vậy $Q(\bar y)$ và nghiệm của $P(x)=\bar y$ có thể khác nhau; đây không tự là lỗi của một trong hai phương pháp.
+
+\subsection{Ví dụ mở đầu: vì sao hai đáp số khác nhau?}
+Cho $x=[0,1,2]$, $y=[0,1,4]$, tìm tại mức $\bar y=2$.
+\begin{itemize}
+\item Nội suy thuận qua ba cặp cho $P(x)=x^2$. Giải $P(x)=2$ trên $[1,2]$ cho $x=\sqrt2\approx1.41421356$.
+\item Đảo bảng thành $(0,0),(1,1),(4,2)$, nội suy bậc hai theo $y$ cho
+\[
+ Q(y)=y-\frac{y(y-1)}6,\qquad Q(2)=\frac53\approx1.66666667.
+\]
+\end{itemize}
+Nếu thế $5/3$ vào mô hình thuận, $P(5/3)-2=7/9$, khác 0. Điều đó chỉ đối chiếu hai mô hình khác nhau; không phải tiêu chuẩn dừng của nội suy hàm ngược.
+
+\paragraph{Dấu hiệu chọn phương pháp.} Đề nói ``nội suy hàm ngược'', ``đảo bảng'', ``Lagrange/Newton theo $y$'' thì dùng $Q$. Đề yêu cầu ``lập công thức lặp tiến/lùi'', ``kiểm tra co'', hoặc ``chia đôi đa thức'' thì dựng $P$ rồi giải phương trình mô hình. Nếu đề không chỉ định, phải công bố lựa chọn, tập mốc và nhánh.
+
+\section{Đầu vào và những lựa chọn phải tách riêng}
+\label{sec:inverse-input}
+\begin{enumerate}
+\item \textbf{Bảng nguồn}: hai dãy hữu hạn, cùng độ dài, ít nhất hai cặp. Tool giữ ID dòng gốc, sắp theo $x$ và không gộp hoành độ trùng.
+\item \textbf{Tập mốc tính}: tập thực sự dùng dựng một đa thức. Nếu dùng $m$ mốc thì bậc tối đa $m-1$. Mọi vòng sau dùng lại đa thức này; không cần mốc mới cho mỗi vòng.
+\item \textbf{Nhánh mục tiêu}: phần của bảng muốn xét tính một-một. Có thể có nhiều nhánh đi qua cùng mức $\bar y$; không tự lấy nhánh đầu tiên.
+\item \textbf{Khoảng nghiệm $[a,b]$}: đoạn hoành độ đang yêu cầu tìm nghiệm, nằm trong dải mốc được chọn. Nó độc lập với hai đầu tập mốc tính.
+\item \textbf{Gốc khai triển}: tiến lấy mốc đầu của \emph{tập tính}; lùi lấy mốc cuối. Không dời gốc sang sát khoảng nghiệm rồi đòi thêm mốc.
+\item \textbf{Khởi tạo}: tuyến tính tại gốc, tuyến tính giữa hai đầu khoảng, hoặc nhập thủ công. Phải ghi rõ cách đã chọn.
+\item \textbf{Ngưỡng và chế độ}: $\varepsilon_x$, $\varepsilon_y$, số vòng tối đa; thực hành hay yêu cầu chứng nhận co.
+\end{enumerate}
+
+\subsection{Cách nhập trong giao diện}
+\begin{center}\small
+\begin{tabular}{@{}p{.30\linewidth}p{.59\linewidth}@{}}\toprule
+Ô/lựa chọn & Nghĩa chính xác\\\midrule
+Giá trị $y$ cần tìm ngược & Mức $\bar y$, không phải điểm $x$ cần tính của nội suy thuận\\
+Mốc dùng, JSON & Ví dụ \texttt{[0,1,2]} là ID dòng nguồn từ 0; trống là toàn bảng\\
+Số mốc ở Hàm ngược & Kiểm tra tập đưa vào đã có đúng số mốc; không tự lấy các mốc gần mức\\
+Cận $a,b$ & Khoảng hoành độ độc lập với gốc tiến/lùi; phải nhập đủ cả hai nếu đã nhập một đầu\\
+Dung sai vị trí & $\varepsilon_x$, đơn vị của hoành độ\\
+Dung sai phần dư & $\varepsilon_y$, đơn vị của tung độ\\
+Khởi tạo tại gốc & Bỏ phần bậc cao để tính $t_0=(\bar y-y_{\rm base})/d$\\
+Khởi tạo hai đầu khoảng & Nội suy tuyến tính giữa hai đầu của khoảng mục tiêu rồi đổi sang $t$\\
+Thủ công & Nhập $t_0$ theo gốc và $h$ của đa thức đang dùng\\
+Lặp có cận co & Chọn hướng tiến/lùi; chỉ báo đạt khi đủ chứng nhận trên $J$\\\bottomrule
+\end{tabular}\end{center}
+
+Nếu không nhập khoảng cho lặp thực hành, tool chỉ tự xác định khi có một khoảng đổi dấu duy nhất trên tập đã nhập (hoặc trường hợp mốc đúng mức duy nhất thích hợp). Có nhiều ứng viên thì yêu cầu chọn. Chia đôi luôn cần khoảng được chỉ định. Các cấu hình như đoạn chứng nhận $J$, cận sai số hàm thật hoặc nguồn chứng nhận có thể được cung cấp qua bài JSON/API; không giả định mọi trường kỹ thuật đều là ô riêng đang hiện trên màn hình.
+
+\section{Khảo sát nhánh: bắt đầu từ bảng trước khi lập công thức}
+\label{sec:inverse-scan}
+Tính $F_i=y_i-\bar y$ và dấu các hiệu $y_{i+1}-y_i$.
+\begin{enumerate}
+\item Nếu $F_i=0$, đánh dấu mốc đúng mức. ``Gần bằng'' trong ngưỡng cảnh báo không tự biến thành bằng đúng.
+\item Nếu $F_iF_{i+1}<0$, đánh dấu một khoảng đổi dấu. Khi hàm thật liên tục, khoảng đó có ít nhất một nghiệm.
+\item Theo dấu sai phân cấp một để chia các nhánh mẫu tăng/giảm. Một đoạn bằng phẳng phải được xét riêng.
+\item Chọn nhánh/khoảng phù hợp với câu hỏi; giữ nguyên lựa chọn trong toàn bộ lượt chạy.
+\end{enumerate}
+Với $x=[0,1,2,3,4]$, $y=[0,1,2,1,0]$, mức $1.5$, bảng quét là
+\begin{center}\begin{tabular}{@{}rrrr@{}}\toprule
+$i$ & $x_i$ & $y_i$ & $y_i-1.5$\\\midrule
+0 & 0 & 0 & $-1.5$\\
+1 & 1 & 1 & $-0.5$\\
+2 & 2 & 2 & $0.5$\\
+3 & 3 & 1 & $-0.5$\\
+4 & 4 & 0 & $-1.5$\\\bottomrule
+\end{tabular}\end{center}
+Có khoảng $[1,2]$ và $[2,3]$. Nhánh trái tăng, nhánh phải giảm. Nếu đảo toàn bảng sẽ có các tung độ 0 và 1 lặp lại, nên không xác định một hàm ngược đơn trị trên toàn bảng.
+
+Đối với phép lặp từ đa thức thuận, có thể giữ tập mốc đi qua nhiều nhánh; phải cảnh báo khả năng nhiều nghiệm và đối chiếu khoảng đã yêu cầu. Đối với \emph{hàm ngược}, tool yêu cầu nhánh mẫu tăng/giảm nghiêm ngặt và các tung độ phân biệt.
+
+\section{Hàm ngược bằng Lagrange}
+\label{sec:inverse-lagrange}
+Đặt $u_i=y_i$, $v_i=x_i$ trên nhánh được chọn. Lập
+\[
+ Q(y)=\sum_{i=0}^{m-1}v_i\ell_i(y),\qquad
+ \ell_i(y)=\prod_{j\ne i}\frac{y-u_j}{u_i-u_j},\qquad
+ \widehat x=Q(\bar y).
+\]
+\textbf{Điều kiện}: các $u_i$ phân biệt, dữ liệu thuộc nhánh một-một thích hợp. Hoành độ gốc có đều hay không không ảnh hưởng tính hợp lệ của Lagrange trên bảng đảo. Mức phải nằm trong miền tung độ của \emph{tập chọn} và nhánh; ngoại suy ngược cần được bật rõ.
+
+\subsection{Từng bước cho ví dụ $x=[0,1,2]$, $y=[0,1,4]$}
+\begin{enumerate}
+\item Chọn cả ba mốc của nhánh tăng; mức 2 nằm giữa 0 và 4.
+\item Đảo thành $u=[0,1,4]$, $v=[0,1,2]$.
+\item Với mỗi $i$, lập tích tử tại $\bar y=2$ và tích mẫu tại $u_i$.
+\item Chia để được $\ell_i(2)$, nhân $v_i$, rồi cộng.
+\end{enumerate}
+\begin{center}\small
+\begin{tabular}{@{}rrrrrr@{}}\toprule
+$i$ & $u_i$ & $v_i$ & mẫu $\prod_{j\ne i}(u_i-u_j)$ & $\ell_i(2)$ & $v_i\ell_i(2)$\\\midrule
+0 & 0 & 0 & 4 & $-1/2$ & 0\\
+1 & 1 & 1 & $-3$ & $4/3$ & $4/3$\\
+2 & 4 & 2 & 12 & $1/6$ & $1/3$\\\bottomrule
+\end{tabular}\end{center}
+Kết luận $\widehat x=0+4/3+1/3=5/3$. Kiểm tra $\sum_i\ell_i(2)=1$. Không có vòng hội tụ; chỉ có ba hạng hữu hạn.
+
+\section{Hàm ngược bằng Newton tỉ sai phân}
+\label{sec:inverse-newton}
+Trên cùng bảng đảo $(u_i,v_i)$, tính
+\[
+ D_{i,0}=v_i,\qquad D_{i,k}=\frac{D_{i+1,k-1}-D_{i,k-1}}{u_{i+k}-u_i},
+\]
+rồi
+\[
+ Q(y)=D_{0,0}+D_{0,1}(y-u_0)+D_{0,2}(y-u_0)(y-u_1)+\cdots.
+\]
+\textbf{Điểm dễ nhầm}: dù $x_i$ cách đều, các $u_i=y_i$ thường không đều. Phải dùng \emph{tỉ sai phân}, không dùng sai phân tiến đều trên bảng đảo.
+
+\begin{center}\begin{tabular}{@{}rrrr@{}}\toprule
+$u_i$ & $v_i$ & cấp 1 & cấp 2\\\midrule
+0 & 0 & 1 & $-1/6$\\
+1 & 1 & $1/3$ & \\
+4 & 2 & & \\\bottomrule
+\end{tabular}\end{center}
+Các phép chia: $(1-0)/(1-0)=1$; $(2-1)/(4-1)=1/3$; $(1/3-1)/(4-0)=-1/6$. Vì thế
+\[
+ Q(y)=y-\frac16y(y-1).
+\]
+Đánh giá Horner tại 2: bắt đầu $v=-1/6$; $v\leftarrow1+(2-1)(-1/6)=5/6$; $v\leftarrow0+(2-0)(5/6)=5/3$. Đây là hai lượt đánh giá lồng, không phải hai vòng hội tụ.
+
+\paragraph{Kết luận của hai dạng hàm ngược.} Trên cùng tập mốc, Lagrange và Newton cho đúng một đa thức $Q$ và cùng $5/3$. Việc thêm cột $P(\widehat x)-\bar y$ vào báo cáo chỉ là thông tin đối chiếu với mô hình thuận khác, không dùng làm điều kiện bác bỏ kết quả $Q$.
+
+\section{Lặp từ Newton tiến: lập công thức trước, sau đó mới lặp}
+\label{sec:inverse-forward}
+Chọn các mốc đều $x_0<\cdots<x_n$, $h>0$, gốc đầu tập tính. Đặt
+\[
+ t=\frac{x-x_0}{h},\quad
+ P_t(t)=y_0+d\,t+H(t),\quad d=\Delta y_0,
+\]
+\[
+ H(t)=\sum_{k=2}^{n}\frac{\Delta^ky_0}{k!}
+             t(t-1)\cdots(t-k+1).
+\]
+Từ $P_t(t)=\bar y$ suy ra phép lặp
+\[
+ \boxed{t_{j+1}=\varphi(t_j)=\frac{\bar y-y_0-H(t_j)}d},\qquad
+ x_{j+1}=x_0+ht_{j+1}.
+\]
+Mẫu $d$ phải khác 0. Không thay một mẫu bằng 0 bằng một số nhỏ tùy ý.
+
+\subsection{Một vòng thực hiện những việc nào?}
+\begin{enumerate}
+\item Lấy $t_j$ của vòng trước; không lấy $x_j$ thế trực tiếp vào biểu thức theo $t$.
+\item Với mọi $k\ge2$, tính tích cơ sở tại $t_j$, chia $k!$, nhân sai phân đúng hàng gốc; ghi từng đóng góp.
+\item Cộng các đóng góp thành $H(t_j)$.
+\item Tính tử $\bar y-y_0-H(t_j)$, chia $d$ để có $t_{j+1}$.
+\item Đổi lại $x_{j+1}=x_0+ht_{j+1}$; tính bước $|h|\,|t_{j+1}-t_j|$.
+\item Đánh giá lại đa thức tại \emph{điểm mới} để có phần dư $\rho_{j+1}=|P_t(t_{j+1})-\bar y|$.
+\item Kiểm tra vị trí/đoạn và tiêu chuẩn dừng của chế độ đã chọn. Nếu chưa đạt, chuyển $t_{j+1}$ làm đầu vào vòng sau.
+\end{enumerate}
+
+\subsection{Ba quy tắc khởi tạo}
+\begin{center}\small
+\begin{tabular}{@{}p{.24\linewidth}p{.65\linewidth}@{}}\toprule
+Quy tắc & Phép tính\\\midrule
+Tuyến tính tại gốc & $t_0=(\bar y-y_0)/d$; bỏ phần $H$ chỉ để khởi tạo\\
+Tuyến tính hai đầu $a,b$ & $x^{(0)}=a+(b-a)(\bar y-y_a)/(y_b-y_a)$, rồi $t_0=(x^{(0)}-\mathrm{origin})/h$\\
+Thủ công & Nhập $t_0$; qua API có thể nhập $x^{(0)}$, nhưng phải đổi theo đúng gốc và $h$\\\bottomrule
+\end{tabular}\end{center}
+Nếu đầu $a,b$ không trùng mốc dùng, quy tắc hai đầu lấy giá trị \emph{mô hình thuận} tại đầu đó và ghi rõ nguồn; không giả sử biết thêm giá trị hàm thật. Khi $y_b=y_a$, quy tắc này không xác định. Không tự đổi quy tắc sau một lần thất bại.
+
+\section{Khoảng mục tiêu T khác đoạn chứng nhận J}
+\label{sec:inverse-contraction}
+Từ khoảng hoành độ đang yêu cầu $[a,b]$, tính
+\[
+ T=\left[\frac{a-\mathrm{origin}}h,\frac{b-\mathrm{origin}}h\right].
+\]
+Đây là nơi muốn nhận nghiệm. Một đoạn $J$ trong biến $t$ dùng để chứng minh phép lặp hội tụ; nó có thể khác $T$.
+
+\textbf{Chứng nhận co trên $J$ cần đủ ba điều kiện}:
+\[
+ t_0\in J,\qquad \varphi(J)\subseteq J,\qquad
+ \sup_{t\in J}|\varphi'(t)|\le q<1.
+\]
+Khi đó phép lặp hội tụ đến nghiệm duy nhất của $t=\varphi(t)$ trong $J$. Vì $\varphi'=-H'/d$, sai phân bậc cao nhỏ so với $d$ có thể gợi ý co, nhưng chưa thay cho kiểm tra trên toàn đoạn.
+
+\subsection{Cận hậu nghiệm và hai tiêu chuẩn dừng}
+Với chứng nhận hợp lệ:
+\[
+ |x_{j+1}-x_*|\le B_{j+1}
+ =|h|\frac q{1-q}|t_{j+1}-t_j|.
+\]
+Tool chỉ nhận khi đồng thời
+\[
+ B_{j+1}\le\varepsilon_x,\qquad
+ \rho_{j+1}\le\varepsilon_y.
+\]
+Nếu $q=0$, ánh xạ là hằng trên $J$ và cận lý thuyết bằng 0 sau một cập nhật hợp lệ. Chứng nhận trên mô hình bằng số hữu tỷ không có nghĩa mọi sai số máy và sai số dữ liệu của hàm thật đã được chặn.
+
+Ở chế độ \textbf{thực hành}, không dùng $q$ để dừng. Thay $B_{j+1}$ bằng bước $|h||t_{j+1}-t_j|$ rồi vẫn yêu cầu phần dư nhỏ. Bước nhỏ là dấu hiệu thực hành, không phải chứng minh sai số nghiệm nhỏ nếu chưa có thêm căn cứ.
+
+\subsection{Rời $T$ và rời $J$ có nghĩa khác nhau}
+Trong thực hành, một vòng rời $T$ được ghi cảnh báo rồi tiếp tục: đa thức vẫn tính được. Khi cuối cùng đạt ngưỡng, nghiệm phải thuộc khoảng yêu cầu $[a,b]$; nếu ở ngoài thì chưa giải đúng câu hỏi trong khoảng đó. Trong chế độ có chứng nhận, rời $J$ vi phạm giả thiết giữ đoạn nên phải dừng kiểm tra. Không kẹp điểm về biên để tạo cảm giác hội tụ.
+
+\paragraph{Vì sao khoảng nghiệm ở giữa bảng không làm thiếu mốc?} Nếu đã chọn 36 mốc, gốc tiến vẫn là mốc đầu trong 36 mốc đó; khoảng nghiệm có thể nằm giữa bảng và $T$ có thể như $[10,11]$. Công thức được lập một lần từ 36 mốc rồi dùng lại. Ba mươi sáu mốc không tương ứng với 36 vòng, và không cần thêm 36 mốc tính từ đầu khoảng nghiệm.
+
+\section{Ví dụ lặp tiến có chứng nhận: đủ tất cả ba vòng}
+\label{sec:inverse-forward-example}
+\textbf{Dữ liệu tự dựng}:
+\[
+ x=[0,1,2],\quad y=[1,3.1,5.4],\quad \bar y=2,\quad
+ [a,b]=[0,1],\quad\varepsilon_x=\varepsilon_y=10^{-6}.
+\]
+Dữ liệu này lấy từ đa thức $1+2x+0.1x^2$, nhưng thuật toán chỉ cần bảng. Sai phân:
+\begin{center}\begin{tabular}{@{}rrrr@{}}\toprule
+$x_i$ & $y_i$ & $\Delta y_i$ & $\Delta^2y_i$\\\midrule
+0 & 1 & 2.1 & 0.2\\
+1 & 3.1 & 2.3 & \\
+2 & 5.4 & & \\\bottomrule
+\end{tabular}\end{center}
+Gốc 0, $h=1$, $t=x$, nên
+\[
+ P_t(t)=1+2.1t+0.1t(t-1),\qquad
+ H(t)=0.1t(t-1),\qquad
+ \varphi(t)=\frac{1-0.1t(t-1)}{2.1}.
+\]
+Khởi tạo $t_0=1/2.1=10/21$. Chọn $J=T=[0,1]$:
+\[
+ \varphi(J)\subseteq\left[\frac{10}{21},\frac{41}{84}\right]\subseteq[0,1],
+ \qquad \varphi'(t)=\frac{1-2t}{21},\quad q=\frac1{21}.
+\]
+Cả ba điều kiện co đều đạt. Cận đổi sang $x$ là $B_{j+1}=\frac1{20}|t_{j+1}-t_j|$.
+
+\subsection{Vòng 1: viết ra từng phép thế}
+\begin{align*}
+H(t_0)&=0.1\frac{10}{21}\left(\frac{10}{21}-1\right)
+       =-0.0249433106575964,\\
+\text{tử}&=2-1-H(t_0)=1.0249433106575964,\\
+t_1&=1.0249433106575964/2.1=0.488068243170284,\\
+x_1&=0+1t_1=0.488068243170284,\\
+B_1&=|t_1-t_0|/20=5.93888348990\cdot10^{-4},\\
+\rho_1&=|1+2t_1+0.1t_1^2-2|=4.24526602993\cdot10^{-5}.
+\end{align*}
+Hai ngưỡng chưa đạt nên dùng $t_1$ cho vòng 2. Không dùng $H(t_0)$ tính phần dư ở điểm mới.
+
+\subsection{Bảng đủ các vòng, không bỏ vòng chưa đạt}
+\begin{center}\small
+\begin{tabular}{@{}rrrrr@{}}\toprule
+Vòng & $t_j$ mới & $H(t_{j-1})$ & $B_j$ & $\rho_j$\\\midrule
+1 & 0.488068243170 & $-0.024943310658$ & $5.93888349\cdot10^{-4}$ & $4.24526603\cdot10^{-5}$\\
+2 & 0.488088458723 & $-0.024985763318$ & $1.01077763\cdot10^{-6}$ & $4.82005445\cdot10^{-8}$\\
+3 & 0.488088481675 & $-0.024985811518$ & $1.14763201\cdot10^{-9}$ & $5.46802117\cdot10^{-11}$\\\bottomrule
+\end{tabular}\end{center}
+Vòng 2 có phần dư đạt nhưng $B_2>10^{-6}$ nên \emph{chưa dừng}. Vòng 3 đạt cả hai. Tool trả
+\[
+ \widehat x=0.4880884816754477.
+\]
+Để kiểm riêng ví dụ tự dựng, nghiệm dương của đa thức đã biết là $-10+\sqrt{110}\approx0.4880884817015$, nằm trong cận của vòng cuối. So sánh này không phải bước bắt buộc của thuật toán.
+
+\section{Lặp từ Newton lùi: cùng dữ liệu, khác gốc và sai phân}
+\label{sec:inverse-backward}
+Gốc là $x_n$, $t=(x-x_n)/h$. Đặt
+\[
+ P_t(t)=y_n+d\,t+H(t),\quad d=\Delta y_{n-1},\quad
+ H(t)=\sum_{k=2}^n\frac{\Delta^ky_{n-k}}{k!}t(t+1)\cdots(t+k-1).
+\]
+Vẫn dùng $t_{j+1}=(\bar y-y_n-H(t_j))/d$, nhưng cả gốc, sai phân và các dấu trong tích phải đổi đồng bộ.
+
+\subsection{Ví dụ lặp lùi, đủ năm vòng}
+Dùng cùng ba cặp và mức 2 của mục trước. Gốc 2, $h=1$, $t=x-2$, $d=2.3$, $y_n=5.4$:
+\[
+ P_t(t)=5.4+2.3t+0.1t(t+1),\qquad
+ \varphi(t)=\frac{-3.4-0.1t(t+1)}{2.3}.
+\]
+Khoảng $x\in[0,1]$ thành $T=[-2,-1]$. Khởi tạo $t_0=-3.4/2.3=-34/23$. Chọn $J=T$:
+\[
+ \varphi(J)\subseteq[-36/23,-34/23]\subseteq[-2,-1],\qquad
+ |\varphi'(t)|=\frac{|2t+1|}{23}\le\frac3{23}=q.
+\]
+Cận $B_j=\frac3{20}|t_j-t_{j-1}|$. Vòng đầu:
+\begin{align*}
+H(t_0)&=0.1t_0(t_0+1)=0.0706994328922495,\\
+t_1&=(-3.4-0.0706994328922495)/2.3=-1.508999753431413,\\
+x_1&=2+t_1=0.491000246568587.
+\end{align*}
+\begin{center}\small
+\begin{tabular}{@{}rrrrr@{}}\toprule
+Vòng & $t_j$ mới & $x_j=2+t_j$ & $B_j$ & $\rho_j$\\\midrule
+1 & $-1.508999753431$ & 0.491000246569 & $4.61083258\cdot10^{-3}$ & $6.10861735\cdot10^{-3}$\\
+2 & $-1.511655674018$ & 0.488344325982 & $3.98388088\cdot10^{-4}$ & $5.36670035\cdot10^{-4}$\\
+3 & $-1.511889008816$ & 0.488110991184 & $3.50002197\cdot10^{-5}$ & $4.72163389\cdot10^{-5}$\\
+4 & $-1.511909537659$ & 0.488090462341 & $3.07932645\cdot10^{-6}$ & $4.15462427\cdot10^{-6}$\\
+5 & $-1.511911344018$ & 0.488088655982 & $2.70953756\cdot10^{-7}$ & $3.65574580\cdot10^{-7}$\\\bottomrule
+\end{tabular}\end{center}
+Vòng 5 đạt cả hai ngưỡng $10^{-6}$. Đáp số khác các chữ số cuối của lặp tiến vì cả hai dừng ở những sai số mô hình được chứng nhận khác nhau; không phải hai đa thức thuận khác nhau.
+
+\paragraph{Tại sao không tự đổi hướng?} Trong ví dụ này tiến có $q=1/21$, lùi có $q=3/23$, nên tiến nhanh hơn. Nhưng nếu đề yêu cầu lùi phải giữ lùi; việc chọn hướng khác là một lượt tính khác có công bố. Có dữ liệu mà khởi tạo của một hướng nằm ngoài $J$ trong khi hướng còn lại hợp lệ. Thiếu chứng nhận của một hướng không đồng nghĩa thiếu mốc.
+
+\section{Thực hành, bài tuyến tính và các trạng thái dừng}
+\label{sec:inverse-practical}
+\subsection{Chế độ thực hành dùng lại cùng công thức}
+Với ví dụ tiến, các bước $x$ là $1.18777670\cdot10^{-2}$, $2.02155525\cdot10^{-5}$, $2.29526402\cdot10^{-8}$. Nếu dùng ngưỡng $10^{-6}$, chế độ thực hành cũng dừng ở vòng 3, nhưng căn cứ là bước và phần dư; báo cáo không gọi bước nhỏ này là cận Banach khi chưa có chứng nhận.
+
+Các tình huống đáng đọc:
+\begin{itemize}
+\item Một vài vòng có bước tăng chưa đủ kết luận phân kỳ toàn cục; tiếp tục đến giới hạn hoặc lỗi thực sự, đồng thời lưu quỹ đạo.
+\item Giá trị mới bằng giá trị cũ nhưng phần dư chưa đạt là đình trệ số học, không được gọi là hội tụ.
+\item Hết số vòng là chưa đạt yêu cầu; số cuối chỉ dùng xem lại lựa chọn.
+\item Tràn số khi đánh giá đa thức bậc cao là lỗi số học của quỹ đạo, không phải thiếu mốc.
+\end{itemize}
+
+\subsection{Dữ liệu tuyến tính không cần tạo vòng lặp thừa}
+Ví dụ $x=[0,1,2]$, $y=[1,3,5]$, mức 4. Các sai phân cấp 2 trở lên bằng 0; $H=0$ nên $t=(4-1)/2=1.5$ cho nghiệm mô hình ngay. Tool có thể trả trạng thái mô hình tuyến tính với không có vòng lặp. Tương tự, nếu mức bằng đúng một mốc được chọn trong khoảng mục tiêu, trả mốc đó mà không tạo lịch sử giả.
+
+\subsection{Không có chứng nhận có thể là ba việc khác nhau}
+\begin{enumerate}
+\item \emph{Không đủ căn cứ}: bao khoảng dùng để chặn còn rộng nên chưa chứng minh được co.
+\item \emph{Một điều kiện bị bác bỏ}: chẳng hạn có điểm với $|\varphi'|\ge1$ hoặc ảnh đi ra ngoài $J$.
+\item \emph{Khởi tạo không thuộc $J$}: chứng nhận trên đoạn đó không áp dụng cho quỹ đạo đang bắt đầu.
+\end{enumerate}
+Cả ba đều phải nêu đúng nguyên nhân. Chế độ chỉ nhận chứng nhận không tự đổi sang thực hành, không tự chuyển chia đôi và không tự đổi khởi tạo.
+
+\section{Chia đôi đa thức thuận: mỗi vòng giữ lại một nửa khoảng}
+\label{sec:inverse-bisection}
+Lập đa thức thuận $P$ bằng tỉ sai phân từ tập mốc đã chọn. Đặt $F(x)=P(x)-\bar y$. Đầu vào thêm khoảng $a<b$, ngưỡng $\varepsilon_x>0$ và số vòng tối đa.
+
+\textbf{Điều kiện}: $F$ liên tục trên khoảng và hai đầu trái dấu, hoặc có đầu bằng 0. Đa thức luôn liên tục. Với hàm thật chưa biết, kết luận đang xét $F$ của \emph{mô hình}, không tự mở rộng bảo đảm sang $f$.
+\begin{enumerate}
+\item Tính $F(a),F(b)$. Có đầu bằng 0 thì trả đầu đó. Nếu cùng dấu, chưa đủ điều kiện chia đôi trên khoảng này.
+\item Khi $(b-a)/2>\varepsilon_x$, tính $c=(a+b)/2$ và $F(c)$.
+\item Nếu $F(c)=0$, thu khoảng về $[c,c]$.
+\item Nếu $F(a)F(c)<0$, thay $b\leftarrow c$; ngược lại thay $a\leftarrow c$. Lưu cả khoảng trước và sau cập nhật.
+\item Sau khi nửa độ rộng đạt ngưỡng, trả \emph{trung điểm của khoảng cuối}, kèm khoảng và cận nửa độ rộng.
+\end{enumerate}
+Sau $N$ lần giữ nửa khoảng, độ rộng còn $(b_0-a_0)/2^N$. Để nửa độ rộng không quá $\varepsilon_x$ cần
+\[
+ N\ge\max\left(0,\left\lceil\log_2\frac{b_0-a_0}{2\varepsilon_x}\right\rceil\right).
+\]
+Đây là cận vị trí nghiệm của mô hình trong khoảng, không yêu cầu phần dư tung độ bằng $\varepsilon_x$. Đơn vị hai đại lượng khác nhau.
+
+\subsection{Ví dụ đủ năm lần: giải $x^2=2$ bằng dữ liệu bảng}
+Nhập $x=[0,1,2]$, $y=[0,1,4]$; tool dựng đúng $P=x^2$. Mức 2, khoảng $[1,2]$, ngưỡng $\varepsilon_x=0.02$. Ban đầu $F(1)=-1$, $F(2)=2$.
+\begin{center}\small
+\begin{tabular}{@{}rrrrrr@{}}\toprule
+Vòng & $a$ trước & $b$ trước & $c$ đã thử & $F(c)$ & khoảng sau cập nhật\\\midrule
+1 & 1 & 2 & 1.5 & 0.25 & $[1,1.5]$\\
+2 & 1 & 1.5 & 1.25 & $-0.4375$ & $[1.25,1.5]$\\
+3 & 1.25 & 1.5 & 1.375 & $-0.109375$ & $[1.375,1.5]$\\
+4 & 1.375 & 1.5 & 1.4375 & 0.06640625 & $[1.375,1.4375]$\\
+5 & 1.375 & 1.4375 & 1.40625 & $-0.0224609375$ & $[1.40625,1.4375]$\\\bottomrule
+\end{tabular}\end{center}
+Khoảng cuối có nửa độ rộng $0.015625\le0.02$. Đáp số tool là trung điểm cuối
+\[
+ \widehat x=\frac{1.40625+1.4375}{2}=1.421875,
+ \qquad |\widehat x-\sqrt2|\le0.015625.
+\]
+Không lấy $c=1.40625$ của vòng vừa thử làm kết quả cuối: mã hiện trả trung điểm khoảng sau khi đã thu. Nếu float không còn phân biệt trung điểm với đầu khoảng trong khi chưa đạt ngưỡng, tool báo giới hạn độ phân giải thay vì lặp vô hạn.
+
+\section{Sai số mô hình không phải sai số của hàm thật}
+\label{sec:inverse-errors}
+\subsection{Với nội suy hàm ngược}
+Nếu hàm thật có nghịch đảo $g$ đủ trơn và $|g^{(m)}|\le M_m$ trên đoạn chứa các tung độ dùng cùng mức $\bar y$:
+\[
+ |g(\bar y)-Q(\bar y)|\le\frac{M_m}{m!}
+            \left|\prod_i(\bar y-y_i)\right|.
+\]
+Đây là cận theo hàm ngược, không phải cận $|f^{(m)}|$. Khi $f'$ rất nhỏ, hàm ngược có thể nhạy số vì $g'=1/f'$. Tung độ gần trùng được cảnh báo nhưng không tự gộp thành một mốc.
+
+\subsection{Với nghiệm của đa thức thuận}
+Giả sử trên đoạn chứa nghiệm thật và điểm tính có $|f-P|\le E$ và $|f'|\ge\mu>0$ trên cùng nhánh thích hợp. Nếu $\rho=|P(\widehat x)-\bar y|$ thì
+\[
+ |\widehat x-x_{\rm thật}|\le\frac{E+\rho}{\mu}.
+\]
+Phải nêu nguồn và miền áp dụng của $E,\mu$. Không lấy cận co của phép lặp thay cho $E$; cận co chỉ chặn sai số \emph{giải phương trình mô hình}. Việc sai số tại các mốc bằng 0 cũng không suy ra $E=0$ giữa mốc.
+
+\paragraph{Những số nên chép cùng đáp án.} Tập mốc/nhánh, khoảng $[a,b]$, gốc và $h$, công thức $P_t$ hoặc $Q$, quy tắc khởi tạo, $\varepsilon_x,\varepsilon_y$, trạng thái dừng, số vòng, phần dư cuối và phạm vi của cận được công bố. Số chữ số hiển thị là lựa chọn trình bày, không là số chữ số được bảo đảm đúng.
+
+\section{Bảng lỗi để quyết định thao tác tiếp theo}
+\begin{center}\small
+\begin{longtable}{@{}p{.30\linewidth}p{.59\linewidth}@{}}
+\toprule
+Thông tin tool báo & Diễn giải và việc cần làm\\\midrule\endhead
+Hoành độ trùng & Dữ liệu thuận không xác định nội suy duy nhất theo chính sách giữ cặp; xử lý nguồn\\
+Tung độ trùng khi đảo bảng & Mẫu tỉ sai phân ngược bằng 0 hoặc nhiều $x$ cho một $y$; tách nhánh phù hợp\\
+Nhánh không đơn điệu nghiêm ngặt trên mẫu & Không có một hàm ngược đơn trị trên tập đang xét; không sắp toàn bảng theo $y$ để che đổi chiều\\
+Mức ngoài miền tung độ & Đang cần ngoại suy ngược; chỉ chạy khi đã chọn rõ và hiểu giới hạn\\
+Không đủ/chưa chọn đúng mốc cho bậc & Bậc $p$ cần đúng $p+1$ cặp đã chọn; không liên quan số vòng\\
+Sai phân đầu $d=0$ & Không chia được khi lập phép lặp này; phải chọn lượt khác theo đề, không thay mẫu bằng số nhỏ\\
+Chưa đủ chứng nhận & Kiểm $t_0\in J$, ảnh giữ $J$, $q<1$; chưa chứng minh không đồng nghĩa chắc chắn phân kỳ\\
+Rời $T$ trong thực hành & Ghi cảnh báo và tiếp tục; kết quả cuối vẫn phải thuộc khoảng yêu cầu\\
+Rời $J$ đã chứng nhận & Dừng do vi phạm chứng nhận/số học; không kẹp về biên\\
+Đạt ngưỡng ngoài khoảng yêu cầu & Chưa phải nghiệm của câu hỏi trong khoảng đã chọn\\
+Hết vòng hoặc đình trệ & Giữ lịch sử; chưa trả kết quả đạt yêu cầu\\
+Hai đầu chia đôi cùng dấu & Khoảng này chưa đủ điều kiện; không suy phương trình vô nghiệm ở mọi nơi\\
+\bottomrule
+\end{longtable}\end{center}
+
+\paragraph{Nguồn đối chiếu.} \texttt{pps/inverse\_solution.py} giữ lựa chọn và điều khiển từng bước; \texttt{inverse\_model.py} dựng hệ số, các đóng góp và chứng nhận trên đoạn; \texttt{inverse\_presentation.py} trình bày từ vết tính đó. Đặc tả nội suy ngược bản 2 trong \texttt{kienthuc/real} là nguồn yêu cầu về giữ tập mốc, tách $T/J$ và phân loại trạng thái. Các ví dụ trong chương này đều là dữ liệu tự dựng, đã chạy qua đúng bộ giải của app; không nhận là dữ liệu đề thi thật.

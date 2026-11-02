@@ -1,0 +1,14 @@
+{
+  "tool": "Phương trình vi phân",
+  "method": "Adams 3",
+  "values": {
+    "expr": "x",
+    "initial": "1",
+    "a": 0,
+    "b": 0.3,
+    "h": 0.1,
+    "tol": 1e-10
+  },
+  "x": "",
+  "y": ""
+}

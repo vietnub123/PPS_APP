@@ -3,10 +3,19 @@ import unittest
 from pathlib import Path
 import numpy as np
 from pps.interpolation import interpolate
-from pps.math_view import table_display,export_html,math_png,difference_image
+from pps.math_view import table_display,export_html,math_png,difference_image,mathtext_latex
 
 
 class MathViewTests(unittest.TestCase):
+    def test_scientific_literals_have_correct_powers_of_ten_in_math(self):
+        self.assertEqual(mathtext_latex(r'I=5e-101'),r'I=5\cdot 10^{-101}')
+        self.assertEqual(mathtext_latex(r'u(1E+12)=-2.5e-8'),r'u(1\cdot 10^{12})=-2.5\cdot 10^{-8}')
+        self.assertEqual(mathtext_latex(r'e^{3x}+x_1e3'),r'e^{3x}+x_1e3')
+        from pps.calculus import integrate
+        report=integrate('Simpson','1e-100*x',0,1,4)
+        for _,formulas in report.presentation['formulas']:
+            for formula in formulas:self.assertTrue(math_png(formula).startswith(b'\x89PNG'))
+
     def test_equal_newton_presents_t_without_expanding_x(self):
         for method,origin in [('Newton tiến','x_0'),('Newton lùi','x_n')]:
             r=interpolate([9,10,11],[2,3,6],method)

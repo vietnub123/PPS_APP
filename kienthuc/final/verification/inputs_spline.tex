@@ -1,0 +1,48 @@
+\subsection*{Input: các ô đúng tên trên giao diện}
+Bảng này được lấy từ biểu mẫu của tool. Giá trị mặc định là ví dụ nhập, cần thay bằng dữ liệu đề. Hai dãy $x,y$ là bảng dữ liệu riêng bên dưới nếu chức năng dùng bảng.
+\subsubsection*{Ô chung của các lựa chọn trong nhóm}
+\begin{center}\small\begin{tabular}{@{}p{.32\linewidth}p{.17\linewidth}p{.43\linewidth}@{}}\toprule
+Ô nhập & Khóa JSON & Cách nhập / mặc định\\\midrule
+Điểm cần tính x (có thể để trống) & \texttt{target} & \texttt{1.5}\\[3pt]
+Cấp đạo hàm (0 = giá trị) & \texttt{order} & \texttt{0}\\[3pt]
+Cận tích phân a (không bắt buộc) & \texttt{integral\_a} & Để trống\\[3pt]
+Cận tích phân b (không bắt buộc) & \texttt{integral\_b} & Để trống\\[3pt]
+Cách giải hệ biên & \texttt{solver} & \texttt{Tự chọn}\\[3pt]
+Mức trình bày & \texttt{detail\_level} & \texttt{Tổng hợp}\\[3pt]
+\bottomrule\end{tabular}\end{center}
+\subsubsection*{Ô riêng: Bậc hai — biên trái}
+\begin{center}\small\begin{tabular}{@{}p{.32\linewidth}p{.17\linewidth}p{.43\linewidth}@{}}\toprule
+Ô nhập & Khóa JSON & Cách nhập / mặc định\\\midrule
+Giá trị đạo hàm tại biên trái & \texttt{left} & \texttt{0}\\[3pt]
+\bottomrule\end{tabular}\end{center}
+\subsubsection*{Ô riêng: Bậc hai — biên phải}
+\begin{center}\small\begin{tabular}{@{}p{.32\linewidth}p{.17\linewidth}p{.43\linewidth}@{}}\toprule
+Ô nhập & Khóa JSON & Cách nhập / mặc định\\\midrule
+Giá trị đạo hàm tại biên phải & \texttt{right} & \texttt{0}\\[3pt]
+\bottomrule\end{tabular}\end{center}
+\subsubsection*{Ô riêng: Cubic kẹp /\allowbreak{} Cubic đạo hàm bậc hai}
+\begin{center}\small\begin{tabular}{@{}p{.32\linewidth}p{.17\linewidth}p{.43\linewidth}@{}}\toprule
+Ô nhập & Khóa JSON & Cách nhập / mặc định\\\midrule
+Giá trị đạo hàm tại biên trái & \texttt{left} & \texttt{0}\\[3pt]
+Giá trị đạo hàm tại biên phải & \texttt{right} & \texttt{0}\\[3pt]
+\bottomrule\end{tabular}\end{center}
+\subsubsection*{Ô riêng: Cubic hỗn hợp}
+\begin{center}\small\begin{tabular}{@{}p{.32\linewidth}p{.17\linewidth}p{.43\linewidth}@{}}\toprule
+Ô nhập & Khóa JSON & Cách nhập / mặc định\\\midrule
+Cấp đạo hàm biên trái & \texttt{left\_order} & \texttt{1}\\[3pt]
+Cấp đạo hàm biên phải & \texttt{right\_order} & \texttt{2}\\[3pt]
+Giá trị tại biên trái & \texttt{left} & \texttt{0}\\[3pt]
+Giá trị tại biên phải & \texttt{right} & \texttt{2}\\[3pt]
+\bottomrule\end{tabular}\end{center}
+\subsubsection*{Ô riêng: Bậc 4 — đạo hàm trái}
+\begin{center}\small\begin{tabular}{@{}p{.32\linewidth}p{.17\linewidth}p{.43\linewidth}@{}}\toprule
+Ô nhập & Khóa JSON & Cách nhập / mặc định\\\midrule
+S′ S′′ S′′′ ở đầu trái & \texttt{derivatives} & \texttt{0 2 0}\\[3pt]
+\bottomrule\end{tabular}\end{center}
+\subsubsection*{Ô riêng: Biên tổng quát}
+\begin{center}\small\begin{tabular}{@{}p{.32\linewidth}p{.17\linewidth}p{.43\linewidth}@{}}\toprule
+Ô nhập & Khóa JSON & Cách nhập / mặc định\\\midrule
+Bậc spline & \texttt{degree} & \texttt{4}\\[3pt]
+Điều kiện biên (JSON) & \texttt{conditions} & \texttt{[["trái",\allowbreak{}1,\allowbreak{}0],\allowbreak{}["trái",\allowbreak{}2,\allowbreak{}2],\allowbreak{}["trái",\allowbreak{}3,\allowbreak{}0]]}
+\par Mỗi điều kiện ghi phía,\allowbreak{} cấp đạo hàm,\allowbreak{} giá trị;\allowbreak{} giữ đúng các điều kiện đề cho.\\[3pt]
+\bottomrule\end{tabular}\end{center}

@@ -1,0 +1,553 @@
+{
+  "cases": [
+    {
+      "name": "Nội suy đa thức / Lagrange",
+      "tool": "Nội suy đa thức",
+      "method": "Lagrange",
+      "status": "completed",
+      "formulas": 10
+    },
+    {
+      "name": "Nội suy đa thức / Newton",
+      "tool": "Nội suy đa thức",
+      "method": "Newton",
+      "status": "completed",
+      "formulas": 21
+    },
+    {
+      "name": "Nội suy đa thức / Gauss I",
+      "tool": "Nội suy đa thức",
+      "method": "Gauss I",
+      "status": "completed",
+      "formulas": 23
+    },
+    {
+      "name": "Nội suy đa thức / Gauss II",
+      "tool": "Nội suy đa thức",
+      "method": "Gauss II",
+      "status": "completed",
+      "formulas": 23
+    },
+    {
+      "name": "Nội suy đa thức / Stirling",
+      "tool": "Nội suy đa thức",
+      "method": "Stirling",
+      "status": "completed",
+      "formulas": 25
+    },
+    {
+      "name": "Nội suy đa thức / Bessel",
+      "tool": "Nội suy đa thức",
+      "method": "Bessel",
+      "status": "completed",
+      "formulas": 22
+    },
+    {
+      "name": "Spline / Tuyến tính",
+      "tool": "Spline",
+      "method": "Tuyến tính",
+      "status": "spline_constructed",
+      "formulas": 18
+    },
+    {
+      "name": "Spline / Bậc hai — biên trái",
+      "tool": "Spline",
+      "method": "Bậc hai — biên trái",
+      "status": "spline_constructed",
+      "formulas": 20
+    },
+    {
+      "name": "Spline / Bậc hai — biên phải",
+      "tool": "Spline",
+      "method": "Bậc hai — biên phải",
+      "status": "spline_constructed",
+      "formulas": 20
+    },
+    {
+      "name": "Spline / Cubic tự nhiên",
+      "tool": "Spline",
+      "method": "Cubic tự nhiên",
+      "status": "spline_constructed",
+      "formulas": 22
+    },
+    {
+      "name": "Spline / Cubic kẹp",
+      "tool": "Spline",
+      "method": "Cubic kẹp",
+      "status": "spline_constructed",
+      "formulas": 22
+    },
+    {
+      "name": "Spline / Cubic đạo hàm bậc hai",
+      "tool": "Spline",
+      "method": "Cubic đạo hàm bậc hai",
+      "status": "spline_constructed",
+      "formulas": 22
+    },
+    {
+      "name": "Spline / Cubic hỗn hợp",
+      "tool": "Spline",
+      "method": "Cubic hỗn hợp",
+      "status": "spline_constructed",
+      "formulas": 22
+    },
+    {
+      "name": "Spline / Cubic tuần hoàn",
+      "tool": "Spline",
+      "method": "Cubic tuần hoàn",
+      "status": "spline_constructed",
+      "formulas": 20
+    },
+    {
+      "name": "Spline / Cubic not-a-knot",
+      "tool": "Spline",
+      "method": "Cubic not-a-knot",
+      "status": "spline_constructed",
+      "formulas": 20
+    },
+    {
+      "name": "Spline / Bậc 4 — đạo hàm trái",
+      "tool": "Spline",
+      "method": "Bậc 4 — đạo hàm trái",
+      "status": "spline_constructed",
+      "formulas": 20
+    },
+    {
+      "name": "Spline / Biên tổng quát",
+      "tool": "Spline",
+      "method": "Biên tổng quát",
+      "status": "spline_constructed",
+      "formulas": 18
+    },
+    {
+      "name": "Bình phương tối thiểu / Tuyến tính theo cơ sở",
+      "tool": "Bình phương tối thiểu",
+      "method": "Tuyến tính theo cơ sở",
+      "status": "unique_fit",
+      "formulas": 14
+    },
+    {
+      "name": "Bình phương tối thiểu / Lũy thừa",
+      "tool": "Bình phương tối thiểu",
+      "method": "Lũy thừa",
+      "status": "unique_fit",
+      "formulas": 14
+    },
+    {
+      "name": "Bình phương tối thiểu / Hàm mũ",
+      "tool": "Bình phương tối thiểu",
+      "method": "Hàm mũ",
+      "status": "unique_fit",
+      "formulas": 14
+    },
+    {
+      "name": "Bình phương tối thiểu / Lũy thừa — SSE thang y",
+      "tool": "Bình phương tối thiểu",
+      "method": "Lũy thừa — SSE thang y",
+      "status": "nonlinear_stationary",
+      "formulas": 10
+    },
+    {
+      "name": "Bình phương tối thiểu / Hàm mũ — SSE thang y",
+      "tool": "Bình phương tối thiểu",
+      "method": "Hàm mũ — SSE thang y",
+      "status": "nonlinear_stationary",
+      "formulas": 10
+    },
+    {
+      "name": "Bình phương tối thiểu / Log của tổ hợp cơ sở",
+      "tool": "Bình phương tối thiểu",
+      "method": "Log của tổ hợp cơ sở",
+      "status": "unique_fit",
+      "formulas": 14
+    },
+    {
+      "name": "Bình phương tối thiểu / 1/(a+b*x)",
+      "tool": "Bình phương tối thiểu",
+      "method": "1/(a+b*x)",
+      "status": "unique_fit",
+      "formulas": 14
+    },
+    {
+      "name": "Bình phương tối thiểu / x/(a+b*x)",
+      "tool": "Bình phương tối thiểu",
+      "method": "x/(a+b*x)",
+      "status": "unique_fit",
+      "formulas": 14
+    },
+    {
+      "name": "Bình phương tối thiểu / a+b*ln(x)",
+      "tool": "Bình phương tối thiểu",
+      "method": "a+b*ln(x)",
+      "status": "unique_fit",
+      "formulas": 14
+    },
+    {
+      "name": "Bình phương tối thiểu / A*b^x",
+      "tool": "Bình phương tối thiểu",
+      "method": "A*b^x",
+      "status": "unique_fit",
+      "formulas": 14
+    },
+    {
+      "name": "Nội suy ngược / Lặp tiến",
+      "tool": "Nội suy ngược",
+      "method": "Lặp tiến",
+      "status": "practical_stop",
+      "formulas": 98
+    },
+    {
+      "name": "Nội suy ngược / Lặp lùi",
+      "tool": "Nội suy ngược",
+      "method": "Lặp lùi",
+      "status": "practical_stop",
+      "formulas": 112
+    },
+    {
+      "name": "Nội suy ngược / Lặp có cận co",
+      "tool": "Nội suy ngược",
+      "method": "Lặp có cận co",
+      "status": "certified_model_tolerance",
+      "formulas": 106
+    },
+    {
+      "name": "Nội suy ngược / Hàm ngược — Newton",
+      "tool": "Nội suy ngược",
+      "method": "Hàm ngược — Newton",
+      "status": "inverse_value_computed",
+      "formulas": 16
+    },
+    {
+      "name": "Nội suy ngược / Hàm ngược — Lagrange",
+      "tool": "Nội suy ngược",
+      "method": "Hàm ngược — Lagrange",
+      "status": "inverse_value_computed",
+      "formulas": 22
+    },
+    {
+      "name": "Nội suy ngược / Chia đôi đa thức",
+      "tool": "Nội suy ngược",
+      "method": "Chia đôi đa thức",
+      "status": "bisection_model_tolerance",
+      "formulas": 10
+    },
+    {
+      "name": "Chọn mốc / Mốc cách đều",
+      "tool": "Chọn mốc",
+      "method": "Mốc cách đều",
+      "status": "completed",
+      "formulas": 0
+    },
+    {
+      "name": "Chọn mốc / Mốc nội suy ngược",
+      "tool": "Chọn mốc",
+      "method": "Mốc nội suy ngược",
+      "status": "computed",
+      "formulas": 0
+    },
+    {
+      "name": "Chọn mốc / Chebyshev",
+      "tool": "Chọn mốc",
+      "method": "Chebyshev",
+      "status": "completed",
+      "formulas": 4
+    },
+    {
+      "name": "Đạo hàm & Horner / Đạo hàm từ bảng",
+      "tool": "Đạo hàm & Horner",
+      "method": "Đạo hàm từ bảng",
+      "status": "completed",
+      "formulas": 10
+    },
+    {
+      "name": "Đạo hàm & Horner / Horner",
+      "tool": "Đạo hàm & Horner",
+      "method": "Horner",
+      "status": "completed",
+      "formulas": 18
+    },
+    {
+      "name": "Tích phân / Hình thang",
+      "tool": "Tích phân",
+      "method": "Hình thang",
+      "status": "computed",
+      "formulas": 3
+    },
+    {
+      "name": "Tích phân / Simpson",
+      "tool": "Tích phân",
+      "method": "Simpson",
+      "status": "computed",
+      "formulas": 3
+    },
+    {
+      "name": "Tích phân / Trung điểm",
+      "tool": "Tích phân",
+      "method": "Trung điểm",
+      "status": "computed",
+      "formulas": 3
+    },
+    {
+      "name": "Tích phân / Newton-Cotes",
+      "tool": "Tích phân",
+      "method": "Newton-Cotes",
+      "status": "computed",
+      "formulas": 3
+    },
+    {
+      "name": "Tích phân / Tích phân kép",
+      "tool": "Tích phân",
+      "method": "Tích phân kép",
+      "status": "computed",
+      "formulas": 1
+    },
+    {
+      "name": "Phương trình vi phân / Euler hiện",
+      "tool": "Phương trình vi phân",
+      "method": "Euler hiện",
+      "status": "computed",
+      "formulas": 1
+    },
+    {
+      "name": "Phương trình vi phân / Euler ẩn",
+      "tool": "Phương trình vi phân",
+      "method": "Euler ẩn",
+      "status": "computed",
+      "formulas": 1
+    },
+    {
+      "name": "Phương trình vi phân / Hình thang",
+      "tool": "Phương trình vi phân",
+      "method": "Hình thang",
+      "status": "computed",
+      "formulas": 1
+    },
+    {
+      "name": "Phương trình vi phân / RK2",
+      "tool": "Phương trình vi phân",
+      "method": "RK2",
+      "status": "computed",
+      "formulas": 1
+    },
+    {
+      "name": "Phương trình vi phân / RK3",
+      "tool": "Phương trình vi phân",
+      "method": "RK3",
+      "status": "computed",
+      "formulas": 1
+    },
+    {
+      "name": "Phương trình vi phân / RK4",
+      "tool": "Phương trình vi phân",
+      "method": "RK4",
+      "status": "computed",
+      "formulas": 1
+    },
+    {
+      "name": "Phương trình vi phân / Adams 2",
+      "tool": "Phương trình vi phân",
+      "method": "Adams 2",
+      "status": "computed",
+      "formulas": 1
+    },
+    {
+      "name": "Phương trình vi phân / Adams 3",
+      "tool": "Phương trình vi phân",
+      "method": "Adams 3",
+      "status": "computed",
+      "formulas": 1
+    },
+    {
+      "name": "Phương trình vi phân / Adams 4",
+      "tool": "Phương trình vi phân",
+      "method": "Adams 4",
+      "status": "computed",
+      "formulas": 1
+    },
+    {
+      "name": "Phương trình vi phân / Adams 5",
+      "tool": "Phương trình vi phân",
+      "method": "Adams 5",
+      "status": "computed",
+      "formulas": 1
+    },
+    {
+      "name": "Phương trình vi phân / RK2 tham số",
+      "tool": "Phương trình vi phân",
+      "method": "RK2 tham số",
+      "status": "computed",
+      "formulas": 1
+    },
+    {
+      "name": "Phương trình vi phân / RK3 tham số",
+      "tool": "Phương trình vi phân",
+      "method": "RK3 tham số",
+      "status": "computed",
+      "formulas": 1
+    },
+    {
+      "name": "Phương trình vi phân / RK tùy chỉnh",
+      "tool": "Phương trình vi phân",
+      "method": "RK tùy chỉnh",
+      "status": "computed",
+      "formulas": 1
+    },
+    {
+      "name": "Bài toán biên / Biên tổng quát",
+      "tool": "Bài toán biên",
+      "method": "Biên tổng quát",
+      "status": "computed",
+      "formulas": 4
+    },
+    {
+      "name": "Bài toán biên / Trị riêng",
+      "tool": "Bài toán biên",
+      "method": "Trị riêng",
+      "status": "computed",
+      "formulas": 2
+    },
+    {
+      "name": "Newton Mốc cách đều Tiến",
+      "tool": "Nội suy đa thức",
+      "method": "Newton",
+      "status": "completed",
+      "formulas": 28
+    },
+    {
+      "name": "Newton Mốc cách đều Lùi",
+      "tool": "Nội suy đa thức",
+      "method": "Newton",
+      "status": "completed",
+      "formulas": 28
+    },
+    {
+      "name": "Newton Mốc bất kỳ Tiến",
+      "tool": "Nội suy đa thức",
+      "method": "Newton",
+      "status": "completed",
+      "formulas": 14
+    },
+    {
+      "name": "Newton Mốc bất kỳ Lùi",
+      "tool": "Nội suy đa thức",
+      "method": "Newton",
+      "status": "completed",
+      "formulas": 14
+    },
+    {
+      "name": "LS weighted QR",
+      "tool": "Bình phương tối thiểu",
+      "method": "Tuyến tính theo cơ sở",
+      "status": "unique_fit",
+      "formulas": 16
+    },
+    {
+      "name": "LS weighted Hệ chuẩn — Gauss",
+      "tool": "Bình phương tối thiểu",
+      "method": "Tuyến tính theo cơ sở",
+      "status": "unique_fit",
+      "formulas": 12
+    },
+    {
+      "name": "LS weighted SVD",
+      "tool": "Bình phương tối thiểu",
+      "method": "Tuyến tính theo cơ sở",
+      "status": "unique_fit",
+      "formulas": 12
+    },
+    {
+      "name": "LS basis x;1/x",
+      "tool": "Bình phương tối thiểu",
+      "method": "Tuyến tính theo cơ sở",
+      "status": "unique_fit",
+      "formulas": 14
+    },
+    {
+      "name": "LS basis sqrt(x);ln(x)",
+      "tool": "Bình phương tối thiểu",
+      "method": "Tuyến tính theo cơ sở",
+      "status": "unique_fit",
+      "formulas": 14
+    },
+    {
+      "name": "LS basis 1;x;x^2",
+      "tool": "Bình phương tối thiểu",
+      "method": "Tuyến tính theo cơ sở",
+      "status": "unique_fit",
+      "formulas": 16
+    },
+    {
+      "name": "Stirling derivative 0",
+      "tool": "Nội suy đa thức",
+      "method": "Stirling",
+      "status": "completed",
+      "formulas": 41
+    },
+    {
+      "name": "Stirling derivative 1",
+      "tool": "Nội suy đa thức",
+      "method": "Stirling",
+      "status": "completed",
+      "formulas": 49
+    },
+    {
+      "name": "Stirling derivative 2",
+      "tool": "Nội suy đa thức",
+      "method": "Stirling",
+      "status": "completed",
+      "formulas": 49
+    },
+    {
+      "name": "Stirling derivative 4",
+      "tool": "Nội suy đa thức",
+      "method": "Stirling",
+      "status": "completed",
+      "formulas": 49
+    },
+    {
+      "name": "Stirling derivative 8",
+      "tool": "Nội suy đa thức",
+      "method": "Stirling",
+      "status": "completed",
+      "formulas": 49
+    },
+    {
+      "name": "ODE radical-log",
+      "tool": "Phương trình vi phân",
+      "method": "RK4",
+      "status": "computed",
+      "formulas": 1
+    },
+    {
+      "name": "Horner scientific 1e-100",
+      "tool": "Đạo hàm & Horner",
+      "method": "Horner",
+      "status": "completed",
+      "formulas": 18
+    },
+    {
+      "name": "Horner scientific 1e12",
+      "tool": "Đạo hàm & Horner",
+      "method": "Horner",
+      "status": "completed",
+      "formulas": 18
+    },
+    {
+      "name": "Integral scientific",
+      "tool": "Tích phân",
+      "method": "Simpson",
+      "status": "computed",
+      "formulas": 3
+    },
+    {
+      "name": "ODE scientific",
+      "tool": "Phương trình vi phân",
+      "method": "RK4",
+      "status": "computed",
+      "formulas": 1
+    }
+  ],
+  "errors": [],
+  "unique_formulas": 360,
+  "formula_occurrences": 1354
+}

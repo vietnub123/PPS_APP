@@ -1,0 +1,20 @@
+Bài toán Cauchy — Adams 3
+================================================================
+Biến độc lập t; các thành phần nghiệm x(t), y(t), z(t).
+Các bước ẩn giải hệ phương trình và kiểm tra phần dư.
+Lưới cố định: dung sai bước ẩn không phải cận sai số toàn cục hoặc bảo đảm ổn định; cần xét thêm h và h/2.
+Adams dùng RK4 khởi tạo, AB dự báo và AM hiệu chỉnh đến hội tụ.
+Adams 3: AB dùng 3 giá trị cũ, AM dùng thêm giá trị mới; bậc toàn cục còn phụ thuộc RK4 khởi tạo.
+
+Nghiệm trên lưới
+t    x
+0    1
+0.1  1.105170833333
+0.2  1.221402570851
+0.3  1.349858925038
+
+Phần dư bước ẩn
+bước  t    phần dư
+1     0.1  0
+2     0.2  0
+3     0.3  8.32667268469e-17

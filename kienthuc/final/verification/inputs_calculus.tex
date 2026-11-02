@@ -1,0 +1,43 @@
+\subsection*{Input: các ô đúng tên trên giao diện}
+Bảng này được lấy từ biểu mẫu của tool. Giá trị mặc định là ví dụ nhập, cần thay bằng dữ liệu đề. Hai dãy $x,y$ là bảng dữ liệu riêng bên dưới nếu chức năng dùng bảng.
+\subsubsection*{Ô chung của các lựa chọn trong nhóm}
+\begin{center}\small\begin{tabular}{@{}p{.32\linewidth}p{.17\linewidth}p{.43\linewidth}@{}}\toprule
+Ô nhập & Khóa JSON & Cách nhập / mặc định\\\midrule
+Cận trái a & \texttt{a} & \texttt{0}\\[3pt]
+Cận phải b & \texttt{b} & \texttt{1}\\[3pt]
+Số khoảng chia n & \texttt{n} & \texttt{20}\\[3pt]
+\bottomrule\end{tabular}\end{center}
+\subsubsection*{Ô riêng: Hình thang /\allowbreak{} Simpson /\allowbreak{} Trung điểm}
+\begin{center}\small\begin{tabular}{@{}p{.32\linewidth}p{.17\linewidth}p{.43\linewidth}@{}}\toprule
+Ô nhập & Khóa JSON & Cách nhập / mặc định\\\midrule
+Hàm f(x) & \texttt{expr} & \texttt{x\textasciicircum{}2}\\[3pt]
+Dung sai tự chia lưới (để trống: dùng n) & \texttt{tol} & Để trống
+\par Chỉ dùng với hàm;\allowbreak{} tự tăng n đến khi ước lượng Runge đủ nhỏ.\\[3pt]
+Cận đạo hàm M (không bắt buộc) & \texttt{bound} & Để trống
+\par M2 cho hình thang/\allowbreak{}trung điểm,\allowbreak{} M4 cho Simpson.\\[3pt]
+Nguồn dữ liệu & \texttt{source} & \texttt{Hàm}
+\par Nhập Hàm hoặc Bảng;\allowbreak{} bảng x,\allowbreak{}y điền bên dưới.\\[3pt]
+\bottomrule\end{tabular}\end{center}
+\subsubsection*{Ô riêng: Newton-Cotes}
+\begin{center}\small\begin{tabular}{@{}p{.32\linewidth}p{.17\linewidth}p{.43\linewidth}@{}}\toprule
+Ô nhập & Khóa JSON & Cách nhập / mặc định\\\midrule
+Hàm f(x) & \texttt{expr} & \texttt{x\textasciicircum{}2}\\[3pt]
+Bậc Newton-Cotes & \texttt{degree} & \texttt{4}
+\par n phải chia hết cho bậc này.\\[3pt]
+Dung sai tự chia lưới (để trống: dùng n) & \texttt{tol} & Để trống
+\par Chỉ dùng với hàm;\allowbreak{} tự tăng n đến khi ước lượng Runge đủ nhỏ.\\[3pt]
+Cận đạo hàm M (không bắt buộc) & \texttt{bound} & Để trống
+\par M2 cho hình thang/\allowbreak{}trung điểm,\allowbreak{} M4 cho Simpson.\\[3pt]
+Nguồn dữ liệu & \texttt{source} & \texttt{Hàm}
+\par Nhập Hàm hoặc Bảng;\allowbreak{} bảng x,\allowbreak{}y điền bên dưới.\\[3pt]
+\bottomrule\end{tabular}\end{center}
+\subsubsection*{Ô riêng: Tích phân kép}
+\begin{center}\small\begin{tabular}{@{}p{.32\linewidth}p{.17\linewidth}p{.43\linewidth}@{}}\toprule
+Ô nhập & Khóa JSON & Cách nhập / mặc định\\\midrule
+Hàm f(x,\allowbreak{}y) & \texttt{expr} & \texttt{x\textasciicircum{}2+y\textasciicircum{}2}\\[3pt]
+Cận dưới y & \texttt{c} & \texttt{0}\\[3pt]
+Cận trên y & \texttt{d} & \texttt{1}\\[3pt]
+Quy tắc & \texttt{rule} & \texttt{Simpson}
+\par Nhập Simpson hoặc Hình thang.\\[3pt]
+Dung sai Runge & \texttt{tol} & \texttt{1e-07}\\[3pt]
+\bottomrule\end{tabular}\end{center}

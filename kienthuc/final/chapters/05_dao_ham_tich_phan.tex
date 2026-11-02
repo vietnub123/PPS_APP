@@ -1,0 +1,333 @@
+\chapter{Đạo hàm số và tích phân số}
+\label{ch:calculus}
+\input{chapters/toolflow_05.tex}
+
+\section{Nhìn đúng dữ liệu trước khi chọn công thức}
+Đạo hàm số và tích phân số đều thay một phép toán trên hàm thật bằng phép toán trên dữ liệu hoặc một hàm xấp xỉ. Chúng không tự tạo thêm thông tin về độ trơn hay sai số đo. Bảng sau là đường đi thực tế trong app.
+\begin{center}
+\begin{tabular}{p{.26\textwidth}p{.28\textwidth}p{.35\textwidth}}
+\toprule
+Đề cho gì? & Chọn trong app & Việc đang làm\\\midrule
+Bảng $(x_i,y_i)$, hỏi $f^{(s)}(z)$ & Đạo hàm từ bảng & Lấy đạo hàm đa thức qua $p+1$ mốc đã chọn.\\
+Đã dựng một đa thức Newton/Stirling/Bessel & Nội suy đa thức, cấp đạo hàm $s$ & Giữ chính đa thức và tập mốc của câu nội suy, lấy đạo hàm theo đúng biến.\\
+Biểu thức $f$, hỏi tích phân & Tích phân, nguồn Hàm & Tính $f$ tại các nút của quy tắc; có thể tinh chỉnh lưới.\\
+Bảng hữu hạn, hỏi tích phân & Tích phân, nguồn Bảng & Dùng đúng lưới của bảng; không tự lấy giá trị hàm ở các nút mới.\\
+Biểu thức $f(x,y)$ trên hình chữ nhật & Tích phân kép & Tích tensor của hai quy tắc một chiều, tinh chỉnh cả hai chiều.\\\bottomrule
+\end{tabular}
+\end{center}
+
+Trong chương này $p$ là bậc đa thức dùng lấy đạo hàm; khi nói sai số tích phân, ký hiệu $r$ là bậc sai số toàn cục để tránh nhầm hai đại lượng. $n$ luôn là \emph{số khoảng chia}, không phải số nút. Với quy tắc chứa hai đầu, có $n+1$ nút; quy tắc trung điểm có $n$ nút.
+
+\section{Đạo hàm từ p+1 mốc bất kỳ}
+\label{sec:derivative-weights}
+\subsection{Đầu vào, đầu ra và điều kiện}
+Nhập hai dãy $x,y$, điểm tính $z$, bậc đa thức $p$ và cấp đạo hàm $s$. Trong màn hình này app yêu cầu
+\[
+1\le s\le p<m,
+\]
+với $m$ là số cặp nhập. Tất cả số phải hữu hạn, $x_i$ phân biệt. Mốc không cách đều vẫn hợp lệ. Đầu ra là
+\[
+f^{(s)}(z)\approx P_p^{(s)}(z)=\sum_{i=0}^{p}w_i y_i.
+\]
+Nếu đề cho sẵn một đa thức thì dùng Horner; không cần xấp xỉ bằng bảng. Nếu đề đã yêu cầu đạo hàm của Stirling chín mốc thì phải giữ tập chín mốc ấy, thay vì chuyển sang một cửa sổ ba mốc khác.
+
+\subsection{Bước 1: chọn đúng các mốc sẽ dùng}
+App sắp tăng $x$ cùng cả cặp và giữ ID dòng nguồn. Tìm hàng gần $z$ nhất, gọi chỉ số là $c$; khi hòa chọn hàng bên trái. Đặt
+\[
+\ell=\max\{0,\min(c-\lfloor p/2\rfloor,m-p-1)\}.
+\]
+Tập dùng là các hàng $\ell,\ldots,\ell+p$. Đây là \emph{cửa sổ liên tiếp quanh hàng gần nhất}; trên lưới không đều nó không nhất thiết là $p+1$ mốc gần $z$ nhất. Điểm ở biên làm cửa sổ lệch về một phía. Điểm nằm ngoài đoạn chọn vẫn tính được đạo hàm của $P_p$, nhưng đó là ngoại suy và phải được ghi rõ.
+
+\subsection{Bước 2: từ cơ sở Lagrange đến trọng số}
+Với các mốc đã chọn, đặt
+\[
+L_i(x)=\prod_{j\ne i}\frac{x-x_j}{x_i-x_j},\qquad
+P_p(x)=\sum_i y_iL_i(x),\qquad w_i=L_i^{(s)}(z).
+\]
+Để tính $w_i$ mà không khai triển các lũy thừa lớn theo $x$, thay $x=z+u$:
+\[
+N_i(u)=\prod_{j\ne i}(z-x_j+u)=\sum_{k=0}^{p}a_k u^k,
+\quad d_i=\prod_{j\ne i}(x_i-x_j),
+\quad w_i=\frac{s!a_s}{d_i}.
+\]
+Chỉ cần giữ $a_0,\ldots,a_s$. Khởi tạo $(a_0,a_1,\ldots,a_s)=(1,0,\ldots,0)$. Mỗi khi nhân thêm $v+u$, $v=z-x_j$, cập nhật \emph{từ cấp cao xuống cấp thấp}:
+\[
+a_k\leftarrow va_k+a_{k-1}\quad(k=s,s-1,\ldots,1),\qquad a_0\leftarrow va_0.
+\]
+Đồng thời nhân $d_i$ với $x_i-x_j$. Cuối vòng qua các $j\ne i$, lấy $s!a_s/d_i$. Không có phép chia cho $z-x_j$, nên $z$ trùng một mốc không gây lỗi chia cho 0.
+
+\subsection{Bước 3: nhân tung độ, cộng và kiểm tra}
+Tính $q_i=w_i y_i$, rồi tổng dồn $T_i=T_{i-1}+q_i$, $T_{-1}=0$. Kết quả cuối là $T_p$. App đối chiếu các moment
+\[
+\sum_iw_i(x_i-z)^k=
+\begin{cases}s!,&k=s,\\0,&0\le k\le p,\ k\ne s.\end{cases}
+\]
+Các đẳng thức này nói công thức lấy đúng đạo hàm của mọi đa thức bậc không quá $p$. Chúng kiểm tra cách dựng trọng số, không chứng minh các giá trị đo chính xác hay hàm thật đủ trơn.
+
+\subsection{Ví dụ đầy đủ: ba điểm ở đầu bảng}
+Ví dụ tự dựng: $x=(0,1,2)$, $y=(1,2,5)$, tính $f'(0)$ bằng đa thức bậc hai. Có $p=2,s=1,z=0$. Cả ba mốc đều được dùng.
+\begin{center}
+\begin{tabular}{rlll}
+\toprule $i$&$L_i(x)$&$L_i'(x)$&$w_i=L_i'(0)$\\\midrule
+0&$(x-1)(x-2)/2$&$x-3/2$&$-3/2$\\
+1&$-x(x-2)$&$-2x+2$&$2$\\
+2&$x(x-1)/2$&$x-1/2$&$-1/2$\\\bottomrule
+\end{tabular}
+\end{center}
+Hàng $i=0$ cũng có thể làm theo đúng vòng nhân hệ số của app:
+\begin{center}
+\begin{tabular}{rllll}
+\toprule Nhân tử & $v$ & $(a_0,a_1)$ sau nhân & Mẫu tích lũy\\\midrule
+Khởi tạo&---&$(1,0)$&$1$\\
+$u-1$&$-1$&$(-1,1)$&$(0-1)=-1$\\
+$u-2$&$-2$&$(2,-3)$&$(-1)(0-2)=2$\\\bottomrule
+\end{tabular}
+\end{center}
+Do đó $w_0=1!(-3)/2=-3/2$. Tương tự $w_1=2,w_2=-1/2$.
+\begin{center}
+\begin{tabular}{rrrrr}
+\toprule $i$&$w_i$&$y_i$&$w_iy_i$&Tổng dồn\\\midrule
+0&$-3/2$&1&$-3/2$&$-3/2$\\
+1&2&2&4&$5/2$\\
+2&$-1/2$&5&$-5/2$&0\\\bottomrule
+\end{tabular}
+\end{center}
+Kết luận $f'(0)\approx0$. Kiểm tra: $\sum w_i=0$, $\sum w_ix_i=1$, $\sum w_ix_i^2=0$.
+
+\subsection{Ví dụ mốc không đều và đạo hàm cấp hai}
+Với $x=(0,1,3)$, $y=(1,3,13)$, $z=1$, $p=2,s=1$, thuật toán tổng quát cho
+\[
+(w_0,w_1,w_2)=(-2/3,1/2,1/6),\qquad
+P'(1)=-\frac23+\frac32+\frac{13}{6}=3.
+\]
+Không có một $h$ chung nên không thay bằng công thức ba điểm giữa cách đều.
+
+Với $x=(0,1,2)$, $y=(1,2,5)$, $z=1$, $p=2,s=2$, nhận
+\[
+(w_0,w_1,w_2)=(1,-2,1),\qquad P''(1)=1-4+5=2.
+\]
+
+\subsection{Khi đã đổi biến trong bài nội suy}
+Nếu $x=a+ht$ và $Q(t)=P(a+ht)$ thì
+\[
+t_z=\frac{z-a}{h},\qquad P^{(s)}(z)=\frac{Q^{(s)}(t_z)}{h^s}.
+\]
+Thứ tự: giữ $Q$ vừa dựng; đạo hàm theo $t$; thế $t_z$; chia $h^s$. Ví dụ $Q(t)=16+16t+4t^2$, $x=4+2t$, tại $x=4$: $t_z=0$, $Q'(0)=16$, $P'(4)=16/2=8$; $Q''(0)=8$, $P''(4)=8/2^2=2$.
+
+\subsection{Công thức quen thuộc và điều kiện sai số}
+Các công thức dưới áp dụng cho giá trị hàm chính xác trên lưới đều $h>0$. $M_k$ phải là cận đúng của $|f^{(k)}|$ trên đoạn liên quan.
+\begin{center}\small
+\begin{tabular}{p{.2\textwidth}p{.5\textwidth}p{.2\textwidth}}
+\toprule Công thức&Giá trị xấp xỉ&Cận đủ điều kiện\\\midrule
+Hai điểm tiến&$[f(z+h)-f(z)]/h$&$M_2h/2$\\
+Hai điểm lùi&$[f(z)-f(z-h)]/h$&$M_2h/2$\\
+Ba điểm giữa, cấp 1&$[f(z+h)-f(z-h)]/(2h)$&$M_3h^2/6$\\
+Ba điểm tiến, cấp 1&$[-3f(z)+4f(z+h)-f(z+2h)]/(2h)$&$M_3h^2/3$\\
+Ba điểm lùi, cấp 1&$[3f(z)-4f(z-h)+f(z-2h)]/(2h)$&$M_3h^2/3$\\
+Ba điểm giữa, cấp 2&$[f(z-h)-2f(z)+f(z+h)]/h^2$&$M_4h^2/12$\\\bottomrule
+\end{tabular}\end{center}
+Với trọng số bất kỳ và moment đúng đến bậc $p$, Taylor tại $z$ cho cận có thể thô:
+\[
+\left|f^{(s)}(z)-\sum_iw_if(x_i)\right|
+\le\frac{M_{p+1}}{(p+1)!}\sum_i|w_i||x_i-z|^{p+1}.
+\]
+Nếu $|\delta y_i|\le\eta_i$, sai số do dữ liệu không vượt $\sum_i|w_i|\eta_i$. Trọng số thường tăng khi $h$ giảm, đặc biệt ở cấp đạo hàm cao. Vì thế giảm $h$ không tự bảo đảm tăng chính xác khi số liệu bị nhiễu. Không đạo hàm công thức phần dư chứa $\xi_x$ như thể $\xi_x$ là hằng số.
+
+\section{Tích phân một chiều: khung tính chung}
+\label{sec:quadrature-framework}
+Mục tiêu $I=\int_a^bf(x)\,dx$. Các trường đầu vào là phương pháp; biểu thức hoặc bảng; hai cận $a,b$; $n$; bậc Newton--Cotes $d$ khi có; dung sai tự chia lưới và cận đạo hàm $M$ tùy chọn.
+
+\begin{enumerate}
+\item Chuẩn hóa cận về đoạn tăng. Nếu đảo hai cận, giữ hệ số dấu $-1$ để đổi dấu kết quả cuối. Hai cận bằng nhau cho $I=0$.
+\item Chọn đúng loại nút và trọng số theo các mục tiếp theo. Đặt $h=(b-a)/n$ trên đoạn tăng.
+\item Với biểu thức, tính $y_i=f(x_i)$. Với bảng, chọn các cặp trong đoạn và kiểm tra chúng khớp lưới; không chỉ kiểm tra số lượng.
+\item Tính từng tích $w_iy_i$, cộng chúng rồi nhân $h$. Với bảng nhỏ, app cộng bằng Decimal của các số đã đọc; không làm tròn từng hạng để cộng tiếp.
+\item Nếu có yêu cầu tinh chỉnh, làm đúng quy trình ở mục~\ref{sec:quadrature-adaptive}. Ghi rõ kết quả chính đang ở lưới nào.
+\end{enumerate}
+
+Giới hạn hiện tại là $10^6$ khoảng cho một chiều. App kiểm tra các nút vẫn phân biệt trong số float. Với bảng hữu hạn, app không cho tự tăng $n$ vì không có quyền tự sinh tung độ mới.
+
+\section{Hình thang ghép}
+\label{sec:trapezoid}
+Cho $x_i=a+ih$, $i=0,\ldots,n$:
+\[
+T_n=h\left(\frac{y_0}{2}+\sum_{i=1}^{n-1}y_i+\frac{y_n}{2}\right).
+\]
+Nó tích phân từng đường thẳng nối hai mốc liên tiếp. Các bước: lấy nửa tung độ hai đầu; giữ nguyên các tung độ trong; cộng; nhân $h$. Không cần $n$ chẵn.
+
+Ví dụ tự dựng $f(x)=x^2$, $[a,b]=[0,1]$, $n=2$, $h=1/2$:
+\begin{center}\begin{tabular}{rrrr}
+\toprule $x_i$&$y_i$&$w_i$&$w_iy_i$\\\midrule
+0&0&$1/2$&0\\
+$1/2$&$1/4$&1&$1/4$\\
+1&1&$1/2$&$1/2$\\\bottomrule
+\end{tabular}\end{center}
+Tổng là $3/4$, nên $T_2=(1/2)(3/4)=3/8=0.375$. Giá trị đúng của ví dụ là $1/3$, sai lệch $1/24$.
+Nếu $f\in C^2$, $|f''|\le M_2$, thì
+\[
+|I-T_n|\le\frac{(b-a)h^2}{12}M_2=\frac{(b-a)^3M_2}{12n^2}.
+\]
+Tăng $n$ chỉ cho hội tụ lý thuyết khi hàm/lưới phù hợp; các hàm có kỳ dị hoặc dao động chưa được lấy mẫu có thể làm ước lượng thực hành sai.
+
+\section{Trung điểm ghép}
+\label{sec:midpoint}
+Các tung độ phải lấy tại tâm từng ô:
+\[
+\xi_i=a+(i+\tfrac12)h,\quad i=0,\ldots,n-1,
+\qquad M_n=h\sum_{i=0}^{n-1}f(\xi_i).
+\]
+Đầu vào bảng có $n$ tâm ô, không có hai đầu mút. App kiểm tra vị trí tâm so với $a,b,n$.
+
+Ví dụ $x^2$ trên $[0,1]$, $n=2$: hai tâm là $1/4,3/4$; các giá trị là $1/16,9/16$. Tổng $10/16$, nhân $h=1/2$ được $M_2=5/16=0.3125$.
+Nếu $|f''|\le M_2^{\ast}$ thì
+\[
+|I-M_n|\le\frac{(b-a)h^2}{24}M_2^{\ast}.
+\]
+Ký hiệu $M_2^{\ast}$ là cận đạo hàm, khác ký hiệu $M_n$ của quy tắc trung điểm.
+
+\section{Simpson ghép}
+\label{sec:simpson}
+Cần $n$ chẵn và $n+1$ nút cách đều, vì mỗi parabol dùng hai khoảng:
+\[
+S_n=\frac h3\left[y_0+4\sum_{i=1,3,\ldots,n-1}y_i
+ +2\sum_{i=2,4,\ldots,n-2}y_i+y_n\right].
+\]
+\begin{enumerate}
+\item Viết hàng trọng số nguyên $1,4,2,4,2,\ldots,4,1$.
+\item Nhân từng tung độ; cộng các tích.
+\item Nhân $h/3$. Nếu dùng trọng số app đã lưu là $1/3,4/3,2/3,\ldots$, chỉ nhân $h$, không chia 3 lần nữa.
+\end{enumerate}
+Ví dụ $x^2$ trên $[0,1]$, $n=2$: $S_2=(1/6)[0+4(1/4)+1]=1/3$. Trường hợp này đúng chính xác vì Simpson tích phân đúng đa thức đến bậc ba. Nếu $f\in C^4$, $|f^{(4)}|\le M_4$:
+\[
+|I-S_n|\le\frac{(b-a)h^4}{180}M_4.
+\]
+Không áp công thức Simpson này cho $n$ lẻ hoặc mốc không đều. Chọn một bậc nội suy khác không tự biến bảng không đều thành lưới Simpson.
+
+\section{Newton--Cotes đóng bậc 1 đến 10}
+\label{sec:newton-cotes}
+\subsection{Công thức cho một khối và cách sinh trọng số}
+Một khối bậc $d$ gồm $d$ khoảng, $d+1$ mốc đều. Đặt $x=x_0+ht$, $0\le t\le d$. Nội suy Lagrange theo các nút $0,1,\ldots,d$ rồi tích phân:
+\[
+I_{\rm khối}\approx h\sum_{j=0}^{d}w_j f(x_0+jh),\qquad
+w_j=\int_0^d\prod_{k\ne j}\frac{t-k}{j-k}\,dt.
+\]
+Một cách kiểm tra độc lập là hệ moment
+\[
+\sum_{j=0}^{d}w_jj^r=\frac{d^{r+1}}{r+1},\qquad r=0,\ldots,d.
+\]
+App lấy trọng số chuẩn bằng \texttt{scipy.integrate.newton\_cotes(d,equal=1)}. Bảng dưới được kiểm lại bằng hệ moment hữu tỷ, không lấy số hiển thị làm chuẩn.
+{\small\input{verification/calculus_nc_weights.tex}}
+
+Ở đây $p$ là bậc sai số toàn cục dùng trong Runge: $p=d+1$ nếu $d$ lẻ, $p=d+2$ nếu $d$ chẵn. Độ chính xác đa thức của quy tắc là đến bậc $p-1$. Sự đối xứng tạo thêm một bậc đúng khi $d$ chẵn.
+
+\subsection{Ghép nhiều khối}
+Đầu vào app cần $1\le d\le10$ và $n$ chia hết cho $d$. Chia lưới thành các khối bắt đầu ở $i=0,d,2d,\ldots,n-d$:
+\begin{enumerate}
+\item Khởi tạo trọng số toàn lưới $W_0=\cdots=W_n=0$.
+\item Với mỗi khối bắt đầu i, cộng $w_j$ vào $W_{i+j}$, $j=0,\ldots,d$.
+\item Các mốc chung giữa hai khối nhận tổng hai đóng góp.
+\item Tính $I_n=h\sum_{i=0}^n W_i y_i$.
+\end{enumerate}
+Ví dụ $d=2,n=4$ cho trọng số $(1,4,2,4,1)/3$, chính là Simpson ghép.
+
+\subsection{Ví dụ Boole, $d=4$}
+Với $f=x^2$ trên $[0,1]$, $n=d=4$, $h=1/4$:
+\[
+I\approx\frac{2h}{45}[7y_0+32y_1+12y_2+32y_3+7y_4].
+\]
+\begin{center}\begin{tabular}{rrrr}
+\toprule $i$&$y_i$&Trọng số nguyên&Đóng góp trong ngoặc\\\midrule
+0&0&7&0\\
+1&$1/16$&32&2\\
+2&$1/4$&12&3\\
+3&$9/16$&32&18\\
+4&1&7&7\\\bottomrule
+\end{tabular}\end{center}
+Tổng $30$, hệ số ngoài $2h/45=1/90$, kết quả $1/3$. Với $d=1,2,3$ lần lượt có hình thang, Simpson $1/3$, Simpson $3/8$; các bậc còn lại dùng cùng quy trình nhưng trọng số khác.
+
+Một số bậc cao có trọng số âm. Chúng có thể khuếch đại sai số dữ liệu; tăng bậc không phải bảo đảm tốt hơn. App không tự thay bậc hay cắt khối lẻ ở cuối.
+
+\section{Cận lý thuyết, Runge và tự chia lưới}
+\label{sec:quadrature-adaptive}
+\subsection{Ba chế độ khác nhau}
+\begin{center}\begin{tabular}{p{.24\textwidth}p{.63\textwidth}}
+\toprule Cấu hình&App thực hiện và cách đọc kết quả\\\midrule
+Không nhập dung sai&Giữ n đã chọn; tính thêm lưới 2n nếu được để đối chiếu. Kết quả chính vẫn là $I_n$. Runge in ra cho sai số lưới $2n$.\\
+Nhập dung sai, không có M&Liên tiếp tăng lưới và dùng Runge, kèm một lưới kiểm tra không lồng. Kết quả chính là lưới cuối thực sự đạt tiêu chuẩn thực hành.\\
+Nhập dung sai và M&Chọn n nhỏ nhất theo cận $C/n^p\le\varepsilon$, tôn trọng số khoảng mỗi khối. Giá trị chính dùng n đó.\\\bottomrule
+\end{tabular}\end{center}
+
+Nếu $I_h=I+Ch^p+o(h^p)$, hai lưới cách nhau hệ số 2 cho
+\[
+E_{h/2}\approx\frac{|I_{h/2}-I_h|}{2^p-1}.
+\]
+Đây là ước lượng tiệm cận khi đã ở miền sai số có quy luật đó. Một hiệu bằng 0 cũng có thể do bỏ sót dao động; nó không tự là chứng minh $I_h=I$.
+
+\subsection{Đúng thứ tự vòng tự chia lưới trong code}
+\begin{enumerate}
+\item Tính $I_n$ ở n đầu vào.
+\item Tính $I_{2n}$ và $E=|I_{2n}-I_n|/(2^p-1)$. Đổi n thành $2n$, giữ giá trị mới.
+\item Nếu $E>\varepsilon$, lặp lại bước 2.
+\item Nếu $E\le\varepsilon$, tạo thêm lưới $n+q$, với $q=1$ cho hình thang/trung điểm, $q=2$ cho Simpson, $q=d$ cho Newton--Cotes. Gần giới hạn tài nguyên có thể dùng $n-q$.
+\item Tính $I_{n+q}$. Nếu $|I_{n+q}-I_n|\le\varepsilon$, nhận $I_n$; nếu chưa đạt, chuyển điểm xuất phát sang lưới kiểm tra và tiếp tục.
+\end{enumerate}
+App cho tối đa 18 vòng ở một chiều và không vượt $10^6$ khoảng. Hết giới hạn trả lỗi chưa đạt, không nhận im giá trị cuối. Kiểm tra thêm lưới không lồng giúp giảm bỏ sót dao động nhưng vẫn không là cận bảo đảm.
+
+\subsection{Ví dụ đầy đủ: hình thang tự chia cho $x^2$}
+Chọn $[0,1]$, n ban đầu 2, $\varepsilon=10^{-3}$, không cho M. Công thức chính xác của hình thang trên hàm này là $T_n=1/3+1/(6n^2)$.
+\begin{center}\begin{tabular}{rrrl}
+\toprule n mới&$T_n$&Ước lượng Runge cho n mới&Quyết định\\\midrule
+2&0.375&---&Bước xuất phát\\
+4&0.34375&0.010416666667&Chia tiếp\\
+8&0.3359375&0.002604166667&Chia tiếp\\
+16&0.333984375&0.000651041667&Thử lưới 17\\\bottomrule
+\end{tabular}\end{center}
+Lưới 17 cho $T_{17}=0.333910034602$; chênh với lưới 16 khoảng $7.43404\cdot10^{-5}<10^{-3}$. App nhận $T_{16}=0.333984375$. Giá trị được nhận là lưới 16, không phải lưới kiểm tra 17.
+
+Nếu bổ sung $M_2=2$, cận hình thang là $1/(6n^2)$. Điều kiện $1/(6n^2)\le10^{-3}$ cho n nhỏ nhất bằng 13. App chọn n=13 và nhận $T_{13}\approx0.334319526627$, với cận $1/1014\approx0.000986193294$. Đây là chế độ có cận nếu $M_2$ đúng.
+
+\subsection{Bảng dữ liệu và những lưới không được suy diễn}
+Với bảng ở hai đầu đoạn, app có thể lấy mỗi hai nút để tạo lưới thô nếu số khoảng phù hợp quy tắc. Khi đó Runge so giá trị bảng hiện tại với bảng thô và áp dụng cho lưới hiện tại. Trung điểm không tự có tâm của lưới thô trong tập tâm lưới mịn nên code không làm phép đối chiếu đó.
+
+Không được nội suy thêm các y mới rồi coi chúng như phép đo độc lập để tinh chỉnh tích phân của bảng. Nếu tự quyết định dùng một mô hình nội suy trước khi tích phân, đó là một bước mô hình hóa khác cần nêu trong bài.
+
+\section{Tích phân kép trên miền chữ nhật}
+\label{sec:double-integral}
+App nhận biểu thức $f(x,y)$ và hình chữ nhật $[a,b]\times[c,d]$, số khoảng n cho \emph{mỗi chiều}, chọn hình thang hoặc Simpson, dung sai Runge. Không có tùy chọn miền tam giác, miền cong hoặc bảng hai chiều trong màn hình này.
+\[
+h_x=\frac{b-a}{n},\quad h_y=\frac{d-c}{n},\qquad
+I_n=h_xh_y\sum_{i=0}^{n}\sum_{j=0}^{n}w_iw_j f(x_i,y_j).
+\]
+Với Simpson $w=(1,4,2,\ldots,4,1)/3$ và n chẵn. Với hình thang hai đầu có trọng số $1/2$, các nút trong có trọng số 1.
+\begin{enumerate}
+\item Chuẩn hóa từng cặp cận; đảo một chiều đổi dấu, đảo cả hai giữ dấu.
+\item Lập hai dãy nút và cùng một vector trọng số cho mỗi chiều.
+\item Tính các $f_{ij}$ và từng tích $w_iw_jf_{ij}$.
+\item Cộng hai chiều rồi nhân $h_xh_y$.
+\item Tăng gấp đôi n ở cả hai chiều; so Runge với bậc 2 hoặc 4; khi đủ nhỏ kiểm thêm lưới n+1 hoặc n+2 không lồng.
+\end{enumerate}
+Giới hạn hiện tại: không quá $2000\times2000$ khoảng và tối đa 12 vòng tinh chỉnh. Miền có chiều dài 0 trả tích phân 0. Một dung sai chung không phải cận tổng hợp đã được chứng minh của hai chiều.
+
+Ví dụ tự dựng $f=x^2+y^2$ trên $[0,1]^2$, Simpson n=2, $h_x=h_y=1/2$:
+\begin{center}\begin{tabular}{r|rrr}
+\toprule $x\backslash y$&0&$1/2$&1\\\midrule
+0&0&$1/4$&1\\
+$1/2$&$1/4$&$1/2$&$5/4$\\
+1&1&$5/4$&2\\\bottomrule
+\end{tabular}\end{center}
+Nhân theo vector nguyên $(1,4,1)$ ở từng chiều: tổng có trọng số nguyên là 24; hệ số ngoài $h_xh_y/9=1/36$ nên $I_2=2/3$. Tinh chỉnh n=4 và kiểm n=6 đều cho $2/3$, nên app nhận lưới 4 trong chế độ tự kiểm. Đây là ví dụ đúng với đa thức đang dùng; không suy kết quả luôn chính xác cho mọi hàm.
+
+\section{Checklist chép lời giải và các ca dừng}
+\begin{enumerate}
+\item Ghi dữ liệu là biểu thức hay bảng; miền và thứ tự cận.
+\item Ghi số khoảng, số nút, h; với trung điểm phải ghi vị trí tâm.
+\item Viết trọng số theo đúng quy ước: đã chứa $1/3$, $3/8$ hay còn để ngoài.
+\item Bảng có các giá trị, trọng số, đóng góp và tổng. Với đạo hàm ghi cả tập mốc và cách tạo trọng số.
+\item Nếu có tinh chỉnh, ghi giá trị trên mỗi lưới, ước lượng cho lưới nào, kiểm tra không lồng và lý do dừng.
+\item Chỉ ghi cận bảo đảm khi đã có giả thiết/cận đạo hàm đúng. Trạng thái đạt Runge là kết luận thực hành.
+\end{enumerate}
+Các lỗi cần xử lý: mốc trùng/không hữu hạn; bảng không khớp lưới; Simpson n lẻ; Newton--Cotes n không chia hết d; thiếu tung độ; hàm không thực tại nút; bước lưới không phân biệt được trong float; kết quả vượt miền số; chưa đạt dung sai trong giới hạn tài nguyên.
+
+\paragraph{Nguồn đối chiếu trong repo.} Các hàm \texttt{differentiate}, \texttt{quadrature\_weights}, \texttt{integrate}, \texttt{double\_integral} ở \texttt{pps/calculus.py}; trường nhập tại \texttt{pps/gui.py}.
+
+Số liệu kiểm tra được tái tạo bằng script trong thư mục \texttt{verification/}: \texttt{calculus\_verification.py}. Kết quả lưu trong \texttt{calculus\_examples.json}.

@@ -1,0 +1,117 @@
+\chapter{Áp dụng vào đề trong repo và khả năng chạy lại}
+\label{app:exam}
+
+\section{Đề 20241: kiểm dữ liệu trước khi chọn công thức}
+Nguồn ảnh trong \texttt{kienthuc/}: \texttt{20241\_MI3042\_GK.jpg}. Workbook: \texttt{20241GKtest2.xlsx}. Bài giải và nhật ký: \texttt{examples/de\_20241}.
+
+Bản kiểm đã chọn \textbf{Sheet3} theo ghi chú ảnh đề 2; có 106 cặp, bước $h=0.117$, tham số $\bar x=4,\bar y=6$. Các chỉ số mốc bên dưới bắt đầu từ 0. Các tệp JSON lưu đủ dữ liệu và lựa chọn để mở lại bằng \textbf{Mở bài}.
+
+\subsection{Horner với đa thức cho sẵn}
+\[
+ P(x)=3.5x^5-2.78x^4+5.63x^3-15.28x+1.54.
+\]
+Nhập \texttt{3.5 -2.78 5.63 0 -15.28 1.54}, điểm 2.57, cấp 3. Hệ số $x^2$ bằng 0 phải giữ đúng cột. Các lượt Horner lặp và hệ số nhân giai thừa đã giải thích ở Chương \ref{ch:interp}; kết quả
+\[
+ P''(2.57)=1054.696646,\qquad P'''(2.57)=1249.3386.
+\]
+Tệp chạy lại: \texttt{A\_Horner.json}. Không dùng bảng dữ liệu đo để giải câu đã cho đa thức tường minh này.
+
+\subsection{Stirling 9 mốc và đạo hàm cùng đa thức}
+Nhập toàn bộ bảng, chọn Stirling, điểm 4, cấp 1, số mốc 9. Cửa sổ là các chỉ số 22--30, gốc giữa $x_0=4.042$; do đó
+\[
+ t=\frac{4-4.042}{.117}=-\frac{14}{39}.
+\]
+Lập sai phân trên đúng 9 mốc, cộng công thức Stirling và đạo hàm theo $t$ rồi chia $h$. Kết quả cùng đa thức:
+\[
+ P(4)=5.442986424022284,\qquad P'(4)=-2.673281525949639.
+\]
+Tệp \texttt{C\_Stirling\_9.json} giữ đúng đầu vào. Đạo hàm này là đạo hàm của mô hình 9 mốc, không phải dùng tiếp một công thức đạo hàm khác trên một tập mốc khác.
+
+\subsection{Tìm mọi nghiệm ở mức 6}
+Quét toàn bộ bảng trước khi lặp. Bốn khoảng đổi dấu là các cặp chỉ số 14--15, 23--24, 62--63, 82--83. Quét bảng chỉ chứng minh các khoảng có nghiệm nếu hàm thật liên tục; không chứng minh không có nghiệm tiếp xúc bị bỏ sót giữa hai dòng cùng dấu.
+
+Mỗi nhánh dưới đây khai báo một tập 9 mốc, giữ đúng gốc đầu/cuối của tập đó, $\varepsilon_x=\varepsilon_y=10^{-6}$. Chọn chế độ có cận co và kiểm cả ba giả thiết ở Chương \ref{ch:inverse}.
+\begin{center}\small
+\begin{tabular}{@{}rllrr@{}}\toprule
+Nhánh&Mốc gốc&Hướng&$\widehat x$&Số vòng\\\midrule
+1&11--19&Tiến&2.72873297033552&13\\
+2&22--30&Tiến&3.76076318833793&9\\
+3&58--66&Tiến&8.35257882568784&6\\
+4&78--86&Lùi&10.6415671769223&4\\\bottomrule
+\end{tabular}\end{center}
+\begin{center}\small
+\begin{tabular}{rrrr}\toprule
+Nhánh&Cận $q$&Cận vị trí vòng cuối $B$&Phần dư vòng cuối\\\midrule
+1&$453609/1087240$&$2.97435\cdot10^{-7}$&$5.34363\cdot10^{-7}$\\
+2&$24456/61985$&$7.12262\cdot10^{-7}$&$4.84535\cdot10^{-7}$\\
+3&$51935/417732$&$4.85921\cdot10^{-8}$&$1.68418\cdot10^{-7}$\\
+4&$20987/247968$&$1.87384\cdot10^{-7}$&$5.05965\cdot10^{-7}$\\\bottomrule
+\end{tabular}\end{center}
+Mọi nhánh đều đạt hai ngưỡng. Bảng trên là tổng kết; các tệp \texttt{D1\_Lap\_tien} đến \texttt{D4\_Lap\_lui} giữ \textbf{đủ mọi vòng và từng phép thế}, dưới dạng JSON đầu vào, TXT và HTML. Ví dụ nhỏ đủ ba/năm vòng trong Chương \ref{ch:inverse} giúp đọc các bảng dài này mà không cần in lặp hàng chục trang.
+
+Nhánh 4 có thêm lượt thử tiến không đủ chứng nhận trong tệp \texttt{D4\_Thu\_tien\_chua\_du\_chung\_nhan}. Lượt đó không được tính là đáp số thành công; đổi sang lùi là một lựa chọn công khai trong lượt khác. Điều này minh họa tại sao ``có đủ mốc'' không có nghĩa mọi hướng lặp đều hội tụ.
+
+\section{Ảnh 20251 và workbook test2: không trộn hai đề}
+Ảnh \texttt{20251\_MI3042\_GK.jpg} chứa hai biến thể cạnh nhau: bên trái ghi 20251, mô hình $a\exp(bx+c/x)$, Stirling 7 và nhắc test1; bên phải in 20241, mô hình $a\exp(bx^2+c/x)$, Bessel 8. Repo cung cấp \texttt{20251GKtest2.xlsx}, có 104 cặp, $h=.115$, $\bar x=2.55$, $\bar y=1.23$. Vì vậy mọi kết quả dưới đây nói rõ mô hình chạy trên \textbf{test2}; không nhận là đáp số test1 chưa có dữ liệu.
+
+\subsection{Bình phương tối thiểu: miền log quyết định cách giải}
+Dữ liệu có cả tung độ âm và đổi dấu. Phép lấy $\ln y$ trên nguyên bảng không xác định; không được âm thầm bỏ dòng âm. Nếu đề bắt buộc tuyến tính hóa log, phải nêu giả thiết dữ liệu không thỏa. Nếu mục tiêu cho phép cực tiểu SSE trên thang $y$ gốc, chọn \textbf{Hàm mũ -- SSE thang y} và công khai sự lựa chọn đó.
+
+Với $a\exp(bx^2+c/x)$, cơ sở nhập \texttt{x\^{}2;1/x}, không thêm hằng 1 vì đã có biên độ $a$. Bộ giải LM cho nghiệm dừng tìm được:
+\begin{align*}
+ a&=1.5172857551154062,\\
+ b&=-0.2524591562528406,\\
+ c&=1.9912315060358277,\\
+ \mathrm{SSE}_y&=0.0012003355260271063.
+\end{align*}
+Với mô hình khác $a\exp(bx+c/x)$ trên \emph{cùng test2}, cơ sở \texttt{x;1/x}, kết quả là
+\[
+ (a,b,c)\simeq(11.6727348564,-1.29073115703,0.981281915998),
+\]
+\[
+ \mathrm{SSE}_y\simeq0.0619256671698.
+\]
+Các kết quả không phải chứng nhận cực tiểu toàn cục. Nhật ký bước LM, cả bước thử bị từ chối, nằm ở \texttt{01a\_mu\_x2\_SSE\_104} và \texttt{01b\_mu\_x\_SSE\_104}; lỗi miền log ở \texttt{01c\_log\_khong\_ap\_dung}.
+
+\subsection{Nội suy ngược: chọn mốc tường minh}
+Mức $1.23$ có khoảng đổi dấu $[2.035,2.15]$. Hai lựa chọn \emph{khác tập mốc}, đều bậc 3 và có chứng nhận, $\varepsilon_x=\varepsilon_y=10^{-9}$:
+\begin{center}\small\begin{tabular}{llll}\toprule
+Lựa chọn&Chỉ số mốc&Kết quả&Số vòng\\\midrule
+Tiến&9,10,11,12&2.130827273369&5\\
+Lùi&7,8,9,10&2.130891279015&5\\\bottomrule
+\end{tabular}\end{center}
+Sự khác nhau ở chữ số sau không phải lỗi đổi biến: hai mô hình khác nhau. Nếu đề quy định tập mốc thì phải giữ đúng tập đó. Hai ca giữ \emph{nguyên 104 mốc} vẫn dựng đúng đa thức tối đa bậc 103 và thử phép lặp, nhưng tràn số tại vòng 3/2; không có đáp số thành công. Không dùng kết quả cục bộ thay lén cho ca toàn bảng thất bại.
+
+\subsection{Stirling, Bessel và một bài spline tự đặt}
+Tại $2.55$, cấp đạo hàm 1:
+\begin{center}\small\begin{tabular}{lrr}\toprule
+Mô hình&$P(2.55)$&$P'(2.55)$\\\midrule
+Stirling 7&0.643602714824106&$-0.987821541452920$\\
+Bessel 8&0.644033162232002&$-0.985994845413192$\\\bottomrule
+\end{tabular}\end{center}
+Tệp chạy tương ứng \texttt{03a\_Stirling\_7}, \texttt{03b\_Bessel\_8}. Hai tập mốc khác nhau; không lấy độ chênh này làm cận sai số đã chứng minh.
+
+Ảnh này \textbf{không có câu spline}. Bài spline sau là tự đặt trên đúng 104 mốc để kiểm công cụ: cubic tự nhiên, không ngoại suy, tính tại $2.55$ và tích phân $[2.035,2.955]$. Kết quả:
+\[
+ S(2.55)=0.644019495981,\quad S'(2.55)=-0.981423912732,
+\]
+\[
+ \int_{2.035}^{2.955}S(x)\,dx=0.696713440263.
+\]
+Tệp \texttt{04\_spline\_104} giữ hệ moment và quá trình Thomas. Không gán điều kiện tự nhiên này cho đề nếu đề cho các đạo hàm khác.
+
+\section{Chạy lại và kiểm nguồn}
+Mở JSON trong GUI rồi bấm \textbf{Tính kết quả}, hoặc từ thư mục gốc chạy:
+\begin{verbatim}
+.venv\Scripts\python.exe exam_cli.py examples\de_20241\A_Horner.json
+\end{verbatim}
+Các chương đối chiếu chủ yếu với các mô-đun:
+\begin{itemize}
+\item \texttt{interpolation.py}, \texttt{polynomial\_model.py}, \texttt{polynomial\_worked.py}: đa thức, đạo hàm, Horner.
+\item \texttt{inverse\_solution.py}, \texttt{inverse\_model.py}, \texttt{inverse\_document.py}, \texttt{inverse\_export.py}: mô hình, chứng nhận, vòng lặp và báo cáo.
+\item \texttt{spline\_worked.py}, \texttt{least\_squares\_worked.py}, \texttt{linear\_algebra.py}: spline, hồi quy, khử và phân rã.
+\item \texttt{calculus.py}, \texttt{differential.py}, \texttt{chapter1\_tools.py}, \texttt{gui.py}: giải tích số, ODE, BVP, trị riêng, helper và đầu vào thực tế.
+\end{itemize}
+Tài liệu trong \texttt{kienthuc/real} cho quy ước trình bày và đối chiếu môn học, gồm PDF Chương 1 hiệu chỉnh, tài liệu nội suy ngược, spline và bình phương tối thiểu. Khi PDF lý thuyết mô tả một họ phương pháp rộng hơn, sổ tay này vẫn ghi giới hạn của mã hiện tại.
+
+Các script trong \texttt{kienthuc/final/verification} tạo lại số ví dụ, bảng hệ số Newton--Cotes, bảng Adams và tệp kết quả JSON. \texttt{coverage.csv} ánh xạ mọi lựa chọn GUI vào chương. \texttt{Kiem\_tra\_va\_nguon.md} ghi lệnh chạy, kết quả kiểm tra và hạn chế của môi trường. Khi mã thay đổi, cần chạy lại các kiểm tra và biên dịch PDF, không chỉ sửa một con số trong bản in.

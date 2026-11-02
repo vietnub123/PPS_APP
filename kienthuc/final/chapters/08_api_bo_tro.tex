@@ -1,0 +1,119 @@
+\chapter{Các hàm Python bổ trợ và giải hệ tuyến tính}
+\label{app:api}
+
+\section{Đọc đúng tên hàm và thứ tự hệ số}
+Các hàm dưới đây nằm trong \texttt{pps/chapter1\_tools.py}; có thể gọi bằng
+\begin{verbatim}
+from pps import chapter1_tools as ch1
+\end{verbatim}
+Chúng không phải tất cả đều có nút riêng trong GUI. Đặc biệt \textbf{hệ số đơn thức của mô-đun này theo bậc tăng}; ô Horner trên GUI lại theo bậc giảm. Ví dụ $2x^3-3x+1$ là \texttt{[1,-3,0,2]} khi gọi \texttt{horner\_division}, và \texttt{2 0 -3 1} khi nhập GUI.
+
+\begin{center}\small\begin{tabular}{@{}p{.38\textwidth}p{.54\textwidth}@{}}\toprule
+API & Vai trò và nơi đọc thuật toán\\\midrule
+\texttt{chebyshev\_value(n,z)} & Tính $T_n(z)$ bằng truy hồi; xem ngay dưới bảng\\
+\texttt{horner\_division(c,a)} & Chia đa thức đơn thức cho $x-a$; Chương \ref{ch:interp}\\
+\texttt{newton\_horner(nodes,c,z)} & Horner dạng Newton theo đúng thứ tự mốc; Chương \ref{ch:interp}\\
+\texttt{newton\_append(nodes,c,x,y)} & Thêm một mốc mà không tính lại hệ số cũ; Chương \ref{ch:interp}\\
+\texttt{interpolation\_error\_bound} & Cận tại một điểm khi đề cho $M_m$; Chương \ref{ch:interp}\\
+\texttt{interpolation\_global\_bound} & Cận toàn dải lưới đều; cần tên mẫu \texttt{'cách đều'}\\
+\texttt{chebyshev\_global\_bound} & Cận trên $[a,b]$ cho đúng $m$ nghiệm Chebyshev; không lấy min/max mốc thay $a,b$\\
+\texttt{fill\_missing} & Điền ô thiếu theo giả thiết bậc đa thức; quy trình dưới đây\\
+\bottomrule\end{tabular}\end{center}
+
+\begin{center}\small\begin{tabular}{@{}p{.38\textwidth}p{.54\textwidth}@{}}\toprule
+API (tiếp) & Vai trò và nơi đọc thuật toán\\\midrule
+\texttt{scan\_level}, \texttt{monotone\_branches} & Quét mức và nhánh đơn điệu của \emph{bảng}; Chương \ref{ch:inverse}\\
+\texttt{inverse\_by\_swap} & Wrapper hàm ngược; dùng đúng tập mốc đã chọn\\
+\texttt{bisect\_model} & Chia đôi một mô hình đã có, trả lịch sử; Chương \ref{ch:inverse}\\
+\texttt{inverse\_controlled} & Wrapper lặp có chứng nhận, mặc định tối đa 1000 vòng; GUI mặc định 100\\
+\texttt{spline\_degree} & API cũ bậc 1--4, biết $p-1$ đạo hàm trái; Chương \ref{ch:spline}\\
+\texttt{spline\_boundary} & API cũ bậc 1--4, đúng $p-1$ điều kiện biên; GUI mới xét cả hệ thiếu/thừa\\
+\texttt{spline\_at} & Giá trị/đạo hàm, kiểm tra hai phía tại nút; không tự ngoại suy\\
+\texttt{thomas} & Giải hệ ba đường chéo có đổi thang từng hàng; ví dụ dưới đây\\
+\texttt{gaussian\_elimination} & Hệ vuông, đổi thang hàng và chọn trụ theo cột; ví dụ dưới đây\\
+\texttt{transformed\_fit} & Bốn mô hình biến đổi cố định; Chương \ref{ch:ls}\\
+\texttt{original\_scale\_fit} & API cũ gọi tối ưu SciPy; khác nhánh GUI LM có đầy đủ vết bước thử\\\bottomrule
+\end{tabular}\end{center}
+
+Một \texttt{Report} thường chứa \texttt{value}, \texttt{lines}, \texttt{tables}. Tuy nhiên kiểu \texttt{value} phụ thuộc hàm: vector nghiệm, số, đối tượng spline hoặc hàm dự đoán. Không giả sử mọi kết quả đều có cùng cấu trúc.
+
+\section{Truy hồi Chebyshev và cận sai số}
+\[
+ T_0(z)=1,\quad T_1(z)=z,\quad
+ T_{k+1}(z)=2zT_k(z)-T_{k-1}(z).
+\]
+Tính theo $k=1,\ldots,n-1$, giữ hai giá trị cũ trước khi gán cặp mới. Ví dụ $z=0.5$: $T_0=1,T_1=.5,T_2=-.5,T_3=-1$. Hàm chấp nhận $z$ ngoài $[-1,1]$ nhưng có thể tràn vì độ lớn tăng nhanh. $n$ phải nguyên không âm.
+
+Với $m$ mốc và cận đạo hàm cấp $m$ là $M_m$:
+\[
+ |f(z)-P(z)|\le\frac{M_m}{m!}\prod_{i=0}^{m-1}|z-x_i|.
+\]
+$M_m$ phải đúng trên đoạn chứa mọi mốc và điểm tính, kể cả khi ngoại suy. Với $m\ge2$ mốc đều bước $h$, cận toàn dải mà API dùng là
+\[
+ |f-P|\le\frac{M_m h^m}{4m}.
+\]
+Với $m$ nghiệm Chebyshev trên $[a,b]$, cận là
+\[
+ \frac{2M_m}{m!}\left(\frac{b-a}{4}\right)^m.
+\]
+Ví dụ $x=(0,1,2)$, $z=.5$, $M_3=6$: cận điểm bằng $.375$; cận lưới đều bằng $.5$. Với 3 nghiệm Chebyshev trên $[0,2]$ cùng $M_3$, cận bằng $.25$. Đây là cận khi có giả thiết đạo hàm, không phải sai số thực tế suy từ bảng đo.
+
+\section{Điền ô thiếu khi đề cho trước bậc}
+\texttt{fill\_missing(x,y,degree,tolerance=1e-9)} nhận các ô thiếu dạng \texttt{None} hoặc \texttt{nan}. Quy trình:
+\begin{enumerate}
+\item Kiểm tra hoành độ hữu hạn, phân biệt, đủ $d+1$ tung độ biết; $0\le d<m$.
+\item Chọn $d+1$ ô biết đầu tiên theo thứ tự mảng để dựng đa thức Newton bậc không quá $d$.
+\item Tính giá trị mô hình ở \emph{mọi} hoành độ, kể cả các ô biết còn lại.
+\item Với các ô biết, kiểm $\max|P(x_i)-y_i|\le\tau\max|y_i|$. Nếu thang tung độ bằng 0 thì vế phải là 0; không tự thêm một ngưỡng tuyệt đối 1.
+\item Chỉ điền các ô thiếu; giữ nguyên các ô đã biết nếu phép kiểm đạt.
+\end{enumerate}
+Ví dụ $x=(0,1,2,3)$, $y=(1,\mathrm{None},5,10)$, $d=2$. Dùng ba cặp biết $(0,1),(2,5),(3,10)$: tỷ sai phân cấp 1 là $2,5$, cấp 2 là $(5-2)/(3-0)=1$. Vì vậy
+\[
+ P(x)=1+2x+x(x-2)=1+x^2,\qquad y(1)=2.
+\]
+Kết quả $(1,2,5,10)$. Nếu có thêm một ô biết không nằm trên đa thức trong ngưỡng kiểm thì hàm báo mâu thuẫn, không sửa ô đó để ép giả thiết.
+
+\section{Thomas: thứ tự khử tiến và thế ngược}
+Nhập bốn vector cùng độ dài $n$: đường chéo dưới $a$, chính $b$, trên $c$ và vế phải $d$, với $a_0=c_{n-1}=0$. Hệ là
+\[
+ a_ix_{i-1}+b_ix_i+c_ix_{i+1}=d_i.
+\]
+API chia mỗi hàng cho $s_i=\max(|a_i|,|b_i|,|c_i|)$ trước khi khử; hàng toàn 0 bị từ chối. Các công thức dưới đây áp dụng cho hệ \emph{sau đổi thang}:
+\begin{align*}
+ m_i&=a_i/\widetilde b_{i-1},\\
+ \widetilde b_i&=b_i-m_i c_{i-1},\qquad
+ \widetilde d_i=d_i-m_i\widetilde d_{i-1},\quad i=1,\ldots,n-1,\\
+ x_{n-1}&=\widetilde d_{n-1}/\widetilde b_{n-1},\\
+ x_i&=(\widetilde d_i-c_ix_{i+1})/\widetilde b_i,\quad i=n-2,\ldots,0.
+\end{align*}
+Thomas không chọn đổi hàng. Pivot gần 0 có thể xuất hiện ở một hệ vẫn khả nghịch; khi đó cần bộ giải có chọn trụ. Dung sai pivot mặc định $10^{-12}$ xét trên hệ đã đổi thang. Không gọi lỗi pivot là một bằng chứng hệ gốc vô nghiệm.
+
+\subsection{Ví dụ trọn vẹn ba ẩn}
+\[
+ \begin{bmatrix}2&-1&0\\-1&2&-1\\0&-1&2\end{bmatrix}x
+ =\begin{bmatrix}1\\0\\1\end{bmatrix}.
+\]
+Chia cả ba hàng cho 2: $b=(1,1,1)$, $a=(0,-.5,-.5)$, $c=(-.5,-.5,0)$, $d=(.5,0,.5)$.
+\begin{center}\begin{tabular}{rrrrr}\toprule
+$i$&$m_i$&$\widetilde b_i$&$\widetilde d_i$&Nguồn vế phải\\\midrule
+0&---&1&$1/2$&Khởi tạo\\
+1&$-1/2$&$3/4$&$1/4$&$0-(-1/2)(1/2)$\\
+2&$-2/3$&$2/3$&$2/3$&$1/2-(-2/3)(1/4)$\\\bottomrule
+\end{tabular}\end{center}
+Thế ngược lần lượt $x_2=1$, $x_1=(1/4+1/2)/(3/4)=1$, $x_0=(1/2+1/2)/1=1$. Kiểm hệ gốc cho phần dư $(0,0,0)$.
+\begin{verbatim}
+r = ch1.thomas([0,-1,-1], [2,2,2], [-1,-1,0], [1,0,1])
+print(r.value)  # [1. 1. 1.]
+\end{verbatim}
+
+\section{API giải hệ: input và output}
+\texttt{gaussian\_elimination(A,b,pivot\_tolerance=1e-12)} cần $A$ vuông hữu hạn, $b$ cùng cỡ. Không dùng API này để giải trực tiếp bài chữ nhật $\Phi c\approx z$; dùng nhánh hồi quy và các cách giải ở Chương \ref{ch:ls}.
+Output là vector nghiệm, bảng chọn pivot thực tế và phần dư theo hệ gốc. Phần này không nhắc lại thuật toán khử.
+Hạng thiếu trong dung sai bị từ chối; hàm không phân loại riêng vô nghiệm/vô số nghiệm như bộ báo cáo spline tổng quát. Nhật ký API này lưu bảng chọn pivot, không lưu mọi ma trận sau từng phép khử.
+
+\section{Phân biệt API cũ và luồng lời giải hiện tại}
+\texttt{spline\_degree} trả \texttt{PPoly}, truyền đạo hàm đầu trái cho bậc 1--4. \texttt{spline\_boundary} cũ nhận đúng $p-1$ điều kiện; GUI mới qua \texttt{solve\_spline} kiểm cả hạng và điều kiện dư. Không dùng giới hạn của API cũ để kết luận GUI chỉ làm được biên trái.
+
+\texttt{original\_scale\_fit} cũ gọi \texttt{scipy.optimize.least\_squares}, với tối đa 10\,000 lần đánh giá và các ngưỡng nội bộ $10^{-12}$. Nó không cung cấp nhật ký LM của GUI. Nhánh GUI \textbf{SSE thang y} dùng \texttt{solve\_least\_squares}, ghi bước thử, tham số, hệ Jacobian, hệ số giảm chấn và bước nhận/từ chối. Hai cách không nhất thiết có cùng số vòng, cùng quỹ đạo hay cùng tiêu chuẩn dừng.
+
+Các wrapper nội suy ngược cũ gọi bộ giải mới nhưng chuyển trạng thái thất bại thành ngoại lệ qua \texttt{require\_success}. Đọc báo cáo của \texttt{solve\_inverse} nếu cần giữ lịch sử thất bại để kiểm tra. Không lấy giá trị cuối của một phép lặp thất bại làm đáp số được công nhận.

@@ -1,0 +1,67 @@
+\section{Input, quá trình và output của sáu lựa chọn nội suy ngược}
+\input{verification/inputs_inverse.tex}
+\paragraph{Input chung.} $x,y$ là bảng nguồn; $\bar y$ là mức cần tìm $x$. Ô \emph{Mốc dùng} chọn chỉ số từ 0, trống dùng toàn bảng. Khoảng $[a,b]$ là nơi muốn tìm nghiệm, không thay gốc của đa thức. Không lấy số mốc làm số vòng lặp.
+
+\subsection{Bước đầu chung: bảng khảo sát tổng quát}
+\begin{center}\small\begin{tabular}{cllll}\toprule
+Dòng&$x_i$&$F_i=y_i-\bar y$&So với dòng sau&Thông tin chuyển tiếp\\\midrule
+0&$x_0$&$y_0-\bar y$&Dấu $F_0,F_1$&Mốc đúng mức/khoảng đổi dấu\\
+$i$&$x_i$&$y_i-\bar y$&Dấu $F_i,F_{i+1}$&Ứng viên $[x_i,x_{i+1}]$\\
+$n$&$x_n$&$y_n-\bar y$&Không có dòng sau&Kiểm riêng $F_n=0$\\\bottomrule
+\end{tabular}\end{center}
+Sau khảo sát mới chọn nhánh, tập mốc và thuật toán. Nhiều khoảng thì phải giải từng nhánh cần tìm. Bảng chỉ phát hiện đổi dấu giữa các mẫu; có thể bỏ sót nghiệm tiếp xúc.
+
+\subsection{Hàm ngược -- Newton và Hàm ngược -- Lagrange}
+\textbf{Input}: tập mốc thuộc nhánh tăng/giảm nghiêm ngặt, tung độ phân biệt; mức trong dải tung độ nếu không bật ngoại suy. \textbf{Quá trình}: đảo cặp $(u_i,v_i)=(y_i,x_i)$ $\to$ dựng $Q(y)$ $\to$ thế $\bar y$.
+\begin{center}\small\begin{tabular}{cllll}\toprule
+Dòng&$u_i$&$v_i$&Tỉ sai phân cấp 1&Cấp 2\\\midrule
+0&$y_0$&$x_0$&$(x_1-x_0)/(y_1-y_0)$&$D_{0,2}$\\
+$i$&$y_i$&$x_i$&$(x_{i+1}-x_i)/(y_{i+1}-y_i)$&$D_{i,2}$ nếu đủ mốc\\
+$n$&$y_n$&$x_n$&&\\\bottomrule
+\end{tabular}\end{center}
+Newton lấy $D_{0,k}$ rồi cộng
+\[
+Q(\bar y)=x_0+D_{0,1}(\bar y-y_0)+D_{0,2}(\bar y-y_0)(\bar y-y_1)+\cdots.
+\]
+Lagrange tính $\ell_i(\bar y)=\prod_{j\ne i}(\bar y-y_j)/(y_i-y_j)$ rồi cộng
+\[
+\widehat x=x_0\ell_0(\bar y)+x_1\ell_1(\bar y)+\cdots+x_n\ell_n(\bar y).
+\]
+\textbf{Output}: đa thức hàm ngược $Q$, giá trị $Q(\bar y)$ và tập mốc; không có vòng hội tụ. Tung độ thường không đều dù hoành độ gốc đều.
+
+\subsection{Lặp tiến, Lặp lùi, Lặp có cận co}
+\textbf{Input}: lưới đều, tập mốc cố định, mức, khoảng, ngưỡng vị trí $\varepsilon_x$, ngưỡng phần dư $\varepsilon_y$, khởi tạo và số vòng tối đa. Lặp có cận co thêm lựa chọn hướng; hai mục tiến/lùi mặc định dùng tiêu chuẩn thực hành.
+
+\textbf{Bước 1}: dựng đa thức thuận $P_t(t)=c_0+dt+H(t)$ một lần:
+\begin{align*}
+\text{Tiến: }&t=(x-x_0)/h,\ c_0=y_0,\ d=\Delta y_0,\\
+&H(t)=\tfrac{\Delta^2y_0}2t(t-1)+\tfrac{\Delta^3y_0}6t(t-1)(t-2)+\cdots;\\
+\text{Lùi: }&t=(x-x_n)/h,\ c_0=y_n,\ d=\Delta y_{n-1},\\
+&H(t)=\tfrac{\Delta^2y_{n-2}}2t(t+1)+\tfrac{\Delta^3y_{n-3}}6t(t+1)(t+2)+\cdots.
+\end{align*}
+\textbf{Bước 2}: lập $\varphi(t)=(\bar y-c_0-H(t))/d$, chọn $t_0$ theo ô khởi tạo. $d$ phải khác 0. Nếu có chứng nhận, kiểm $t_0\in J$, $\varphi(J)\subseteq J$, $q\ge\sup_J|\varphi'|$, $q<1$.
+
+\textbf{Bước 3}: điền bảng vòng lặp tổng quát theo hai nửa để đọc rõ:
+\begin{center}\small\begin{tabular}{cllll}\toprule
+Vòng&Giá trị nhận&Phần bậc cao&Tử số&Giá trị mới\\\midrule
+1&$t_0$&$H(t_0)$&$\bar y-c_0-H(t_0)$&$t_1=(\bar y-c_0-H(t_0))/d$\\
+$k+1$&$t_k$&$H(t_k)$&$\bar y-c_0-H(t_k)$&$t_{k+1}=(\bar y-c_0-H(t_k))/d$\\\bottomrule
+\end{tabular}\end{center}
+\begin{center}\small\begin{tabular}{cllll}\toprule
+Vòng&Đổi lại hoành độ&Bước hoặc cận&Phần dư tại điểm mới&Quyết định\\\midrule
+$k+1$&$x_{k+1}=a_0+ht_{k+1}$&$D_{k+1}$ hoặc $B_{k+1}$&$|P_t(t_{k+1})-\bar y|$&Đạt cả hai ngưỡng?\\\bottomrule
+\end{tabular}\end{center}
+Ở đây $a_0$ là gốc đầu/cuối tập mốc, không phải cận trái khoảng nghiệm.
+$D_{k+1}=|h||t_{k+1}-t_k|$ dùng ở thực hành;
+$B_{k+1}=|h|q|t_{k+1}-t_k|/(1-q)$ dùng khi có chứng nhận hợp lệ.
+Vòng chưa đạt chuyển \emph{giá trị mới} thành đầu vào vòng sau. Không dùng $H(t_k)$ để tính phần dư tại $t_{k+1}$.
+
+\textbf{Output}: nghiệm mô hình trong khoảng yêu cầu, trạng thái dừng, gốc/hướng/tập mốc, bảng mọi vòng, bước/cận và phần dư. Hết vòng hoặc tràn số là trạng thái chưa đạt. Đúng một mốc hoặc đa thức thực tế tuyến tính có thể cho kết quả không cần vòng lặp.
+
+\subsection{Chia đôi đa thức}
+\textbf{Input}: cùng bảng và mức nhưng cần khoảng $[a,b]$, ngưỡng vị trí. \textbf{Quá trình}: dựng $P$ $\to$ đặt $F=P-\bar y$ $\to$ kiểm hai đầu $\to$ thu khoảng:
+\begin{center}\small\begin{tabular}{cllll}\toprule
+Lần&Khoảng nhận&Trung điểm&Giá trị kiểm&Khoảng chuyển tiếp\\\midrule
+$k+1$&$[a_k,b_k]$&$c_k=(a_k+b_k)/2$&$F(c_k)$&Giữ nửa có đổi dấu\\\bottomrule
+\end{tabular}\end{center}
+Khi nửa độ rộng đạt ngưỡng, \textbf{output} là trung điểm của khoảng cuối, khoảng cuối và cận nửa độ rộng. Trung điểm vừa thử ở hàng cuối không nhất thiết là trung điểm của khoảng sau thu. Phần giải thích và ví dụ đầy đủ theo từng mô hình ở các mục tiếp theo.

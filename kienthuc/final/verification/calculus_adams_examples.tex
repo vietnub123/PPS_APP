@@ -1,0 +1,76 @@
+\examplebreak
+\subsubsection*{Ví dụ Adams 2: đủ 1 bước khởi tạo và một bước Adams}
+Ví dụ tự dựng: $u^{\prime}=u$, $u(0)=1$, $h=0.1$. Gọi $R_4=265241/240000$ là hệ số tăng trưởng một bước RK4. Ở bước Adams dưới đây, $n=s-1$.
+\begin{center}\begin{tabular}{rrll}\toprule $i$&$t_i$&$u_i$&Cách có giá trị\\\midrule
+0&0&1&Điều kiện đầu\\
+1&0.1&1.10517083333&RK4: $u_1 = R_4u_{0}$\\
+\bottomrule\end{tabular}\end{center}
+Ở bước Adams, xếp lịch sử từ mới nhất đến cũ nhất:
+\begin{center}\begin{tabular}{rlll}\toprule $j$&$f_{n-j}$&$\beta_jf_{n-j}$&$a_{j+1}f_{n-j}$\\\midrule
+0&1.10517083333&1.65775625&0.736780555556\\
+1&1&-0.5&-0.0833333333333\\
+\bottomrule\end{tabular}\end{center}
+Dự báo: $u_{n+1}^P=u_n+0.1\sum\beta_jf_{n-j}=1.22094645833$.
+Hiệu chỉnh giải phương trình tuyến tính $(1-0.1\,5/12)u_{n+1}=u_n+0.1\sum a_{j+1}f_{n-j}$.
+Kết quả: $u_{n+1}=1.22140753623$ tại $t_{n+1}=0.2$. Đối chiếu app: $1.22140753623$.
+Đây là phép giải đại số của phương trình hiệu chỉnh trong ví dụ tuyến tính, không phải nhật ký các lần gọi nội bộ của bộ giải phi tuyến.
+\examplebreak
+\subsubsection*{Ví dụ Adams 3: đủ 2 bước khởi tạo và một bước Adams}
+Ví dụ tự dựng: $u^{\prime}=u$, $u(0)=1$, $h=0.1$. Gọi $R_4=265241/240000$ là hệ số tăng trưởng một bước RK4. Ở bước Adams dưới đây, $n=s-1$.
+\begin{center}\begin{tabular}{rrll}\toprule $i$&$t_i$&$u_i$&Cách có giá trị\\\midrule
+0&0&1&Điều kiện đầu\\
+1&0.1&1.10517083333&RK4: $u_1 = R_4u_{0}$\\
+2&0.2&1.22140257085&RK4: $u_2 = R_4u_{1}$\\
+\bottomrule\end{tabular}\end{center}
+Ở bước Adams, xếp lịch sử từ mới nhất đến cũ nhất:
+\begin{center}\begin{tabular}{rlll}\toprule $j$&$f_{n-j}$&$\beta_jf_{n-j}$&$a_{j+1}f_{n-j}$\\\midrule
+0&1.22140257085&2.34102159413&0.966943701923\\
+1&1.10517083333&-1.47356111111&-0.230243923611\\
+2&1&0.416666666667&0.0416666666667\\
+\bottomrule\end{tabular}\end{center}
+Dự báo: $u_{n+1}^P=u_n+0.1\sum\beta_jf_{n-j}=1.34981528582$.
+Hiệu chỉnh giải phương trình tuyến tính $(1-0.1\,3/8)u_{n+1}=u_n+0.1\sum a_{j+1}f_{n-j}$.
+Kết quả: $u_{n+1}=1.34985892504$ tại $t_{n+1}=0.3$. Đối chiếu app: $1.34985892504$.
+Đây là phép giải đại số của phương trình hiệu chỉnh trong ví dụ tuyến tính, không phải nhật ký các lần gọi nội bộ của bộ giải phi tuyến.
+\examplebreak
+\subsubsection*{Ví dụ Adams 4: đủ 3 bước khởi tạo và một bước Adams}
+Ví dụ tự dựng: $u^{\prime}=u$, $u(0)=1$, $h=0.1$. Gọi $R_4=265241/240000$ là hệ số tăng trưởng một bước RK4. Ở bước Adams dưới đây, $n=s-1$.
+\begin{center}\begin{tabular}{rrll}\toprule $i$&$t_i$&$u_i$&Cách có giá trị\\\midrule
+0&0&1&Điều kiện đầu\\
+1&0.1&1.10517083333&RK4: $u_1 = R_4u_{0}$\\
+2&0.2&1.22140257085&RK4: $u_2 = R_4u_{1}$\\
+3&0.3&1.34985849706&RK4: $u_3 = R_4u_{2}$\\
+\bottomrule\end{tabular}\end{center}
+Ở bước Adams, xếp lịch sử từ mới nhất đến cũ nhất:
+\begin{center}\begin{tabular}{rlll}\toprule $j$&$f_{n-j}$&$\beta_jf_{n-j}$&$a_{j+1}f_{n-j}$\\\midrule
+0&1.34985849706&3.09342572243&1.21112304042\\
+1&1.22140257085&-3.00261465334&-0.447847609312\\
+2&1.10517083333&1.70380503472&0.162705706019\\
+3&1&-0.375&-0.0263888888889\\
+\bottomrule\end{tabular}\end{center}
+Dự báo: $u_{n+1}^P=u_n+0.1\sum\beta_jf_{n-j}=1.49182010744$.
+Hiệu chỉnh giải phương trình tuyến tính $(1-0.1\,251/720)u_{n+1}=u_n+0.1\sum a_{j+1}f_{n-j}$.
+Kết quả: $u_{n+1}=1.49182437726$ tại $t_{n+1}=0.4$. Đối chiếu app: $1.49182437726$.
+Đây là phép giải đại số của phương trình hiệu chỉnh trong ví dụ tuyến tính, không phải nhật ký các lần gọi nội bộ của bộ giải phi tuyến.
+\examplebreak
+\subsubsection*{Ví dụ Adams 5: đủ 4 bước khởi tạo và một bước Adams}
+Ví dụ tự dựng: $u^{\prime}=u$, $u(0)=1$, $h=0.1$. Gọi $R_4=265241/240000$ là hệ số tăng trưởng một bước RK4. Ở bước Adams dưới đây, $n=s-1$.
+\begin{center}\begin{tabular}{rrll}\toprule $i$&$t_i$&$u_i$&Cách có giá trị\\\midrule
+0&0&1&Điều kiện đầu\\
+1&0.1&1.10517083333&RK4: $u_1 = R_4u_{0}$\\
+2&0.2&1.22140257085&RK4: $u_2 = R_4u_{1}$\\
+3&0.3&1.34985849706&RK4: $u_3 = R_4u_{2}$\\
+4&0.4&1.49182424008&RK4: $u_4 = R_4u_{3}$\\
+\bottomrule\end{tabular}\end{center}
+Ở bước Adams, xếp lịch sử từ mới nhất đến cũ nhất:
+\begin{center}\begin{tabular}{rlll}\toprule $j$&$f_{n-j}$&$\beta_jf_{n-j}$&$a_{j+1}f_{n-j}$\\\midrule
+0&1.49182424008&3.93883038944&1.47835638236\\
+1&1.34985849706&-5.20070482063&-0.748046583789\\
+2&1.22140257085&4.43776267409&0.408830582743\\
+3&1.10517083333&-1.9555383912&-0.132773995949\\
+4&1&0.348611111111&0.01875\\
+\bottomrule\end{tabular}\end{center}
+Dự báo: $u_{n+1}^P=u_n+0.1\sum\beta_jf_{n-j}=1.64872033636$.
+Hiệu chỉnh giải phương trình tuyến tính $(1-0.1\,95/288)u_{n+1}=u_n+0.1\sum a_{j+1}f_{n-j}$.
+Kết quả: $u_{n+1}=1.64872076496$ tại $t_{n+1}=0.5$. Đối chiếu app: $1.64872076496$.
+Đây là phép giải đại số của phương trình hiệu chỉnh trong ví dụ tuyến tính, không phải nhật ký các lần gọi nội bộ của bộ giải phi tuyến.

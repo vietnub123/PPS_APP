@@ -1,0 +1,318 @@
+\chapter{Bài toán Cauchy: Euler, Runge--Kutta và Adams}
+\label{ch:ode}
+\input{chapters/toolflow_06.tex}
+
+\section{Chuyển đề về đúng tên biến của tool}
+App giải hệ
+\[
+\mathbf u'(t)=\mathbf F(t,\mathbf u(t)),\qquad
+\mathbf u(t_0)=\mathbf u_0,
+\]
+với một đến ba thành phần. Trên giao diện, biến độc lập luôn là \texttt{t}; các thành phần lần lượt là \texttt{x}, \texttt{y}, \texttt{z}. Vì vậy, nếu sách viết $y'=t+y$, $y(0)=1$, trong tool nhập vế phải \texttt{t+x} và giá trị đầu \texttt{1}. Không nhập \texttt{t+y} cho một phương trình một ẩn vì khi đó \texttt{y} không phải thành phần đã khai báo.
+
+\begin{center}\begin{tabular}{p{.3\textwidth}p{.55\textwidth}}
+\toprule Trường nhập&Ý nghĩa\\\midrule
+Vế phải&1--3 biểu thức, ngăn bằng dấu chấm phẩy; thứ tự trùng thứ tự giá trị đầu.\\
+Giá trị đầu&Vector $\mathbf u_0$ gồm đúng số thành phần.\\
+Thời điểm đầu/cuối&$a=t_0,b$; app dùng lưới đều cố định.\\
+Bước h&Phải cùng chiều a đến b; $(b-a)/h$ phải là số nguyên trong dung sai lưới.\\
+Dung sai bước ẩn&Điều khiển giải hệ đại số của Euler ẩn, hình thang và Adams; không tự chọn h.\\
+Tham số/bảng RK&Có thêm ở các lựa chọn tham số và RK tùy chỉnh.\\\bottomrule
+\end{tabular}\end{center}
+
+App cho tối đa 20.000 khoảng thời gian. Nếu a=b hữu hạn và h hữu hạn khác 0, kết quả chỉ gồm điều kiện đầu. Nếu b<a có thể nhập h âm. Không tự thêm một bước cuối ngắn hơn để bù độ dài đoạn; hãy chọn h sao cho lưới chạm đúng b. Mọi giá trị hàm ở các tầng phải hữu hạn trong miền thực.
+
+\section{Ba khái niệm phải tách biệt}
+\begin{enumerate}
+\item \textbf{Tính từng bước:} từ $\mathbf u_n$ tìm $\mathbf u_{n+1}$. Euler/RK hiện dùng một số phép tính hữu hạn, không có vòng hội tụ nội bộ.
+\item \textbf{Giải bước ẩn:} một bước có thể chứa $\mathbf u_{n+1}$ ở cả hai vế. Bộ giải đại số phải tìm nghiệm của phương trình đó. Dung sai ở đây kiểm tra phần dư phương trình bước.
+\item \textbf{Hội tụ khi h tiến về 0:} nghiệm trên lưới tiến về nghiệm liên tục, cần các giả thiết về hàm, tính nhất quán, ổn định và bậc của phương pháp. Giải bước ẩn rất chính xác không tự làm sai số toàn cục nhỏ.
+\end{enumerate}
+Với $\mathbf F$ Lipschitz theo trạng thái, bài toán Cauchy có nghiệm duy nhất cục bộ theo các giả thiết thông thường. Các kết quả bậc sai số dưới đây giả sử nghiệm đủ trơn và các bước nằm trong miền ổn định; chúng không phải cận số được tự chứng minh từ dữ liệu đã nhập.
+
+\section{Euler hiện}
+\label{sec:ode-euler-explicit}
+\subsection{Công thức và thứ tự thao tác}
+\[
+\mathbf k_1=\mathbf F(t_n,\mathbf u_n),\qquad
+\mathbf u_{n+1}=\mathbf u_n+h\mathbf k_1.
+\]
+\begin{enumerate}
+\item Lấy $t_n,\mathbf u_n$ từ hàng nghiệm đã có.
+\item Thế vào vế phải để tính vector độ dốc $\mathbf k_1$.
+\item Nhân cả vector với h rồi cộng vào trạng thái cũ.
+\item Ghi hàng mới tại $t_{n+1}=t_n+h$; dùng hàng này cho bước sau.
+\end{enumerate}
+Đây là tiếp tuyến tại đầu trái của bước. Sai số toàn cục điển hình là $O(h)$.
+
+Ví dụ tự dựng $u'=u,u(0)=1,h=0.1$, tương ứng nhập \texttt{x}. Hai bước đầy đủ:
+\begin{center}\begin{tabular}{rrrrl}
+\toprule n&$t_n$&$u_n$&$k_1$&Phép cập nhật\\\midrule
+0&0&1&1&$u_1=1+0.1(1)=1.1$\\
+1&0.1&1.1&1.1&$u_2=1.1+0.1(1.1)=1.21$\\\bottomrule
+\end{tabular}\end{center}
+Không có epsilon để dừng hai phép tính này. Với phương trình thử $u'=\lambda u$, hệ số tăng trưởng là $R(z)=1+z$, $z=h\lambda$; ổn định tuyệt đối đòi $|1+z|\le1$. Vì vậy một h lớn có thể làm nghiệm số tăng dù nghiệm thật đang giảm.
+
+\section{Euler ẩn}
+\label{sec:ode-euler-implicit}
+\subsection{Từ phương trình vi phân đến hệ đại số ở mỗi bước}
+\[
+\mathbf u_{n+1}=\mathbf u_n+h\mathbf F(t_{n+1},\mathbf u_{n+1}).
+\]
+Đặt ẩn $\mathbf v=\mathbf u_{n+1}$ và phần dư
+\[
+\mathbf R(\mathbf v)=\mathbf v-\mathbf u_n-h\mathbf F(t_{n+1},\mathbf v),
+\quad D\mathbf R=I-hJ_F(t_{n+1},\mathbf v).
+\]
+\begin{enumerate}
+\item Tính $\mathbf F(t_n,\mathbf u_n)$ để có dự đoán Euler hiện $\mathbf v_0=\mathbf u_n+h\mathbf F(t_n,\mathbf u_n)$.
+\item Lập đúng $\mathbf R$ và Jacobian ở trên. App lấy Jacobian của vế phải bằng đạo hàm ký hiệu.
+\item Gọi \texttt{scipy.optimize.root} với dự đoán đó, Jacobian và dung sai đã nhập.
+\item Kiểm lại phần dư tại nghiệm cuối và tính không suy biến của Jacobian bước; chỉ nhận khi các kiểm tra đạt.
+\end{enumerate}
+App không lưu đầy đủ các lần gọi nội bộ của \texttt{root}. Bảng phần dư là phần dư cuối mỗi bước thời gian, không phải một nhật ký Newton. Không nên tự gắn các vòng Newton tính tay vào đó rồi nói tool đã chạy đúng các vòng ấy.
+
+Ví dụ $u'=u$, $u_0=1$, $h=0.1$: dự đoán là 1.1; phương trình cần giải là $v=1+0.1v$, hay $0.9v=1$. Do đó
+\[
+u_1=\frac{10}{9}=1.111111111111\ldots,\qquad
+R(u_1)=0,\quad R'(v)=0.9.
+\]
+Đây là giải đại số chính xác của ví dụ tuyến tính; phép gọi thư viện được đối chiếu với kết quả này.
+
+Nếu dùng lặp đơn $v^{(k+1)}=u_n+hF(t_{n+1},v^{(k)})$ thì điều kiện đủ $|h|L<1$ giúp co trên đoạn bất biến thích hợp. \emph{Đó không phải thuật toán lặp đơn mà code hiện dùng.} Bộ giải root có thể hội tụ trong những trường hợp lặp đơn không co, và cũng có thể thất bại ở bài phi tuyến khó.
+
+Euler ẩn có bậc toàn cục 1. Với phương trình thử, $R(z)=1/(1-z)$, ổn định trên nửa mặt phẳng $\operatorname{Re}z\le0$; điều này không thay thế việc tìm đúng nghiệm bước phi tuyến.
+
+\section{Hình thang cho ODE}
+\label{sec:ode-trapezoid}
+Đây là phương pháp hình thang \emph{ẩn} cho phương trình vi phân:
+\[
+\mathbf u_{n+1}=\mathbf u_n+\frac h2\left[
+\mathbf F(t_n,\mathbf u_n)+\mathbf F(t_{n+1},\mathbf u_{n+1})\right].
+\]
+Đặt $\theta=1/2$; Euler ẩn tương ứng $\theta=1$. Hai lựa chọn dùng cùng dạng
+\[
+\mathbf R(\mathbf v)=\mathbf v-\mathbf u_n-h[(1-\theta)\mathbf F_n+
+\theta\mathbf F(t_{n+1},\mathbf v)],\quad
+D\mathbf R=I-h\theta J_F.
+\]
+Các bước nhập, dự đoán, giải và kiểm tra như Euler ẩn; chỉ thay $\theta$. Với $u'=u$, $u_0=1,h=0.1$:
+\[
+v=1+0.05(1+v),\quad0.95v=1.05,
+\quad u_1=\frac{21}{19}=1.105263157895\ldots.
+\]
+Bậc toàn cục là 2 dưới giả thiết đủ trơn và ổn định. Hệ số thử $R(z)=(1+z/2)/(1-z/2)$; ổn định trên nửa mặt phẳng trái nhưng không triệt tiêu mạnh các thành phần rất cứng như Euler ẩn.
+
+\subsection{Chính xác app kiểm tra gì khi nhận một bước ẩn?}
+Đặt $\tau$ là dung sai đã nhập. Tại nghiệm cuối $\widehat{\mathbf v}$, app yêu cầu các số hữu hạn và
+\[
+\|\mathbf R(\widehat{\mathbf v})\|_\infty
+\le\max(\tau,32\epsilon_{\rm mach})\left(1+\|\widehat{\mathbf v}\|_\infty\right).
+\]
+Tiếp theo, nếu các giá trị kỳ dị của $D\mathbf R$ là $\sigma_{\max},\sigma_{\min}$, app từ chối khi
+\[
+\sigma_{\min}\le64\epsilon_{\rm mach}\max(1,\sigma_{\max}).
+\]
+Đây là kiểm tra phần dư và tính khả nghịch số của bước, không là chứng nhận nghiệm duy nhất toàn cục của bài phi tuyến. Không đạt thì báo giảm h hoặc kiểm tra miền hàm; không âm thầm chuyển sang Euler hiện.
+
+\section{Khung Runge--Kutta hiện tổng quát}
+\label{sec:ode-rk-general}
+Một bảng Butcher gồm ma trận A, vector b và c, với s tầng:
+\[
+\mathbf K_i=\mathbf F\left(t_n+c_i h,
+\mathbf u_n+h\sum_{j<i}a_{ij}\mathbf K_j\right),\quad
+\mathbf u_{n+1}=\mathbf u_n+h\sum_{i=1}^{s}b_i\mathbf K_i.
+\]
+Trong quy ước của app, $K_i$ là \emph{độ dốc}, chưa nhân h. Nếu dùng sách định nghĩa $k_i=hF(\cdots)$ thì phải đổi quy ước nhất quán, không nhân h hai lần.
+\begin{enumerate}
+\item Tầng 1: tổng các tầng trước rỗng nên chỉ dùng $t_n+c_1h$ và $\mathbf u_n$.
+\item Tầng i: tính trạng thái trung gian từ các $K_j$ đã có, rồi thế vào F để lấy $K_i$ mới.
+\item Khi đủ s tầng, nhân từng $K_i$ với $b_i$, cộng, nhân h rồi cộng trạng thái cũ.
+\item Ghi trạng thái mới và dùng nó cho bước kế tiếp; không dùng trạng thái tầng cuối thay cho tổng trọng số.
+\end{enumerate}
+Không có phép lặp hội tụ giữa các tầng RK hiện. Số tầng là s, được xác định bởi bảng hệ số.
+
+\section{RK2 mặc định: Heun hai tầng}
+\label{sec:ode-rk2}
+\[
+K_1=F(t_n,u_n),\quad K_2=F(t_n+h,u_n+hK_1),
+\quad u_{n+1}=u_n+\frac h2(K_1+K_2).
+\]
+Bảng hệ số là
+\[
+\begin{array}{c|cc}0&0&0\\1&1&0\\\hline&1/2&1/2\end{array}.
+\]
+Với $u'=u,u_0=1,h=0.1$:
+\begin{center}\begin{tabular}{rlll}
+\toprule Tầng&Thời điểm&Trạng thái thế vào F&Độ dốc\\\midrule
+1&0&1&$K_1=1$\\
+2&0.1&$1+0.1(1)=1.1$&$K_2=1.1$\\\bottomrule
+\end{tabular}\end{center}
+Tổng độ dốc $(1+1.1)/2=1.05$, nên $u_1=1.105$. Bậc toàn cục 2; với phương trình thử $R(z)=1+z+z^2/2$.
+
+\section{RK3 mặc định: Kutta ba tầng}
+\label{sec:ode-rk3}
+\begin{align*}
+K_1&=F(t_n,u_n),\\
+K_2&=F(t_n+h/2,u_n+hK_1/2),\\
+K_3&=F(t_n+h,u_n+h(-K_1+2K_2)),\\
+u_{n+1}&=u_n+\frac h6(K_1+4K_2+K_3).
+\end{align*}
+Với cùng ví dụ, toàn bộ các tầng là:
+\begin{center}\begin{tabular}{rlll}
+\toprule Tầng&Thời điểm&Trạng thái trung gian&Độ dốc\\\midrule
+1&0&1&1\\
+2&0.05&$1+0.05(1)=1.05$&1.05\\
+3&0.1&$1+0.1[-1+2(1.05)]=1.11$&1.11\\\bottomrule
+\end{tabular}\end{center}
+Vậy $u_1=1+0.1(1+4\cdot1.05+1.11)/6=1.105166666667$. Bậc toàn cục 3; $R(z)=1+z+z^2/2+z^3/6$ cho phương trình thử.
+
+\section{RK4 cổ điển}
+\label{sec:ode-rk4}
+\begin{align*}
+K_1&=F(t_n,u_n),&K_2&=F(t_n+h/2,u_n+hK_1/2),\\
+K_3&=F(t_n+h/2,u_n+hK_2/2),&K_4&=F(t_n+h,u_n+hK_3),\\
+u_{n+1}&=u_n+\frac h6(K_1+2K_2+2K_3+K_4).
+\end{align*}
+\begin{center}\begin{tabular}{rlll}
+\toprule Tầng&Thời điểm&Trạng thái trung gian, $u'=u$&$K_i$\\\midrule
+1&0&1&1\\
+2&0.05&$1+0.05(1)=1.05$&1.05\\
+3&0.05&$1+0.05(1.05)=1.0525$&1.0525\\
+4&0.1&$1+0.1(1.0525)=1.10525$&1.10525\\\bottomrule
+\end{tabular}\end{center}
+Tổng có trọng số là $(1+2.1+2.105+1.10525)/6=1.051708333333\ldots$; nhân h và cộng 1 được
+\[
+u_1=1.105170833333\ldots=\frac{265241}{240000}.
+\]
+Sai số toàn cục điển hình $O(h^4)$. Đó không phải lời hứa bốn chữ số đúng với mọi h và mọi phương trình.
+
+\section{RK2 tham số: bốn cách nhập cùng một họ}
+\label{sec:ode-rk2-parameter}
+Đặt $\alpha=c_2\ne0$. Họ hai tầng bậc hai:
+\[
+A=\begin{pmatrix}0&0\\\alpha&0\end{pmatrix},\quad
+c=(0,\alpha)^T,\quad b_2=\frac1{2\alpha},\quad b_1=1-\frac1{2\alpha}.
+\]
+Nhập một trong bốn tham số mà giao diện nhận:
+\begin{center}\begin{tabular}{lll}
+\toprule Tên trường tham số&Giá trị cho&App suy ra\\\midrule
+\texttt{alpha2}&$\alpha$&$c_2=\alpha$\\
+\texttt{beta11}&$a_{21}$&$c_2=a_{21}$\\
+\texttt{r2}&$b_2\ne0$&$c_2=1/(2b_2)$\\
+\texttt{r1}&$b_1\ne1$&$c_2=1/[2(1-b_1)]$\\\bottomrule
+\end{tabular}\end{center}
+Sau khi lập bảng, app chạy cùng thuật toán RK hiện tổng quát. $\alpha=1$ là Heun; $\alpha=1/2$ là trung điểm; $\alpha=2/3$ là một lựa chọn có trọng số $(1/4,3/4)$.
+
+Ví dụ tự dựng $\alpha=3/4$, $u'=u$, $h=0.1$: $K_1=1$, $K_2=1+0.1(3/4)=1.075$; $b=(1/3,2/3)$. Tổng $1/3+(2/3)1.075=1.05$, nên $u_1=1.105$. Kết quả một bước trùng RK2 mặc định trên phương trình tuyến tính này, nhưng không có nghĩa mọi họ cho cùng kết quả trên mọi F phi tuyến.
+
+\section{RK3 tham số và hai nhánh suy biến được hỗ trợ}
+\label{sec:ode-rk3-parameter}
+Với $c_2\ne0$, $c_3\ne0$, $c_2\ne c_3$, đặt
+\begin{align*}
+b_2&=\frac{3c_3-2}{6c_2(c_3-c_2)},&
+b_3&=\frac{2-3c_2}{6c_3(c_3-c_2)},&b_1&=1-b_2-b_3,\\
+a_{21}&=c_2,&a_{32}&=\frac1{6b_3c_2},&a_{31}&=c_3-a_{32}.
+\end{align*}
+Cần $b_3\ne0$ trong nhánh này. Nhập c2,c3, lập bảng trước, rồi tính ba tầng theo mục~\ref{sec:ode-rk-general}.
+
+Ví dụ $c_2=3/10,c_3=4/5$ cho
+\[
+b=(1/12,4/9,17/36),\quad a_{21}=3/10,
+\quad a_{32}=20/17,\quad a_{31}=-32/85.
+\]
+Với $u'=u,h=0.1$: $K_1=1$, $K_2=1.03$,
+\[
+K_3=1+0.1\left[-\frac{32}{85}+\frac{20}{17}(1.03)\right]
+=1.083529411765\ldots.
+\]
+Thế các b vào tổng cho $u_1=1.105166666667\ldots$, được đối chiếu với app.
+
+Không dùng công thức có mẫu bằng 0 để kết luận mọi trường hợp trùng c đều vô hiệu. Code có hai bảng riêng khi $c_2=2/3$:
+\[
+\begin{array}{c|ccc}
+0&0&0&0\\2/3&2/3&0&0\\0&-1&1&0\\\hline&0&3/4&1/4
+\end{array}
+\qquad(c_3=0),
+\qquad
+\begin{array}{c|ccc}
+0&0&0&0\\2/3&2/3&0&0\\2/3&0&2/3&0\\\hline&1/4&3/8&3/8
+\end{array}
+\qquad(c_3=c_2).
+\]
+Trong ví dụ $u'=u,h=0.1$, bảng thứ nhất cho $(K_1,K_2,K_3)=(1,16/15,151/150)$; bảng thứ hai cho $(1,16/15,241/225)$. Hai tổng đều cho $u_1=1.105166666667\ldots$. Nếu $c_3=0$ hoặc $c_3=c_2$ nhưng $c_2$ khác $2/3$ trong kiểm tra số của code, app báo bộ tham số không thuộc nhánh được hỗ trợ.
+
+\section{RK tùy chỉnh và hệ nhiều phương trình}
+\label{sec:ode-rk-custom}
+Ma trận A nhập dưới dạng JSON, b,c là các dãy. Code nhận $1\le s\le10$, A kích thước $s\times s$, b,c có s phần tử, mọi số hữu hạn. Điều kiện cấu trúc:
+\[
+a_{ij}=0\ (j\ge i),\qquad c_i=\sum_ja_{ij},\qquad\sum_i b_i=1.
+\]
+Đây là RK \emph{hiện}; không nhập bảng RK ẩn rồi mong tool giải các tầng đồng thời. Những kiểm tra trên xác nhận kích thước, tính hiện và điều kiện nhất quán cấp một, \emph{không tự xác nhận bảng tùy chỉnh đạt bậc 2,3 hay cao hơn}.
+
+Ví dụ nhập A=$[[0,0],[1,0]]$, b=$[0.5,0.5]$, c=$[0,1]$ tái tạo RK2 Heun. Đề cho một bảng khác thì giữ đúng bảng và tự nêu bậc nếu đã chứng minh các điều kiện bậc.
+
+Với hệ nhiều phương trình, mỗi $K_i$ là vector. Ví dụ tự dựng
+\[
+x'=y,\quad y'=-x,\quad (x(0),y(0))=(1,0),\quad h=0.1,
+\]
+nhập vế phải \texttt{y; -x}, điều kiện đầu \texttt{1 0}. RK4 có:
+\begin{center}\begin{tabular}{rlll}
+\toprule Tầng&t&Trạng thái trung gian $(x,y)$&Vector độ dốc\\\midrule
+1&0&$(1,0)$&$(0,-1)$\\
+2&0.05&$(1,-0.05)$&$(-0.05,-1)$\\
+3&0.05&$(0.9975,-0.05)$&$(-0.05,-0.9975)$\\
+4&0.1&$(0.995,-0.09975)$&$(-0.09975,-0.995)$\\\bottomrule
+\end{tabular}\end{center}
+Kết quả $(x_1,y_1)=(0.995004166667,-0.099833333333)$. Hai thành phần phải cập nhật từ cùng các vector tầng, không dùng $x$ mới để tính lại $y$ trong cùng bước.
+
+\section{Adams 2--5: khởi tạo, dự báo rồi giải hiệu chỉnh}
+\label{sec:ode-adams}
+\subsection{Số bước và các hệ số đúng với code}
+Gọi s là lựa chọn \texttt{Adams s}. Ở bước n, có s độ dốc cũ $F_n,F_{n-1},\ldots,F_{n-s+1}$.
+\[
+\mathbf u_{n+1}^P=\mathbf u_n+h\sum_{j=0}^{s-1}\beta_j\mathbf F_{n-j}
+\]
+là dự báo Adams--Bashforth. Hiệu chỉnh Adams--Moulton giải
+\[
+\mathbf v=\mathbf u_n+h\left[a_0\mathbf F(t_{n+1},\mathbf v)
++\sum_{j=0}^{s-1}a_{j+1}\mathbf F_{n-j}\right].
+\]
+\begin{center}\small\begin{tabular}{rll}
+\toprule s&Vector $\beta$ của dự báo&Vector a của hiệu chỉnh\\\midrule
+2&$(3,-1)/2$&$(5,8,-1)/12$\\
+3&$(23,-16,5)/12$&$(9,19,-5,1)/24$\\
+4&$(55,-59,37,-9)/24$&$(251,646,-264,106,-19)/720$\\
+5&$(1901,-2774,2616,-1274,251)/720$&$(475,1427,-798,482,-173,27)/1440$\\\bottomrule
+\end{tabular}\end{center}
+Tên \texttt{Adams s} ở đây mô tả s giá trị cũ ở AB; AM dùng thêm giá trị mới nên vector a có s+1 phần tử. Không tự thay AM bằng một công thức s phần tử có cùng tên trong tài liệu khác.
+
+\subsection{Từng giai đoạn thực sự chạy}
+\begin{enumerate}
+\item Bắt đầu chỉ có $\mathbf u_0$. Tính s−1 bước bằng RK4 để đủ lịch sử. Nếu toàn bộ đoạn quá ngắn, có thể chưa có bước Adams nào; mọi bước đang có đều là khởi tạo RK4.
+\item Từ n=s−1, xếp lịch sử mới nhất trước. Tính từng $F_{n-j}$, nhân $\beta_j$, cộng và lập $\mathbf u_{n+1}^P$.
+\item Tính phần đuôi đã biết $\mathbf T=\sum_{j=0}^{s-1}a_{j+1}\mathbf F_{n-j}$.
+\item Lập $\mathbf R(\mathbf v)=\mathbf v-\mathbf u_n-h[a_0\mathbf F(t_{n+1},\mathbf v)+\mathbf T]$ và Jacobian $I-ha_0J_F$.
+\item Gọi bộ giải root, dùng dự báo làm giá trị đầu. Kiểm phần dư và Jacobian như các bước ẩn ở trên.
+\item Nhận giá trị hiệu chỉnh, thêm nó vào lịch sử, dịch cửa sổ để tính bước tiếp theo.
+\end{enumerate}
+App không chỉ thế dự báo vào AM đúng một lần. Nó giải phương trình hiệu chỉnh đến khi kiểm tra phần dư đạt. Cũng không có quy tắc ``s mốc cho phép s vòng''; các mốc thời gian cũ được dùng lặp lại để tính nhiều bước sau.
+
+Các công thức AB s có bậc s và AM ở bảng có bậc s+1 theo lý thuyết đủ trơn. Sai số toàn cục của triển khai còn phụ thuộc chất lượng khởi tạo RK4 và việc giải hiệu chỉnh. Đặc biệt không tự ghi bậc toàn chương trình là 6 chỉ vì AM của lựa chọn s=5 có bậc 6.
+
+\subsection{Ví dụ số cho đủ cả bốn lựa chọn}
+Các bảng sau dùng cùng ví dụ tự dựng $u'=u$, $u_0=1,h=0.1$. Đối với hàm này $F_i=u_i$; phương trình hiệu chỉnh là tuyến tính nên có thể giải chính xác bằng một phép chia. Bảng ghi mọi bước khởi tạo rồi một bước Adams, được đối chiếu với đường tính thật của app.
+\input{verification/calculus_adams_examples.tex}
+
+\section{Đánh giá hội tụ và cách chép một bài ODE}
+\begin{enumerate}
+\item Ghi phương trình sau khi đổi tên biến và điều kiện đầu, không chỉ chép biểu thức trong ô nhập.
+\item Ghi h, các $t_n$, số bước; kiểm tra lưới kết thúc đúng ở b.
+\item Với Euler/RK hiện: công thức từng tầng, trạng thái trung gian, độ dốc, tổng trọng số và nghiệm mới. Với hệ, ghi vector hoặc tách cột đúng thứ tự.
+\item Với phương pháp ẩn: phương trình dư theo ẩn mới, dự đoán, Jacobian, nghiệm bước và phần dư cuối. Nếu tool không cung cấp nhật ký bộ giải nội bộ thì không gán một dãy vòng tự nghĩ thành trace thực tế.
+\item Với Adams: đánh dấu các bước RK4 khởi tạo; ghi lịch sử, dự báo AB, phương trình hiệu chỉnh AM và nghiệm đã hiệu chỉnh.
+\item Nếu được phép kiểm thêm: chạy lại h/2 và so nghiệm tại các thời điểm chung. Với bậc p và đã ở miền tiệm cận, $\|U_{h/2}-U_h\|/(2^p-1)$ là gợi ý sai số lưới mịn, không tự là cận bảo đảm.
+\end{enumerate}
+Các ca từ chối gồm: sai số thành phần/vế phải; dùng biến trạng thái không tồn tại; h sai chiều hoặc không chia hết đoạn; hàm/Jacobian ngoài miền; bảng RK không hiện; tham số RK ở nhánh không hỗ trợ; bước ẩn không đạt phần dư; Jacobian bước suy biến; số tràn; quá giới hạn lưới. Tăng số chữ số in ra không sửa các nguyên nhân đó.
+
+\paragraph{Nguồn đối chiếu trong repo.} \texttt{pps/differential.py}: các bảng \texttt{RK}, \texttt{AB}, \texttt{AM}, các hàm \texttt{custom\_rk2}, \texttt{custom\_rk3}, \texttt{tableau}, \texttt{rkstep}, \texttt{ode}. Số liệu được kiểm bằng \texttt{verification/calculus\_verification.py}. Các bảng tầng trong chương là phép tính theo công thức được đối chiếu với kết quả app; chúng không được nhận là log nội bộ mà app chưa ghi.

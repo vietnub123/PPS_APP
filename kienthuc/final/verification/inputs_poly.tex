@@ -1,0 +1,24 @@
+\subsection*{Input: các ô đúng tên trên giao diện}
+Bảng này được lấy từ biểu mẫu của tool. Giá trị mặc định là ví dụ nhập, cần thay bằng dữ liệu đề. Hai dãy $x,y$ là bảng dữ liệu riêng bên dưới nếu chức năng dùng bảng.
+\subsubsection*{Ô chung của các lựa chọn trong nhóm}
+\begin{center}\small\begin{tabular}{@{}p{.32\linewidth}p{.17\linewidth}p{.43\linewidth}@{}}\toprule
+Ô nhập & Khóa JSON & Cách nhập / mặc định\\\midrule
+Điểm cần tính x & \texttt{target} & \texttt{1.5}\\[3pt]
+Cấp đạo hàm (0 = giá trị hàm) & \texttt{order} & \texttt{0}
+\par Khi cấp > 0,\allowbreak{} lời giải trình bày cả giá trị hàm và đạo hàm yêu cầu trên cùng tập mốc.\\[3pt]
+\bottomrule\end{tabular}\end{center}
+\subsubsection*{Ô riêng: Lagrange /\allowbreak{} Gauss I /\allowbreak{} Gauss II /\allowbreak{} Stirling /\allowbreak{} Bessel}
+\begin{center}\small\begin{tabular}{@{}p{.32\linewidth}p{.17\linewidth}p{.43\linewidth}@{}}\toprule
+Ô nhập & Khóa JSON & Cách nhập / mặc định\\\midrule
+Số mốc dùng (để trống: toàn bảng) & \texttt{count} & Để trống
+\par Stirling: số lẻ;\allowbreak{} Bessel: số chẵn;\allowbreak{} Gauss dùng được cả hai. Ví dụ nhập 9 để chọn 9 mốc gần điểm tính từ bảng lớn.\\[3pt]
+\bottomrule\end{tabular}\end{center}
+\subsubsection*{Ô riêng: Newton}
+\begin{center}\small\begin{tabular}{@{}p{.32\linewidth}p{.17\linewidth}p{.43\linewidth}@{}}\toprule
+Ô nhập & Khóa JSON & Cách nhập / mặc định\\\midrule
+Loại mốc & \texttt{newton\_nodes} & \texttt{Mốc cách đều}
+\par Mốc cách đều dùng sai phân tiến;\allowbreak{} mốc bất kỳ dùng tỷ sai phân.\\[3pt]
+Hướng nội suy & \texttt{direction} & \texttt{Tiến}\\[3pt]
+Số mốc dùng (để trống: toàn bảng) & \texttt{count} & Để trống
+\par Nhập điểm tính khi chọn ít mốc hơn. Không tự thay bậc đề yêu cầu.\\[3pt]
+\bottomrule\end{tabular}\end{center}

@@ -1,0 +1,19 @@
+{
+  "tool": "Bình phương tối thiểu",
+  "method": "Tuyến tính theo cơ sở",
+  "values": {
+    "basis": "1;x",
+    "weights": "1 2 1",
+    "solver": "QR"
+  },
+  "x": [
+    0,
+    1,
+    2
+  ],
+  "y": [
+    1,
+    2,
+    2
+  ]
+}

@@ -1,0 +1,51 @@
+\chapter*{Cách đọc và chuẩn bị một bài thi}
+\addcontentsline{toc}{chapter}{Cách đọc và chuẩn bị một bài thi}
+\markboth{Cách đọc}{}
+
+\section*{Đọc theo luồng của tool, không bắt đầu từ ví dụ số}
+Mỗi chương bắt đầu bằng một phần \textbf{Input -- quá trình -- output}. Tìm đúng tên nhóm và lựa chọn trên GUI, đọc tên các ô, rồi điền \emph{khuôn bảng tổng quát} theo dữ liệu đề. Hàng $i$ chỉ đại diện cho các dòng giữa; khi làm bài phải điền mọi dòng thật, không cộng thêm hàng ký hiệu này vào dữ liệu.
+
+Khi bảng có hàng tổng, công thức ngay dưới cho biết mỗi tổng cộng những cột nào và được chuyển vào hệ/phép tính nào. Với tích, dấu ba chấm phải giữ đúng thứ tự và quy tắc bỏ mốc. Khi có lặp, đọc rõ đại lượng nhận từ vòng trước, đại lượng mới, tiêu chuẩn dừng và thứ gì được chuyển sang vòng sau.
+
+Chương Bình phương tối thiểu tách riêng từng mô hình và cách khôi phục tham số. Gauss, QR và SVD được coi là những bộ giải đã biết; tài liệu tập trung bài toán mà tool đưa vào bộ giải và kết quả mà tool lấy ra.
+
+\section*{Mỗi bài giải cần công khai sáu điều}
+\begin{enumerate}
+\item \textbf{Dữ liệu}: tên tệp, sheet, cột $x,y$, số dòng, đơn vị; dữ liệu đo hay giá trị hàm. Không lấy cột tham số làm quan sát, không bỏ dòng âm chỉ để lấy được log.
+\item \textbf{Câu hỏi}: tìm $y$ từ $x$, tìm $x$ từ $y$, đạo hàm, tích phân hay khớp mô hình? Tìm trên nhánh nào, đoạn nào? Đề có quy định bậc, số mốc và điều kiện biên không?
+\item \textbf{Mô hình được dùng}: đa thức qua những mốc nào, spline với biên nào, cơ sở hồi quy nào, hay hệ sai phân nào. Hai tập mốc khác nhau có thể cho hai đáp số khác nhau mà đều tính đúng mô hình đã khai báo.
+\item \textbf{Thuật toán}: ghi công thức trước, định nghĩa biến rồi mới thế số. Phân biệt $x$ vật lý với $t=(x-x_0)/h$, hệ số theo bậc tăng với hệ số theo bậc giảm.
+\item \textbf{Tính toán}: bảng mốc, sai phân, hệ số, khử/thế ngược, các tầng RK hoặc các vòng lặp. Hàng nào nhận đầu vào từ hàng nào phải chỉ rõ. Trong các ví dụ nhỏ của sổ tay, không lược vòng lặp ở giữa.
+\item \textbf{Kết luận có điều kiện}: đáp số, đơn vị, mô hình, phần dư và lý do dừng. Nêu riêng sai số dữ liệu, sai số mô hình và sai số giải; một phần dư nhỏ không tự chứng minh cả ba đều nhỏ.
+\end{enumerate}
+
+\clearpage
+\section*{Chọn chương theo dạng đề}
+\begin{center}\small\begin{tabular}{@{}p{.30\textwidth}p{.43\textwidth}p{.19\textwidth}@{}}
+\toprule
+Đề hỏi & Quyết định đầu tiên & Đọc\\\midrule
+Giá trị/đạo hàm từ bảng & Mốc đều hay bất kỳ? Bậc, tập mốc, gốc? & Chương \ref{ch:interp}\\
+Giá trị đa thức đã biết & Nhập đủ hệ số, kể cả các hệ số 0 & Horner, Chương \ref{ch:interp}\\
+Tìm $x$ sao cho $y=\bar y$ & Quét mọi khoảng đổi dấu; xác định nhánh; chọn hàm ngược hay giải đa thức thuận & Chương \ref{ch:inverse}\\
+Hàm từng đoạn qua bảng & Bậc spline và đúng số điều kiện biên độc lập & Chương \ref{ch:spline}\\
+Khớp dữ liệu nhiễu & Mô hình, trọng số, thang sai số gốc hay biến đổi & Chương \ref{ch:ls}\\
+Đạo hàm trực tiếp từ bảng & Bậc $p$, cấp $s$, $p+1$ mốc được dùng & Chương \ref{ch:calculus}\\
+Tích phân từ hàm/bảng & Quy tắc, lưới hợp lệ; cận đạo hàm hay Runge & Chương \ref{ch:calculus}\\
+Phương trình có điều kiện đầu & Biến độc lập $t$, trạng thái $x,y,z$, bước $h$ & Chương \ref{ch:ode}\\
+Điều kiện tại hai đầu / trị riêng & Đúng dấu phương trình, thứ tự ba số biên & Chương \ref{ch:bvp}\\
+Tên hàm Python cũ & Phân biệt API bổ trợ với luồng GUI đang dùng & Phụ lục \ref{app:api}\\
+Áp dụng vào đề thật & Kiểm tra sheet, biến thể đề và giả thiết dữ liệu & Phụ lục \ref{app:exam}\\
+\bottomrule
+\end{tabular}\end{center}
+
+\section*{Ký hiệu và cách đọc kết quả}
+$m$ là số quan sát được dùng, $n$ thường là bậc đa thức hoặc số khoảng chia (sẽ định nghĩa lại ngay tại từng thuật toán). $h$ là bước lưới; $z$ là điểm đánh giá; $\bar y$ là mức cần tìm ngược. Trong hồi quy, $z$ còn có thể là vector đáp ứng đã biến đổi, được định nghĩa trong chương đó. $c$ là vector hệ số, $\Phi$ là ma trận cơ sở. Không đồng nhất $c$ với vector hoành độ $\mathbf{x}$ của dữ liệu.
+
+Đầu vào số dùng dấu chấm thập phân. Các hàm cơ sở ngăn bằng dấu chấm phẩy. Ví dụ \texttt{1; x; x\^{}2}; hệ ODE \texttt{y; -x}. Dấu trừ, log, căn phải nằm trong miền xác định tại mọi điểm mà thuật toán cần đánh giá, kể cả các điểm trung gian.
+
+\textbf{Tổng hợp} phục vụ đọc nhanh hệ số và bảng vòng lặp; \textbf{Chi tiết} mở các phép thế số khi tính tay. Số chữ số hiển thị là cách viết kết quả, không phải yêu cầu làm tròn mọi phép tính trung gian. Các bảng trong sổ tay làm tròn để dễ đọc; bộ tính giữ độ chính xác nội bộ của từng mô-đun.
+
+\section*{Khi nào được nói ``hội tụ''?}
+Nội suy hữu hạn, Horner, khử Gauss, Thomas và dựng spline là thuật toán hữu hạn: hoàn tất khi tính hết hàng và kiểm tra hệ. Với nội suy ngược hoặc LM, số vòng phụ thuộc dữ liệu và tiêu chuẩn dừng. Với tích phân tự chia lưới, vòng lặp tăng số khoảng để ước lượng sai số. Với ODE, $h$ quyết định sai số rời rạc; dung sai bước ẩn chỉ kiểm soát việc giải phương trình trong một bước. Không tráo các ý nghĩa này.
+
+Tài liệu mô tả cách tính và giới hạn đã kiểm tra, không khẳng định mọi dữ liệu tùy ý đều có nghiệm duy nhất hay mọi phép lặp đều hội tụ. Nếu thuật toán không phù hợp giả thiết đề, cần công khai lý do trước khi đổi phương pháp.

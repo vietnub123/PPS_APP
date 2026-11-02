@@ -1,0 +1,71 @@
+\section{Input và output dùng chung cho các tool ODE}
+\input{verification/inputs_ode.tex}
+\paragraph{Đổi đề sang tên biến của tool.} Biến độc lập là $t$; các thành phần trạng thái lần lượt $x,y,z$. Ví dụ đề $y'=y$ thì nhập biểu thức \texttt{x}, điều kiện đầu một số; đề hệ dao động nhập \texttt{y; -x}, đầu \texttt{1 0}. Nếu dùng tên không có trong hệ, tool từ chối.
+\paragraph{Input lưới.} $a$ là thời điểm đầu, $b$ là cuối, $h$ cùng chiều $a\to b$ và chia hết đoạn trong dung sai máy. $u_0$ là vector đầu. Dung sai bước ẩn không phải sai số toàn cục ODE; số bước được xác định từ $a,b,h$.
+\paragraph{Output chung.} Bảng các thời điểm $t_n$ và trạng thái $u_n$; bảng hệ số RK nếu có; phần dư cuối mỗi bước ẩn và đồ thị. Tool hiện không lưu mọi tầng RK hoặc mọi vòng nội bộ của bộ giải ẩn; các khuôn dưới đây hướng dẫn cách tự lập bài tính tay theo đúng công thức.
+
+\subsection{Euler hiện, Euler ẩn, Hình thang: khuôn một bước}
+Đặt $u'=F(t,u)$, $F_n=F(t_n,u_n)$. Mỗi dòng nhận $t_n,u_n$, tạo $t_{n+1}=t_n+h$ rồi xử lý:
+\begin{center}\small\begin{tabular}{@{}p{.21\linewidth}p{.43\linewidth}p{.27\linewidth}@{}}\toprule
+Tool&Quá trình trong bước&Giá trị chuyển tiếp\\\midrule
+Euler hiện&Tính $F_n$, nhân $h$, cộng vào $u_n$&$u_{n+1}=u_n+hF_n$\\
+Euler ẩn&Dự đoán $u_n+hF_n$; giải $R(v)=v-u_n-hF(t_{n+1},v)=0$&Nghiệm mới và phần dư\\
+Hình thang&Dự đoán như trên; giải $R(v)=v-u_n-\frac h2[F_n+F(t_{n+1},v)]=0$&Nghiệm mới và phần dư\\\bottomrule
+\end{tabular}\end{center}
+\begin{center}\small\begin{tabular}{cllll}\toprule
+Bước&Nhận từ trước&Độ dốc cũ&Phép tính/ẩn phải giải&Output hàng\\\midrule
+0&$t_0,u_0$&$F(t_0,u_0)$&Công thức của tool chọn&$t_1,u_1,\|R(u_1)\|$ nếu ẩn\\
+$n$&$t_n,u_n$&$F(t_n,u_n)$&Cùng quy trình trên&$t_{n+1},u_{n+1}$\\\bottomrule
+\end{tabular}\end{center}
+Không dùng $u_{n+1}$ của một thành phần để cập nhật tùy tiện thành phần còn lại trong cùng bước hệ vector.
+
+\subsection{RK2, RK3, RK4: bảng tầng tổng quát thay cho bảng số riêng}
+Mỗi $K_j$ dưới đây là \emph{độ dốc}, chưa nhân $h$. Mọi tầng của một bước đều xuất phát từ cùng $t_n,u_n$.
+\begin{center}\small\begin{tabular}{clll}\toprule
+RK2&Thời điểm&Trạng thái thế vào F&Độ dốc\\\midrule
+1&$t_n$&$u_n$&$K_1=F(t_n,u_n)$\\
+2&$t_n+h$&$u_n+hK_1$&$K_2=F(t_n+h,u_n+hK_1)$\\\bottomrule
+\end{tabular}\end{center}
+Output bước: $u_{n+1}=u_n+\frac h2(K_1+K_2)$.
+\begin{center}\small\begin{tabular}{clll}\toprule
+RK3&Thời điểm&Trạng thái thế vào F&Độ dốc\\\midrule
+1&$t_n$&$u_n$&$K_1$\\
+2&$t_n+h/2$&$u_n+hK_1/2$&$K_2$\\
+3&$t_n+h$&$u_n-hK_1+2hK_2$&$K_3$\\\bottomrule
+\end{tabular}\end{center}
+Output bước: $u_{n+1}=u_n+\frac h6(K_1+4K_2+K_3)$.
+\begin{center}\small\begin{tabular}{clll}\toprule
+RK4&Thời điểm&Trạng thái thế vào F&Độ dốc\\\midrule
+1&$t_n$&$u_n$&$K_1$\\
+2&$t_n+h/2$&$u_n+hK_1/2$&$K_2$\\
+3&$t_n+h/2$&$u_n+hK_2/2$&$K_3$\\
+4&$t_n+h$&$u_n+hK_3$&$K_4$\\\bottomrule
+\end{tabular}\end{center}
+Output bước: $u_{n+1}=u_n+\frac h6(K_1+2K_2+2K_3+K_4)$. Sau khi có $u_{n+1}$ mới bắt đầu bảng tầng của bước sau.
+
+\subsection{RK2 tham số, RK3 tham số và RK tùy chỉnh}
+\textbf{Input riêng}: RK2 chọn tham số biết trước \texttt{alpha2}, \texttt{beta11}, \texttt{r1} hoặc \texttt{r2} và giá trị; RK3 nhập \texttt{alpha2,alpha3}; tùy chỉnh nhập $A,b,c$. Các mục sau đưa công thức chuyển tham số thành bảng hệ số và các nhánh ngoại lệ.
+\textbf{Quá trình}: tạo và kiểm bảng $\to$ với mỗi tầng $j$, điền hàng tổng quát
+\[
+T_j=t_n+c_jh,\quad
+U_j=u_n+h(a_{j1}K_1+\cdots+a_{j,j-1}K_{j-1}),\quad K_j=F(T_j,U_j).
+\]
+Cuối bước $u_{n+1}=u_n+h(b_1K_1+b_2K_2+\cdots+b_sK_s)$. Output gồm bảng hệ số thực sự dùng và nghiệm trên lưới. Kiểm cấu trúc RK hiện không tự chứng minh bậc cao của một bảng tùy ý.
+
+\subsection{Adams 2, 3, 4, 5: bảng lịch sử và thứ tự cập nhật}
+\textbf{Input riêng}: chọn số $s$ qua tên Adams $s$, không nhập thêm $s$ giá trị đầu; tool dùng $s-1$ bước RK4 khởi tạo. Nếu đoạn ngắn thì có thể chỉ chạy các bước khởi tạo.
+\begin{center}\small\begin{tabular}{cllll}\toprule
+Vị trí lịch sử&Thời điểm&Trạng thái&Độ dốc&Đóng góp AB / AM cũ\\\midrule
+0 mới nhất&$t_n$&$u_n$&$F_n$&$\beta_0F_n$ / $a_1F_n$\\
+$j$&$t_{n-j}$&$u_{n-j}$&$F_{n-j}$&$\beta_jF_{n-j}$ / $a_{j+1}F_{n-j}$\\
+$s-1$ cũ nhất&$t_{n-s+1}$&$u_{n-s+1}$&$F_{n-s+1}$&Đóng góp cuối\\\bottomrule
+\end{tabular}\end{center}
+Dự báo của từng tool, viết rõ các phép nhân:
+\begin{align*}
+\mathrm{AB2}:\quad u^P&=u_n+\tfrac h2(3F_n-F_{n-1}),\\
+\mathrm{AB3}:\quad u^P&=u_n+\tfrac h{12}(23F_n-16F_{n-1}+5F_{n-2}),\\
+\mathrm{AB4}:\quad u^P&=u_n+\tfrac h{24}(55F_n-59F_{n-1}+37F_{n-2}-9F_{n-3}),\\
+\mathrm{AB5}:\quad u^P&=u_n+\tfrac h{720}(1901F_n-2774F_{n-1}+2616F_{n-2}\\
+&\hspace{38mm}-1274F_{n-3}+251F_{n-4}).
+\end{align*}
+Sau dự báo, tính phần đuôi $T=a_1F_n+a_2F_{n-1}+\cdots+a_sF_{n-s+1}$; giải phương trình $v=u_n+h[a_0F(t_{n+1},v)+T]$ từ điểm đầu $u^P$. Tool giải bước hiệu chỉnh ẩn, không chỉ thế dự báo vào một lần. Output bước là $u_{n+1}$ đã hiệu chỉnh và phần dư. Đưa giá trị này vào đầu lịch sử, loại giá trị cũ nhất rồi tiếp tục. Các vector AM đúng theo từng $s$ và ví dụ mọi bước khởi tạo được cho bên dưới.

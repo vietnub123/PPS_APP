@@ -1,0 +1,52 @@
+\subsection*{Input: các ô đúng tên trên giao diện}
+Bảng này được lấy từ biểu mẫu của tool. Giá trị mặc định là ví dụ nhập, cần thay bằng dữ liệu đề. Hai dãy $x,y$ là bảng dữ liệu riêng bên dưới nếu chức năng dùng bảng.
+\subsubsection*{Ô chung của các lựa chọn trong nhóm}
+\begin{center}\small\begin{tabular}{@{}p{.32\linewidth}p{.17\linewidth}p{.43\linewidth}@{}}\toprule
+Ô nhập & Khóa JSON & Cách nhập / mặc định\\\midrule
+Trọng số w\_i (để trống: tất cả bằng 1) & \texttt{weights} & Để trống
+\par Không âm,\allowbreak{} ít nhất một trọng số dương;\allowbreak{} giữ cùng thứ tự dữ liệu.\\[3pt]
+Điểm dự đoán x (không bắt buộc) & \texttt{target} & Để trống\\[3pt]
+Mức trình bày & \texttt{detail\_level} & \texttt{Tổng hợp}\\[3pt]
+\bottomrule\end{tabular}\end{center}
+\subsubsection*{Ô riêng: Tuyến tính theo cơ sở /\allowbreak{} Log của tổ hợp cơ sở}
+\begin{center}\small\begin{tabular}{@{}p{.32\linewidth}p{.17\linewidth}p{.43\linewidth}@{}}\toprule
+Ô nhập & Khóa JSON & Cách nhập / mặc định\\\midrule
+Các hàm cơ sở (ngăn bằng dấu ;\allowbreak{}) & \texttt{basis} & \texttt{1;\allowbreak{} x}
+\par Nhập đầy đủ các cơ sở,\allowbreak{} kể cả 1 nếu mô hình có hằng;\allowbreak{} lựa chọn này không tự thêm cột 1.\\[3pt]
+Cách giải bình phương tối thiểu & \texttt{solver} & \texttt{QR}\\[3pt]
+Quy tắc khi thiếu hạng & \texttt{rank\_policy} & \texttt{Nghiệm duy nhất}\\[3pt]
+\bottomrule\end{tabular}\end{center}
+\subsubsection*{Ô riêng: Lũy thừa /\allowbreak{} 1/\allowbreak{}(a+b*x) /\allowbreak{} x/\allowbreak{}(a+b*x) /\allowbreak{} a+b*ln(x) /\allowbreak{} A*b\textasciicircum{}x}
+\begin{center}\small\begin{tabular}{@{}p{.32\linewidth}p{.17\linewidth}p{.43\linewidth}@{}}\toprule
+Ô nhập & Khóa JSON & Cách nhập / mặc định\\\midrule
+Cách giải bình phương tối thiểu & \texttt{solver} & \texttt{QR}\\[3pt]
+Quy tắc khi thiếu hạng & \texttt{rank\_policy} & \texttt{Nghiệm duy nhất}\\[3pt]
+\bottomrule\end{tabular}\end{center}
+\subsubsection*{Ô riêng: Hàm mũ}
+\begin{center}\small\begin{tabular}{@{}p{.32\linewidth}p{.17\linewidth}p{.43\linewidth}@{}}\toprule
+Ô nhập & Khóa JSON & Cách nhập / mặc định\\\midrule
+Các hàm cơ sở (ngăn bằng dấu ;\allowbreak{}) & \texttt{basis} & \texttt{x}
+\par Chỉ nhập các cơ sở biến thiên trong số mũ;\allowbreak{} tool tự thêm cột hằng cho biên độ. Không nhập thêm 1.\\[3pt]
+Cách giải bình phương tối thiểu & \texttt{solver} & \texttt{QR}\\[3pt]
+Quy tắc khi thiếu hạng & \texttt{rank\_policy} & \texttt{Nghiệm duy nhất}\\[3pt]
+\bottomrule\end{tabular}\end{center}
+\subsubsection*{Ô riêng: Lũy thừa — SSE thang y}
+\begin{center}\small\begin{tabular}{@{}p{.32\linewidth}p{.17\linewidth}p{.43\linewidth}@{}}\toprule
+Ô nhập & Khóa JSON & Cách nhập / mặc định\\\midrule
+Tham số đầu A b1 b2... (để trống: từ log) & \texttt{initial} & Để trống
+\par Lời giải ghi tham số và SSE từng vòng.\\[3pt]
+Ngưỡng dừng phi tuyến & \texttt{tol} & \texttt{1e-10}\\[3pt]
+Số vòng tối đa & \texttt{max\_iter} & \texttt{100}\\[3pt]
+Bộ giải phi tuyến & \texttt{solver} & \texttt{Levenberg–Marquardt}\\[3pt]
+\bottomrule\end{tabular}\end{center}
+\subsubsection*{Ô riêng: Hàm mũ — SSE thang y}
+\begin{center}\small\begin{tabular}{@{}p{.32\linewidth}p{.17\linewidth}p{.43\linewidth}@{}}\toprule
+Ô nhập & Khóa JSON & Cách nhập / mặc định\\\midrule
+Các hàm cơ sở (ngăn bằng dấu ;\allowbreak{}) & \texttt{basis} & \texttt{x}
+\par Chỉ nhập các cơ sở biến thiên trong số mũ;\allowbreak{} tool tự thêm cột hằng cho biên độ. Không nhập thêm 1.\\[3pt]
+Tham số đầu A b1 b2... (để trống: từ log) & \texttt{initial} & Để trống
+\par Lời giải ghi tham số và SSE từng vòng.\\[3pt]
+Ngưỡng dừng phi tuyến & \texttt{tol} & \texttt{1e-10}\\[3pt]
+Số vòng tối đa & \texttt{max\_iter} & \texttt{100}\\[3pt]
+Bộ giải phi tuyến & \texttt{solver} & \texttt{Levenberg–Marquardt}\\[3pt]
+\bottomrule\end{tabular}\end{center}

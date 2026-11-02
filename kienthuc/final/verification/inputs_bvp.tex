@@ -1,0 +1,26 @@
+\subsection*{Input: các ô đúng tên trên giao diện}
+Bảng này được lấy từ biểu mẫu của tool. Giá trị mặc định là ví dụ nhập, cần thay bằng dữ liệu đề. Hai dãy $x,y$ là bảng dữ liệu riêng bên dưới nếu chức năng dùng bảng.
+\subsubsection*{Ô chung của các lựa chọn trong nhóm}
+\begin{center}\small\begin{tabular}{@{}p{.32\linewidth}p{.17\linewidth}p{.43\linewidth}@{}}\toprule
+Ô nhập & Khóa JSON & Cách nhập / mặc định\\\midrule
+Hàm p(x) & \texttt{p} & \texttt{1}\\[3pt]
+Hàm q(x) & \texttt{q} & \texttt{0}\\[3pt]
+Đầu đoạn a & \texttt{a} & \texttt{0}\\[3pt]
+Cuối đoạn b & \texttt{b} & \texttt{1}\\[3pt]
+Bước h & \texttt{h} & \texttt{0.05}\\[3pt]
+\bottomrule\end{tabular}\end{center}
+\subsubsection*{Ô riêng: Biên tổng quát}
+\begin{center}\small\begin{tabular}{@{}p{.32\linewidth}p{.17\linewidth}p{.43\linewidth}@{}}\toprule
+Ô nhập & Khóa JSON & Cách nhập / mặc định\\\midrule
+Hàm f(x) & \texttt{f} & \texttt{2}\\[3pt]
+Biên trái: alpha beta gamma & \texttt{left} & \texttt{0 1 0}
+\par alpha*u′(a) + beta*u(a) = gamma\\[3pt]
+Biên phải: alpha beta gamma & \texttt{right} & \texttt{0 1 0}
+\par alpha*u′(b) + beta*u(b) = gamma\\[3pt]
+\bottomrule\end{tabular}\end{center}
+\subsubsection*{Ô riêng: Trị riêng}
+\begin{center}\small\begin{tabular}{@{}p{.32\linewidth}p{.17\linewidth}p{.43\linewidth}@{}}\toprule
+Ô nhập & Khóa JSON & Cách nhập / mặc định\\\midrule
+Hàm r(x) & \texttt{f} & \texttt{1}\\[3pt]
+Số trị riêng nhỏ nhất & \texttt{count} & \texttt{5}\\[3pt]
+\bottomrule\end{tabular}\end{center}

@@ -1,0 +1,2323 @@
+{
+  "forms": [
+    {
+      "tool": "Nội suy đa thức",
+      "method": "Lagrange",
+      "fields": [
+        {
+          "key": "target",
+          "label": "Điểm cần tính x",
+          "default": "1.5"
+        },
+        {
+          "key": "order",
+          "label": "Cấp đạo hàm (0 = giá trị hàm)",
+          "default": "0"
+        },
+        {
+          "key": "count",
+          "label": "Số mốc dùng (để trống: toàn bảng)",
+          "default": ""
+        }
+      ]
+    },
+    {
+      "tool": "Nội suy đa thức",
+      "method": "Newton",
+      "fields": [
+        {
+          "key": "newton_nodes",
+          "label": "Loại mốc",
+          "default": "Mốc cách đều"
+        },
+        {
+          "key": "direction",
+          "label": "Hướng nội suy",
+          "default": "Tiến"
+        },
+        {
+          "key": "target",
+          "label": "Điểm cần tính x",
+          "default": "1.5"
+        },
+        {
+          "key": "order",
+          "label": "Cấp đạo hàm (0 = giá trị hàm)",
+          "default": "0"
+        },
+        {
+          "key": "count",
+          "label": "Số mốc dùng (để trống: toàn bảng)",
+          "default": ""
+        }
+      ]
+    },
+    {
+      "tool": "Nội suy đa thức",
+      "method": "Gauss I",
+      "fields": [
+        {
+          "key": "target",
+          "label": "Điểm cần tính x",
+          "default": "1.5"
+        },
+        {
+          "key": "order",
+          "label": "Cấp đạo hàm (0 = giá trị hàm)",
+          "default": "0"
+        },
+        {
+          "key": "count",
+          "label": "Số mốc dùng (để trống: toàn bảng)",
+          "default": ""
+        }
+      ]
+    },
+    {
+      "tool": "Nội suy đa thức",
+      "method": "Gauss II",
+      "fields": [
+        {
+          "key": "target",
+          "label": "Điểm cần tính x",
+          "default": "1.5"
+        },
+        {
+          "key": "order",
+          "label": "Cấp đạo hàm (0 = giá trị hàm)",
+          "default": "0"
+        },
+        {
+          "key": "count",
+          "label": "Số mốc dùng (để trống: toàn bảng)",
+          "default": ""
+        }
+      ]
+    },
+    {
+      "tool": "Nội suy đa thức",
+      "method": "Stirling",
+      "fields": [
+        {
+          "key": "target",
+          "label": "Điểm cần tính x",
+          "default": "1.5"
+        },
+        {
+          "key": "order",
+          "label": "Cấp đạo hàm (0 = giá trị hàm)",
+          "default": "0"
+        },
+        {
+          "key": "count",
+          "label": "Số mốc dùng (để trống: toàn bảng)",
+          "default": ""
+        }
+      ]
+    },
+    {
+      "tool": "Nội suy đa thức",
+      "method": "Bessel",
+      "fields": [
+        {
+          "key": "target",
+          "label": "Điểm cần tính x",
+          "default": "1.5"
+        },
+        {
+          "key": "order",
+          "label": "Cấp đạo hàm (0 = giá trị hàm)",
+          "default": "0"
+        },
+        {
+          "key": "count",
+          "label": "Số mốc dùng (để trống: toàn bảng)",
+          "default": ""
+        }
+      ]
+    },
+    {
+      "tool": "Nội suy ngược",
+      "method": "Lặp tiến",
+      "fields": [
+        {
+          "key": "target",
+          "label": "Giá trị y cần tìm ngược",
+          "default": "4"
+        },
+        {
+          "key": "a",
+          "label": "Cận x trái (trống: khoảng đổi dấu duy nhất)",
+          "default": ""
+        },
+        {
+          "key": "b",
+          "label": "Cận x phải (trống: khoảng đổi dấu duy nhất)",
+          "default": ""
+        },
+        {
+          "key": "tol",
+          "label": "Dung sai vị trí/bước theo x",
+          "default": "1e-06"
+        },
+        {
+          "key": "residual_tol",
+          "label": "Dung sai phần dư",
+          "default": "1e-06"
+        },
+        {
+          "key": "selected_indices",
+          "label": "Mốc dùng (JSON, trống: toàn bộ bảng)",
+          "default": ""
+        },
+        {
+          "key": "max_iter",
+          "label": "Số vòng tối đa",
+          "default": "100"
+        },
+        {
+          "key": "initial_rule",
+          "label": "Quy tắc khởi tạo",
+          "default": "Tuyến tính tại gốc"
+        },
+        {
+          "key": "initial_t",
+          "label": "t₀ khi khởi tạo thủ công",
+          "default": ""
+        },
+        {
+          "key": "detail_level",
+          "label": "Mức trình bày",
+          "default": "Tổng hợp"
+        }
+      ]
+    },
+    {
+      "tool": "Nội suy ngược",
+      "method": "Lặp lùi",
+      "fields": [
+        {
+          "key": "target",
+          "label": "Giá trị y cần tìm ngược",
+          "default": "2"
+        },
+        {
+          "key": "a",
+          "label": "Cận x trái (trống: khoảng đổi dấu duy nhất)",
+          "default": ""
+        },
+        {
+          "key": "b",
+          "label": "Cận x phải (trống: khoảng đổi dấu duy nhất)",
+          "default": ""
+        },
+        {
+          "key": "tol",
+          "label": "Dung sai vị trí/bước theo x",
+          "default": "1e-06"
+        },
+        {
+          "key": "residual_tol",
+          "label": "Dung sai phần dư",
+          "default": "1e-06"
+        },
+        {
+          "key": "selected_indices",
+          "label": "Mốc dùng (JSON, trống: toàn bộ bảng)",
+          "default": ""
+        },
+        {
+          "key": "max_iter",
+          "label": "Số vòng tối đa",
+          "default": "100"
+        },
+        {
+          "key": "initial_rule",
+          "label": "Quy tắc khởi tạo",
+          "default": "Tuyến tính tại gốc"
+        },
+        {
+          "key": "initial_t",
+          "label": "t₀ khi khởi tạo thủ công",
+          "default": ""
+        },
+        {
+          "key": "detail_level",
+          "label": "Mức trình bày",
+          "default": "Tổng hợp"
+        }
+      ]
+    },
+    {
+      "tool": "Nội suy ngược",
+      "method": "Lặp có cận co",
+      "fields": [
+        {
+          "key": "target",
+          "label": "Giá trị y cần tìm ngược",
+          "default": "4"
+        },
+        {
+          "key": "a",
+          "label": "Cận x trái của khoảng nghiệm",
+          "default": "1.6"
+        },
+        {
+          "key": "b",
+          "label": "Cận x phải của khoảng nghiệm",
+          "default": "1.8"
+        },
+        {
+          "key": "tol",
+          "label": "Dung sai vị trí",
+          "default": "1e-06"
+        },
+        {
+          "key": "residual_tol",
+          "label": "Dung sai phần dư",
+          "default": "1e-06"
+        },
+        {
+          "key": "direction",
+          "label": "Hướng nội suy",
+          "default": "Tiến"
+        },
+        {
+          "key": "selected_indices",
+          "label": "Mốc dùng (JSON, trống: toàn bộ bảng)",
+          "default": ""
+        },
+        {
+          "key": "max_iter",
+          "label": "Số vòng tối đa",
+          "default": "100"
+        },
+        {
+          "key": "initial_rule",
+          "label": "Quy tắc khởi tạo",
+          "default": "Tuyến tính tại gốc"
+        },
+        {
+          "key": "initial_t",
+          "label": "t₀ khi khởi tạo thủ công",
+          "default": ""
+        },
+        {
+          "key": "detail_level",
+          "label": "Mức trình bày",
+          "default": "Tổng hợp"
+        }
+      ]
+    },
+    {
+      "tool": "Nội suy ngược",
+      "method": "Hàm ngược — Newton",
+      "fields": [
+        {
+          "key": "target",
+          "label": "Giá trị y cần tìm ngược",
+          "default": "6"
+        },
+        {
+          "key": "count",
+          "label": "Số mốc đã chọn (để trống: toàn tập nhập)",
+          "default": ""
+        },
+        {
+          "key": "selected_indices",
+          "label": "Mốc dùng (JSON, trống: toàn bộ bảng)",
+          "default": ""
+        },
+        {
+          "key": "detail_level",
+          "label": "Mức trình bày",
+          "default": "Tổng hợp"
+        }
+      ]
+    },
+    {
+      "tool": "Nội suy ngược",
+      "method": "Hàm ngược — Lagrange",
+      "fields": [
+        {
+          "key": "target",
+          "label": "Giá trị y cần tìm ngược",
+          "default": "6"
+        },
+        {
+          "key": "count",
+          "label": "Số mốc đã chọn (để trống: toàn tập nhập)",
+          "default": ""
+        },
+        {
+          "key": "selected_indices",
+          "label": "Mốc dùng (JSON, trống: toàn bộ bảng)",
+          "default": ""
+        },
+        {
+          "key": "detail_level",
+          "label": "Mức trình bày",
+          "default": "Tổng hợp"
+        }
+      ]
+    },
+    {
+      "tool": "Nội suy ngược",
+      "method": "Chia đôi đa thức",
+      "fields": [
+        {
+          "key": "target",
+          "label": "Giá trị y cần tìm ngược",
+          "default": "2"
+        },
+        {
+          "key": "a",
+          "label": "Cận trái",
+          "default": "1"
+        },
+        {
+          "key": "b",
+          "label": "Cận phải",
+          "default": "2"
+        },
+        {
+          "key": "tol",
+          "label": "Dung sai vị trí",
+          "default": "0.001"
+        },
+        {
+          "key": "selected_indices",
+          "label": "Mốc dùng (JSON, trống: toàn bộ bảng)",
+          "default": ""
+        },
+        {
+          "key": "detail_level",
+          "label": "Mức trình bày",
+          "default": "Tổng hợp"
+        }
+      ]
+    },
+    {
+      "tool": "Spline",
+      "method": "Tuyến tính",
+      "fields": [
+        {
+          "key": "target",
+          "label": "Điểm cần tính x (có thể để trống)",
+          "default": "1.5"
+        },
+        {
+          "key": "order",
+          "label": "Cấp đạo hàm (0 = giá trị)",
+          "default": "0"
+        },
+        {
+          "key": "integral_a",
+          "label": "Cận tích phân a (không bắt buộc)",
+          "default": ""
+        },
+        {
+          "key": "integral_b",
+          "label": "Cận tích phân b (không bắt buộc)",
+          "default": ""
+        },
+        {
+          "key": "solver",
+          "label": "Cách giải hệ biên",
+          "default": "Tự chọn"
+        },
+        {
+          "key": "detail_level",
+          "label": "Mức trình bày",
+          "default": "Tổng hợp"
+        }
+      ]
+    },
+    {
+      "tool": "Spline",
+      "method": "Bậc hai — biên trái",
+      "fields": [
+        {
+          "key": "target",
+          "label": "Điểm cần tính x (có thể để trống)",
+          "default": "1.5"
+        },
+        {
+          "key": "order",
+          "label": "Cấp đạo hàm (0 = giá trị)",
+          "default": "0"
+        },
+        {
+          "key": "left",
+          "label": "Giá trị đạo hàm tại biên trái",
+          "default": "0"
+        },
+        {
+          "key": "integral_a",
+          "label": "Cận tích phân a (không bắt buộc)",
+          "default": ""
+        },
+        {
+          "key": "integral_b",
+          "label": "Cận tích phân b (không bắt buộc)",
+          "default": ""
+        },
+        {
+          "key": "solver",
+          "label": "Cách giải hệ biên",
+          "default": "Tự chọn"
+        },
+        {
+          "key": "detail_level",
+          "label": "Mức trình bày",
+          "default": "Tổng hợp"
+        }
+      ]
+    },
+    {
+      "tool": "Spline",
+      "method": "Bậc hai — biên phải",
+      "fields": [
+        {
+          "key": "target",
+          "label": "Điểm cần tính x (có thể để trống)",
+          "default": "1.5"
+        },
+        {
+          "key": "order",
+          "label": "Cấp đạo hàm (0 = giá trị)",
+          "default": "0"
+        },
+        {
+          "key": "right",
+          "label": "Giá trị đạo hàm tại biên phải",
+          "default": "0"
+        },
+        {
+          "key": "integral_a",
+          "label": "Cận tích phân a (không bắt buộc)",
+          "default": ""
+        },
+        {
+          "key": "integral_b",
+          "label": "Cận tích phân b (không bắt buộc)",
+          "default": ""
+        },
+        {
+          "key": "solver",
+          "label": "Cách giải hệ biên",
+          "default": "Tự chọn"
+        },
+        {
+          "key": "detail_level",
+          "label": "Mức trình bày",
+          "default": "Tổng hợp"
+        }
+      ]
+    },
+    {
+      "tool": "Spline",
+      "method": "Cubic tự nhiên",
+      "fields": [
+        {
+          "key": "target",
+          "label": "Điểm cần tính x (có thể để trống)",
+          "default": "1.5"
+        },
+        {
+          "key": "order",
+          "label": "Cấp đạo hàm (0 = giá trị)",
+          "default": "0"
+        },
+        {
+          "key": "integral_a",
+          "label": "Cận tích phân a (không bắt buộc)",
+          "default": ""
+        },
+        {
+          "key": "integral_b",
+          "label": "Cận tích phân b (không bắt buộc)",
+          "default": ""
+        },
+        {
+          "key": "solver",
+          "label": "Cách giải hệ biên",
+          "default": "Tự chọn"
+        },
+        {
+          "key": "detail_level",
+          "label": "Mức trình bày",
+          "default": "Tổng hợp"
+        }
+      ]
+    },
+    {
+      "tool": "Spline",
+      "method": "Cubic kẹp",
+      "fields": [
+        {
+          "key": "target",
+          "label": "Điểm cần tính x (có thể để trống)",
+          "default": "1.5"
+        },
+        {
+          "key": "order",
+          "label": "Cấp đạo hàm (0 = giá trị)",
+          "default": "0"
+        },
+        {
+          "key": "left",
+          "label": "Giá trị đạo hàm tại biên trái",
+          "default": "0"
+        },
+        {
+          "key": "right",
+          "label": "Giá trị đạo hàm tại biên phải",
+          "default": "0"
+        },
+        {
+          "key": "integral_a",
+          "label": "Cận tích phân a (không bắt buộc)",
+          "default": ""
+        },
+        {
+          "key": "integral_b",
+          "label": "Cận tích phân b (không bắt buộc)",
+          "default": ""
+        },
+        {
+          "key": "solver",
+          "label": "Cách giải hệ biên",
+          "default": "Tự chọn"
+        },
+        {
+          "key": "detail_level",
+          "label": "Mức trình bày",
+          "default": "Tổng hợp"
+        }
+      ]
+    },
+    {
+      "tool": "Spline",
+      "method": "Cubic đạo hàm bậc hai",
+      "fields": [
+        {
+          "key": "target",
+          "label": "Điểm cần tính x (có thể để trống)",
+          "default": "1.5"
+        },
+        {
+          "key": "order",
+          "label": "Cấp đạo hàm (0 = giá trị)",
+          "default": "0"
+        },
+        {
+          "key": "left",
+          "label": "Giá trị đạo hàm tại biên trái",
+          "default": "0"
+        },
+        {
+          "key": "right",
+          "label": "Giá trị đạo hàm tại biên phải",
+          "default": "0"
+        },
+        {
+          "key": "integral_a",
+          "label": "Cận tích phân a (không bắt buộc)",
+          "default": ""
+        },
+        {
+          "key": "integral_b",
+          "label": "Cận tích phân b (không bắt buộc)",
+          "default": ""
+        },
+        {
+          "key": "solver",
+          "label": "Cách giải hệ biên",
+          "default": "Tự chọn"
+        },
+        {
+          "key": "detail_level",
+          "label": "Mức trình bày",
+          "default": "Tổng hợp"
+        }
+      ]
+    },
+    {
+      "tool": "Spline",
+      "method": "Cubic hỗn hợp",
+      "fields": [
+        {
+          "key": "target",
+          "label": "Điểm cần tính x (có thể để trống)",
+          "default": "1.5"
+        },
+        {
+          "key": "order",
+          "label": "Cấp đạo hàm (0 = giá trị)",
+          "default": "0"
+        },
+        {
+          "key": "left_order",
+          "label": "Cấp đạo hàm biên trái",
+          "default": "1"
+        },
+        {
+          "key": "right_order",
+          "label": "Cấp đạo hàm biên phải",
+          "default": "2"
+        },
+        {
+          "key": "left",
+          "label": "Giá trị tại biên trái",
+          "default": "0"
+        },
+        {
+          "key": "right",
+          "label": "Giá trị tại biên phải",
+          "default": "2"
+        },
+        {
+          "key": "integral_a",
+          "label": "Cận tích phân a (không bắt buộc)",
+          "default": ""
+        },
+        {
+          "key": "integral_b",
+          "label": "Cận tích phân b (không bắt buộc)",
+          "default": ""
+        },
+        {
+          "key": "solver",
+          "label": "Cách giải hệ biên",
+          "default": "Tự chọn"
+        },
+        {
+          "key": "detail_level",
+          "label": "Mức trình bày",
+          "default": "Tổng hợp"
+        }
+      ]
+    },
+    {
+      "tool": "Spline",
+      "method": "Cubic tuần hoàn",
+      "fields": [
+        {
+          "key": "target",
+          "label": "Điểm cần tính x (có thể để trống)",
+          "default": "1.5"
+        },
+        {
+          "key": "order",
+          "label": "Cấp đạo hàm (0 = giá trị)",
+          "default": "0"
+        },
+        {
+          "key": "integral_a",
+          "label": "Cận tích phân a (không bắt buộc)",
+          "default": ""
+        },
+        {
+          "key": "integral_b",
+          "label": "Cận tích phân b (không bắt buộc)",
+          "default": ""
+        },
+        {
+          "key": "solver",
+          "label": "Cách giải hệ biên",
+          "default": "Tự chọn"
+        },
+        {
+          "key": "detail_level",
+          "label": "Mức trình bày",
+          "default": "Tổng hợp"
+        }
+      ]
+    },
+    {
+      "tool": "Spline",
+      "method": "Cubic not-a-knot",
+      "fields": [
+        {
+          "key": "target",
+          "label": "Điểm cần tính x (có thể để trống)",
+          "default": "1.5"
+        },
+        {
+          "key": "order",
+          "label": "Cấp đạo hàm (0 = giá trị)",
+          "default": "0"
+        },
+        {
+          "key": "integral_a",
+          "label": "Cận tích phân a (không bắt buộc)",
+          "default": ""
+        },
+        {
+          "key": "integral_b",
+          "label": "Cận tích phân b (không bắt buộc)",
+          "default": ""
+        },
+        {
+          "key": "solver",
+          "label": "Cách giải hệ biên",
+          "default": "Tự chọn"
+        },
+        {
+          "key": "detail_level",
+          "label": "Mức trình bày",
+          "default": "Tổng hợp"
+        }
+      ]
+    },
+    {
+      "tool": "Spline",
+      "method": "Bậc 4 — đạo hàm trái",
+      "fields": [
+        {
+          "key": "target",
+          "label": "Điểm cần tính x (có thể để trống)",
+          "default": "1.5"
+        },
+        {
+          "key": "order",
+          "label": "Cấp đạo hàm (0 = giá trị)",
+          "default": "0"
+        },
+        {
+          "key": "derivatives",
+          "label": "S′ S′′ S′′′ ở đầu trái",
+          "default": "0 2 0"
+        },
+        {
+          "key": "integral_a",
+          "label": "Cận tích phân a (không bắt buộc)",
+          "default": ""
+        },
+        {
+          "key": "integral_b",
+          "label": "Cận tích phân b (không bắt buộc)",
+          "default": ""
+        },
+        {
+          "key": "solver",
+          "label": "Cách giải hệ biên",
+          "default": "Tự chọn"
+        },
+        {
+          "key": "detail_level",
+          "label": "Mức trình bày",
+          "default": "Tổng hợp"
+        }
+      ]
+    },
+    {
+      "tool": "Spline",
+      "method": "Biên tổng quát",
+      "fields": [
+        {
+          "key": "target",
+          "label": "Điểm cần tính x (có thể để trống)",
+          "default": "1.5"
+        },
+        {
+          "key": "order",
+          "label": "Cấp đạo hàm (0 = giá trị)",
+          "default": "0"
+        },
+        {
+          "key": "degree",
+          "label": "Bậc spline",
+          "default": "4"
+        },
+        {
+          "key": "conditions",
+          "label": "Điều kiện biên (JSON)",
+          "default": "[[\"trái\",1,0],[\"trái\",2,2],[\"trái\",3,0]]"
+        },
+        {
+          "key": "integral_a",
+          "label": "Cận tích phân a (không bắt buộc)",
+          "default": ""
+        },
+        {
+          "key": "integral_b",
+          "label": "Cận tích phân b (không bắt buộc)",
+          "default": ""
+        },
+        {
+          "key": "solver",
+          "label": "Cách giải hệ biên",
+          "default": "Tự chọn"
+        },
+        {
+          "key": "detail_level",
+          "label": "Mức trình bày",
+          "default": "Tổng hợp"
+        }
+      ]
+    },
+    {
+      "tool": "Bình phương tối thiểu",
+      "method": "Tuyến tính theo cơ sở",
+      "fields": [
+        {
+          "key": "basis",
+          "label": "Các hàm cơ sở (ngăn bằng dấu ;)",
+          "default": "1; x"
+        },
+        {
+          "key": "weights",
+          "label": "Trọng số w_i (để trống: tất cả bằng 1)",
+          "default": ""
+        },
+        {
+          "key": "solver",
+          "label": "Cách giải bình phương tối thiểu",
+          "default": "QR"
+        },
+        {
+          "key": "rank_policy",
+          "label": "Quy tắc khi thiếu hạng",
+          "default": "Nghiệm duy nhất"
+        },
+        {
+          "key": "target",
+          "label": "Điểm dự đoán x (không bắt buộc)",
+          "default": ""
+        },
+        {
+          "key": "detail_level",
+          "label": "Mức trình bày",
+          "default": "Tổng hợp"
+        }
+      ]
+    },
+    {
+      "tool": "Bình phương tối thiểu",
+      "method": "Lũy thừa",
+      "fields": [
+        {
+          "key": "weights",
+          "label": "Trọng số w_i (để trống: tất cả bằng 1)",
+          "default": ""
+        },
+        {
+          "key": "solver",
+          "label": "Cách giải bình phương tối thiểu",
+          "default": "QR"
+        },
+        {
+          "key": "rank_policy",
+          "label": "Quy tắc khi thiếu hạng",
+          "default": "Nghiệm duy nhất"
+        },
+        {
+          "key": "target",
+          "label": "Điểm dự đoán x (không bắt buộc)",
+          "default": ""
+        },
+        {
+          "key": "detail_level",
+          "label": "Mức trình bày",
+          "default": "Tổng hợp"
+        }
+      ]
+    },
+    {
+      "tool": "Bình phương tối thiểu",
+      "method": "Hàm mũ",
+      "fields": [
+        {
+          "key": "basis",
+          "label": "Các hàm cơ sở (ngăn bằng dấu ;)",
+          "default": "x"
+        },
+        {
+          "key": "weights",
+          "label": "Trọng số w_i (để trống: tất cả bằng 1)",
+          "default": ""
+        },
+        {
+          "key": "solver",
+          "label": "Cách giải bình phương tối thiểu",
+          "default": "QR"
+        },
+        {
+          "key": "rank_policy",
+          "label": "Quy tắc khi thiếu hạng",
+          "default": "Nghiệm duy nhất"
+        },
+        {
+          "key": "target",
+          "label": "Điểm dự đoán x (không bắt buộc)",
+          "default": ""
+        },
+        {
+          "key": "detail_level",
+          "label": "Mức trình bày",
+          "default": "Tổng hợp"
+        }
+      ]
+    },
+    {
+      "tool": "Bình phương tối thiểu",
+      "method": "Lũy thừa — SSE thang y",
+      "fields": [
+        {
+          "key": "initial",
+          "label": "Tham số đầu A b1 b2... (để trống: từ log)",
+          "default": ""
+        },
+        {
+          "key": "tol",
+          "label": "Ngưỡng dừng phi tuyến",
+          "default": "1e-10"
+        },
+        {
+          "key": "max_iter",
+          "label": "Số vòng tối đa",
+          "default": "100"
+        },
+        {
+          "key": "weights",
+          "label": "Trọng số w_i (để trống: tất cả bằng 1)",
+          "default": ""
+        },
+        {
+          "key": "solver",
+          "label": "Bộ giải phi tuyến",
+          "default": "Levenberg–Marquardt"
+        },
+        {
+          "key": "target",
+          "label": "Điểm dự đoán x (không bắt buộc)",
+          "default": ""
+        },
+        {
+          "key": "detail_level",
+          "label": "Mức trình bày",
+          "default": "Tổng hợp"
+        }
+      ]
+    },
+    {
+      "tool": "Bình phương tối thiểu",
+      "method": "Hàm mũ — SSE thang y",
+      "fields": [
+        {
+          "key": "basis",
+          "label": "Các hàm cơ sở (ngăn bằng dấu ;)",
+          "default": "x"
+        },
+        {
+          "key": "initial",
+          "label": "Tham số đầu A b1 b2... (để trống: từ log)",
+          "default": ""
+        },
+        {
+          "key": "tol",
+          "label": "Ngưỡng dừng phi tuyến",
+          "default": "1e-10"
+        },
+        {
+          "key": "max_iter",
+          "label": "Số vòng tối đa",
+          "default": "100"
+        },
+        {
+          "key": "weights",
+          "label": "Trọng số w_i (để trống: tất cả bằng 1)",
+          "default": ""
+        },
+        {
+          "key": "solver",
+          "label": "Bộ giải phi tuyến",
+          "default": "Levenberg–Marquardt"
+        },
+        {
+          "key": "target",
+          "label": "Điểm dự đoán x (không bắt buộc)",
+          "default": ""
+        },
+        {
+          "key": "detail_level",
+          "label": "Mức trình bày",
+          "default": "Tổng hợp"
+        }
+      ]
+    },
+    {
+      "tool": "Bình phương tối thiểu",
+      "method": "Log của tổ hợp cơ sở",
+      "fields": [
+        {
+          "key": "basis",
+          "label": "Các hàm cơ sở (ngăn bằng dấu ;)",
+          "default": "1; x"
+        },
+        {
+          "key": "weights",
+          "label": "Trọng số w_i (để trống: tất cả bằng 1)",
+          "default": ""
+        },
+        {
+          "key": "solver",
+          "label": "Cách giải bình phương tối thiểu",
+          "default": "QR"
+        },
+        {
+          "key": "rank_policy",
+          "label": "Quy tắc khi thiếu hạng",
+          "default": "Nghiệm duy nhất"
+        },
+        {
+          "key": "target",
+          "label": "Điểm dự đoán x (không bắt buộc)",
+          "default": ""
+        },
+        {
+          "key": "detail_level",
+          "label": "Mức trình bày",
+          "default": "Tổng hợp"
+        }
+      ]
+    },
+    {
+      "tool": "Bình phương tối thiểu",
+      "method": "1/(a+b*x)",
+      "fields": [
+        {
+          "key": "weights",
+          "label": "Trọng số w_i (để trống: tất cả bằng 1)",
+          "default": ""
+        },
+        {
+          "key": "solver",
+          "label": "Cách giải bình phương tối thiểu",
+          "default": "QR"
+        },
+        {
+          "key": "rank_policy",
+          "label": "Quy tắc khi thiếu hạng",
+          "default": "Nghiệm duy nhất"
+        },
+        {
+          "key": "target",
+          "label": "Điểm dự đoán x (không bắt buộc)",
+          "default": ""
+        },
+        {
+          "key": "detail_level",
+          "label": "Mức trình bày",
+          "default": "Tổng hợp"
+        }
+      ]
+    },
+    {
+      "tool": "Bình phương tối thiểu",
+      "method": "x/(a+b*x)",
+      "fields": [
+        {
+          "key": "weights",
+          "label": "Trọng số w_i (để trống: tất cả bằng 1)",
+          "default": ""
+        },
+        {
+          "key": "solver",
+          "label": "Cách giải bình phương tối thiểu",
+          "default": "QR"
+        },
+        {
+          "key": "rank_policy",
+          "label": "Quy tắc khi thiếu hạng",
+          "default": "Nghiệm duy nhất"
+        },
+        {
+          "key": "target",
+          "label": "Điểm dự đoán x (không bắt buộc)",
+          "default": ""
+        },
+        {
+          "key": "detail_level",
+          "label": "Mức trình bày",
+          "default": "Tổng hợp"
+        }
+      ]
+    },
+    {
+      "tool": "Bình phương tối thiểu",
+      "method": "a+b*ln(x)",
+      "fields": [
+        {
+          "key": "weights",
+          "label": "Trọng số w_i (để trống: tất cả bằng 1)",
+          "default": ""
+        },
+        {
+          "key": "solver",
+          "label": "Cách giải bình phương tối thiểu",
+          "default": "QR"
+        },
+        {
+          "key": "rank_policy",
+          "label": "Quy tắc khi thiếu hạng",
+          "default": "Nghiệm duy nhất"
+        },
+        {
+          "key": "target",
+          "label": "Điểm dự đoán x (không bắt buộc)",
+          "default": ""
+        },
+        {
+          "key": "detail_level",
+          "label": "Mức trình bày",
+          "default": "Tổng hợp"
+        }
+      ]
+    },
+    {
+      "tool": "Bình phương tối thiểu",
+      "method": "A*b^x",
+      "fields": [
+        {
+          "key": "weights",
+          "label": "Trọng số w_i (để trống: tất cả bằng 1)",
+          "default": ""
+        },
+        {
+          "key": "solver",
+          "label": "Cách giải bình phương tối thiểu",
+          "default": "QR"
+        },
+        {
+          "key": "rank_policy",
+          "label": "Quy tắc khi thiếu hạng",
+          "default": "Nghiệm duy nhất"
+        },
+        {
+          "key": "target",
+          "label": "Điểm dự đoán x (không bắt buộc)",
+          "default": ""
+        },
+        {
+          "key": "detail_level",
+          "label": "Mức trình bày",
+          "default": "Tổng hợp"
+        }
+      ]
+    },
+    {
+      "tool": "Tích phân",
+      "method": "Hình thang",
+      "fields": [
+        {
+          "key": "expr",
+          "label": "Hàm f(x)",
+          "default": "x^2"
+        },
+        {
+          "key": "a",
+          "label": "Cận trái a",
+          "default": "0"
+        },
+        {
+          "key": "b",
+          "label": "Cận phải b",
+          "default": "1"
+        },
+        {
+          "key": "n",
+          "label": "Số khoảng chia n",
+          "default": "20"
+        },
+        {
+          "key": "tol",
+          "label": "Dung sai tự chia lưới (để trống: dùng n)",
+          "default": ""
+        },
+        {
+          "key": "bound",
+          "label": "Cận đạo hàm M (không bắt buộc)",
+          "default": ""
+        },
+        {
+          "key": "source",
+          "label": "Nguồn dữ liệu",
+          "default": "Hàm"
+        }
+      ]
+    },
+    {
+      "tool": "Tích phân",
+      "method": "Simpson",
+      "fields": [
+        {
+          "key": "expr",
+          "label": "Hàm f(x)",
+          "default": "x^2"
+        },
+        {
+          "key": "a",
+          "label": "Cận trái a",
+          "default": "0"
+        },
+        {
+          "key": "b",
+          "label": "Cận phải b",
+          "default": "1"
+        },
+        {
+          "key": "n",
+          "label": "Số khoảng chia n",
+          "default": "20"
+        },
+        {
+          "key": "tol",
+          "label": "Dung sai tự chia lưới (để trống: dùng n)",
+          "default": ""
+        },
+        {
+          "key": "bound",
+          "label": "Cận đạo hàm M (không bắt buộc)",
+          "default": ""
+        },
+        {
+          "key": "source",
+          "label": "Nguồn dữ liệu",
+          "default": "Hàm"
+        }
+      ]
+    },
+    {
+      "tool": "Tích phân",
+      "method": "Trung điểm",
+      "fields": [
+        {
+          "key": "expr",
+          "label": "Hàm f(x)",
+          "default": "x^2"
+        },
+        {
+          "key": "a",
+          "label": "Cận trái a",
+          "default": "0"
+        },
+        {
+          "key": "b",
+          "label": "Cận phải b",
+          "default": "1"
+        },
+        {
+          "key": "n",
+          "label": "Số khoảng chia n",
+          "default": "20"
+        },
+        {
+          "key": "tol",
+          "label": "Dung sai tự chia lưới (để trống: dùng n)",
+          "default": ""
+        },
+        {
+          "key": "bound",
+          "label": "Cận đạo hàm M (không bắt buộc)",
+          "default": ""
+        },
+        {
+          "key": "source",
+          "label": "Nguồn dữ liệu",
+          "default": "Hàm"
+        }
+      ]
+    },
+    {
+      "tool": "Tích phân",
+      "method": "Newton-Cotes",
+      "fields": [
+        {
+          "key": "expr",
+          "label": "Hàm f(x)",
+          "default": "x^2"
+        },
+        {
+          "key": "a",
+          "label": "Cận trái a",
+          "default": "0"
+        },
+        {
+          "key": "b",
+          "label": "Cận phải b",
+          "default": "1"
+        },
+        {
+          "key": "n",
+          "label": "Số khoảng chia n",
+          "default": "20"
+        },
+        {
+          "key": "degree",
+          "label": "Bậc Newton-Cotes",
+          "default": "4"
+        },
+        {
+          "key": "tol",
+          "label": "Dung sai tự chia lưới (để trống: dùng n)",
+          "default": ""
+        },
+        {
+          "key": "bound",
+          "label": "Cận đạo hàm M (không bắt buộc)",
+          "default": ""
+        },
+        {
+          "key": "source",
+          "label": "Nguồn dữ liệu",
+          "default": "Hàm"
+        }
+      ]
+    },
+    {
+      "tool": "Tích phân",
+      "method": "Tích phân kép",
+      "fields": [
+        {
+          "key": "expr",
+          "label": "Hàm f(x,y)",
+          "default": "x^2+y^2"
+        },
+        {
+          "key": "a",
+          "label": "Cận trái a",
+          "default": "0"
+        },
+        {
+          "key": "b",
+          "label": "Cận phải b",
+          "default": "1"
+        },
+        {
+          "key": "n",
+          "label": "Số khoảng chia n",
+          "default": "20"
+        },
+        {
+          "key": "c",
+          "label": "Cận dưới y",
+          "default": "0"
+        },
+        {
+          "key": "d",
+          "label": "Cận trên y",
+          "default": "1"
+        },
+        {
+          "key": "rule",
+          "label": "Quy tắc",
+          "default": "Simpson"
+        },
+        {
+          "key": "tol",
+          "label": "Dung sai Runge",
+          "default": "1e-07"
+        }
+      ]
+    },
+    {
+      "tool": "Phương trình vi phân",
+      "method": "Euler hiện",
+      "fields": [
+        {
+          "key": "expr",
+          "label": "Vế phải x′; y′; z′ (1–3 hàm)",
+          "default": "x"
+        },
+        {
+          "key": "initial",
+          "label": "Giá trị đầu x, y, z",
+          "default": "1"
+        },
+        {
+          "key": "a",
+          "label": "Thời điểm đầu t0",
+          "default": "0"
+        },
+        {
+          "key": "b",
+          "label": "Thời điểm cuối",
+          "default": "1"
+        },
+        {
+          "key": "h",
+          "label": "Bước h",
+          "default": "0.1"
+        },
+        {
+          "key": "tol",
+          "label": "Dung sai bước ẩn",
+          "default": "1e-10"
+        }
+      ]
+    },
+    {
+      "tool": "Phương trình vi phân",
+      "method": "Euler ẩn",
+      "fields": [
+        {
+          "key": "expr",
+          "label": "Vế phải x′; y′; z′ (1–3 hàm)",
+          "default": "x"
+        },
+        {
+          "key": "initial",
+          "label": "Giá trị đầu x, y, z",
+          "default": "1"
+        },
+        {
+          "key": "a",
+          "label": "Thời điểm đầu t0",
+          "default": "0"
+        },
+        {
+          "key": "b",
+          "label": "Thời điểm cuối",
+          "default": "1"
+        },
+        {
+          "key": "h",
+          "label": "Bước h",
+          "default": "0.1"
+        },
+        {
+          "key": "tol",
+          "label": "Dung sai bước ẩn",
+          "default": "1e-10"
+        }
+      ]
+    },
+    {
+      "tool": "Phương trình vi phân",
+      "method": "Hình thang",
+      "fields": [
+        {
+          "key": "expr",
+          "label": "Vế phải x′; y′; z′ (1–3 hàm)",
+          "default": "x"
+        },
+        {
+          "key": "initial",
+          "label": "Giá trị đầu x, y, z",
+          "default": "1"
+        },
+        {
+          "key": "a",
+          "label": "Thời điểm đầu t0",
+          "default": "0"
+        },
+        {
+          "key": "b",
+          "label": "Thời điểm cuối",
+          "default": "1"
+        },
+        {
+          "key": "h",
+          "label": "Bước h",
+          "default": "0.1"
+        },
+        {
+          "key": "tol",
+          "label": "Dung sai bước ẩn",
+          "default": "1e-10"
+        }
+      ]
+    },
+    {
+      "tool": "Phương trình vi phân",
+      "method": "RK2",
+      "fields": [
+        {
+          "key": "expr",
+          "label": "Vế phải x′; y′; z′ (1–3 hàm)",
+          "default": "x"
+        },
+        {
+          "key": "initial",
+          "label": "Giá trị đầu x, y, z",
+          "default": "1"
+        },
+        {
+          "key": "a",
+          "label": "Thời điểm đầu t0",
+          "default": "0"
+        },
+        {
+          "key": "b",
+          "label": "Thời điểm cuối",
+          "default": "1"
+        },
+        {
+          "key": "h",
+          "label": "Bước h",
+          "default": "0.1"
+        },
+        {
+          "key": "tol",
+          "label": "Dung sai bước ẩn",
+          "default": "1e-10"
+        }
+      ]
+    },
+    {
+      "tool": "Phương trình vi phân",
+      "method": "RK3",
+      "fields": [
+        {
+          "key": "expr",
+          "label": "Vế phải x′; y′; z′ (1–3 hàm)",
+          "default": "x"
+        },
+        {
+          "key": "initial",
+          "label": "Giá trị đầu x, y, z",
+          "default": "1"
+        },
+        {
+          "key": "a",
+          "label": "Thời điểm đầu t0",
+          "default": "0"
+        },
+        {
+          "key": "b",
+          "label": "Thời điểm cuối",
+          "default": "1"
+        },
+        {
+          "key": "h",
+          "label": "Bước h",
+          "default": "0.1"
+        },
+        {
+          "key": "tol",
+          "label": "Dung sai bước ẩn",
+          "default": "1e-10"
+        }
+      ]
+    },
+    {
+      "tool": "Phương trình vi phân",
+      "method": "RK4",
+      "fields": [
+        {
+          "key": "expr",
+          "label": "Vế phải x′; y′; z′ (1–3 hàm)",
+          "default": "x"
+        },
+        {
+          "key": "initial",
+          "label": "Giá trị đầu x, y, z",
+          "default": "1"
+        },
+        {
+          "key": "a",
+          "label": "Thời điểm đầu t0",
+          "default": "0"
+        },
+        {
+          "key": "b",
+          "label": "Thời điểm cuối",
+          "default": "1"
+        },
+        {
+          "key": "h",
+          "label": "Bước h",
+          "default": "0.1"
+        },
+        {
+          "key": "tol",
+          "label": "Dung sai bước ẩn",
+          "default": "1e-10"
+        }
+      ]
+    },
+    {
+      "tool": "Phương trình vi phân",
+      "method": "Adams 2",
+      "fields": [
+        {
+          "key": "expr",
+          "label": "Vế phải x′; y′; z′ (1–3 hàm)",
+          "default": "x"
+        },
+        {
+          "key": "initial",
+          "label": "Giá trị đầu x, y, z",
+          "default": "1"
+        },
+        {
+          "key": "a",
+          "label": "Thời điểm đầu t0",
+          "default": "0"
+        },
+        {
+          "key": "b",
+          "label": "Thời điểm cuối",
+          "default": "1"
+        },
+        {
+          "key": "h",
+          "label": "Bước h",
+          "default": "0.1"
+        },
+        {
+          "key": "tol",
+          "label": "Dung sai bước ẩn",
+          "default": "1e-10"
+        }
+      ]
+    },
+    {
+      "tool": "Phương trình vi phân",
+      "method": "Adams 3",
+      "fields": [
+        {
+          "key": "expr",
+          "label": "Vế phải x′; y′; z′ (1–3 hàm)",
+          "default": "x"
+        },
+        {
+          "key": "initial",
+          "label": "Giá trị đầu x, y, z",
+          "default": "1"
+        },
+        {
+          "key": "a",
+          "label": "Thời điểm đầu t0",
+          "default": "0"
+        },
+        {
+          "key": "b",
+          "label": "Thời điểm cuối",
+          "default": "1"
+        },
+        {
+          "key": "h",
+          "label": "Bước h",
+          "default": "0.1"
+        },
+        {
+          "key": "tol",
+          "label": "Dung sai bước ẩn",
+          "default": "1e-10"
+        }
+      ]
+    },
+    {
+      "tool": "Phương trình vi phân",
+      "method": "Adams 4",
+      "fields": [
+        {
+          "key": "expr",
+          "label": "Vế phải x′; y′; z′ (1–3 hàm)",
+          "default": "x"
+        },
+        {
+          "key": "initial",
+          "label": "Giá trị đầu x, y, z",
+          "default": "1"
+        },
+        {
+          "key": "a",
+          "label": "Thời điểm đầu t0",
+          "default": "0"
+        },
+        {
+          "key": "b",
+          "label": "Thời điểm cuối",
+          "default": "1"
+        },
+        {
+          "key": "h",
+          "label": "Bước h",
+          "default": "0.1"
+        },
+        {
+          "key": "tol",
+          "label": "Dung sai bước ẩn",
+          "default": "1e-10"
+        }
+      ]
+    },
+    {
+      "tool": "Phương trình vi phân",
+      "method": "Adams 5",
+      "fields": [
+        {
+          "key": "expr",
+          "label": "Vế phải x′; y′; z′ (1–3 hàm)",
+          "default": "x"
+        },
+        {
+          "key": "initial",
+          "label": "Giá trị đầu x, y, z",
+          "default": "1"
+        },
+        {
+          "key": "a",
+          "label": "Thời điểm đầu t0",
+          "default": "0"
+        },
+        {
+          "key": "b",
+          "label": "Thời điểm cuối",
+          "default": "1"
+        },
+        {
+          "key": "h",
+          "label": "Bước h",
+          "default": "0.1"
+        },
+        {
+          "key": "tol",
+          "label": "Dung sai bước ẩn",
+          "default": "1e-10"
+        }
+      ]
+    },
+    {
+      "tool": "Phương trình vi phân",
+      "method": "RK2 tham số",
+      "fields": [
+        {
+          "key": "expr",
+          "label": "Vế phải x′; y′; z′ (1–3 hàm)",
+          "default": "x"
+        },
+        {
+          "key": "initial",
+          "label": "Giá trị đầu x, y, z",
+          "default": "1"
+        },
+        {
+          "key": "a",
+          "label": "Thời điểm đầu t0",
+          "default": "0"
+        },
+        {
+          "key": "b",
+          "label": "Thời điểm cuối",
+          "default": "1"
+        },
+        {
+          "key": "h",
+          "label": "Bước h",
+          "default": "0.1"
+        },
+        {
+          "key": "tol",
+          "label": "Dung sai bước ẩn",
+          "default": "1e-10"
+        },
+        {
+          "key": "parameter",
+          "label": "Tham số biết trước",
+          "default": "alpha2"
+        },
+        {
+          "key": "value",
+          "label": "Giá trị tham số",
+          "default": "1"
+        }
+      ]
+    },
+    {
+      "tool": "Phương trình vi phân",
+      "method": "RK3 tham số",
+      "fields": [
+        {
+          "key": "expr",
+          "label": "Vế phải x′; y′; z′ (1–3 hàm)",
+          "default": "x"
+        },
+        {
+          "key": "initial",
+          "label": "Giá trị đầu x, y, z",
+          "default": "1"
+        },
+        {
+          "key": "a",
+          "label": "Thời điểm đầu t0",
+          "default": "0"
+        },
+        {
+          "key": "b",
+          "label": "Thời điểm cuối",
+          "default": "1"
+        },
+        {
+          "key": "h",
+          "label": "Bước h",
+          "default": "0.1"
+        },
+        {
+          "key": "tol",
+          "label": "Dung sai bước ẩn",
+          "default": "1e-10"
+        },
+        {
+          "key": "alpha2",
+          "label": "alpha2",
+          "default": "0.5"
+        },
+        {
+          "key": "alpha3",
+          "label": "alpha3",
+          "default": "1"
+        }
+      ]
+    },
+    {
+      "tool": "Phương trình vi phân",
+      "method": "RK tùy chỉnh",
+      "fields": [
+        {
+          "key": "expr",
+          "label": "Vế phải x′; y′; z′ (1–3 hàm)",
+          "default": "x"
+        },
+        {
+          "key": "initial",
+          "label": "Giá trị đầu x, y, z",
+          "default": "1"
+        },
+        {
+          "key": "a",
+          "label": "Thời điểm đầu t0",
+          "default": "0"
+        },
+        {
+          "key": "b",
+          "label": "Thời điểm cuối",
+          "default": "1"
+        },
+        {
+          "key": "h",
+          "label": "Bước h",
+          "default": "0.1"
+        },
+        {
+          "key": "tol",
+          "label": "Dung sai bước ẩn",
+          "default": "1e-10"
+        },
+        {
+          "key": "rk_a",
+          "label": "Ma trận A (JSON)",
+          "default": "[[0,0],[1,0]]"
+        },
+        {
+          "key": "rk_b",
+          "label": "Trọng số b",
+          "default": "0.5 0.5"
+        },
+        {
+          "key": "rk_c",
+          "label": "Vị trí c",
+          "default": "0 1"
+        }
+      ]
+    },
+    {
+      "tool": "Bài toán biên",
+      "method": "Biên tổng quát",
+      "fields": [
+        {
+          "key": "p",
+          "label": "Hàm p(x)",
+          "default": "1"
+        },
+        {
+          "key": "q",
+          "label": "Hàm q(x)",
+          "default": "0"
+        },
+        {
+          "key": "f",
+          "label": "Hàm f(x)",
+          "default": "2"
+        },
+        {
+          "key": "a",
+          "label": "Đầu đoạn a",
+          "default": "0"
+        },
+        {
+          "key": "b",
+          "label": "Cuối đoạn b",
+          "default": "1"
+        },
+        {
+          "key": "h",
+          "label": "Bước h",
+          "default": "0.05"
+        },
+        {
+          "key": "left",
+          "label": "Biên trái: alpha beta gamma",
+          "default": "0 1 0"
+        },
+        {
+          "key": "right",
+          "label": "Biên phải: alpha beta gamma",
+          "default": "0 1 0"
+        }
+      ]
+    },
+    {
+      "tool": "Bài toán biên",
+      "method": "Trị riêng",
+      "fields": [
+        {
+          "key": "p",
+          "label": "Hàm p(x)",
+          "default": "1"
+        },
+        {
+          "key": "q",
+          "label": "Hàm q(x)",
+          "default": "0"
+        },
+        {
+          "key": "f",
+          "label": "Hàm r(x)",
+          "default": "1"
+        },
+        {
+          "key": "a",
+          "label": "Đầu đoạn a",
+          "default": "0"
+        },
+        {
+          "key": "b",
+          "label": "Cuối đoạn b",
+          "default": "1"
+        },
+        {
+          "key": "h",
+          "label": "Bước h",
+          "default": "0.05"
+        },
+        {
+          "key": "count",
+          "label": "Số trị riêng nhỏ nhất",
+          "default": "5"
+        }
+      ]
+    },
+    {
+      "tool": "Chọn mốc",
+      "method": "Mốc cách đều",
+      "fields": [
+        {
+          "key": "target",
+          "label": "Điểm x",
+          "default": "1.5"
+        },
+        {
+          "key": "count",
+          "label": "Số mốc cần lấy",
+          "default": "3"
+        }
+      ]
+    },
+    {
+      "tool": "Chọn mốc",
+      "method": "Mốc nội suy ngược",
+      "fields": [
+        {
+          "key": "target",
+          "label": "Giá trị y",
+          "default": "1.5"
+        }
+      ]
+    },
+    {
+      "tool": "Chọn mốc",
+      "method": "Chebyshev",
+      "fields": [
+        {
+          "key": "degree",
+          "label": "Bậc đa thức n (sinh n+1 mốc)",
+          "default": "4"
+        },
+        {
+          "key": "a",
+          "label": "Đầu đoạn a",
+          "default": "-1"
+        },
+        {
+          "key": "b",
+          "label": "Cuối đoạn b",
+          "default": "1"
+        }
+      ]
+    },
+    {
+      "tool": "Đạo hàm & Horner",
+      "method": "Đạo hàm từ bảng",
+      "fields": [
+        {
+          "key": "target",
+          "label": "Điểm x",
+          "default": "1.5"
+        },
+        {
+          "key": "degree",
+          "label": "Bậc p (dùng p+1 mốc)",
+          "default": "2"
+        },
+        {
+          "key": "order",
+          "label": "Cấp đạo hàm",
+          "default": "1"
+        }
+      ]
+    },
+    {
+      "tool": "Đạo hàm & Horner",
+      "method": "Horner",
+      "fields": [
+        {
+          "key": "coef",
+          "label": "Hệ số theo bậc giảm dần",
+          "default": "1 0 0"
+        },
+        {
+          "key": "target",
+          "label": "Điểm x",
+          "default": "1.5"
+        },
+        {
+          "key": "order",
+          "label": "Đạo hàm đến cấp",
+          "default": "2"
+        }
+      ]
+    }
+  ],
+  "model_checks": [
+    {
+      "model": "Tuyến tính theo cơ sở",
+      "linear_coefficients": [
+        1.1999999999999997,
+        0.7000000000000001
+      ],
+      "normal_system": [
+        [
+          7.0,
+          18.0
+        ],
+        [
+          18.0,
+          52.0
+        ]
+      ],
+      "rhs": [
+        21.0,
+        58.0
+      ]
+    },
+    {
+      "model": "Lũy thừa",
+      "linear_coefficients": [
+        1.0986122886681098,
+        1.9999999999999998
+      ],
+      "normal_system": [
+        [
+          7.0,
+          6.068425588244111
+        ],
+        [
+          6.068425588244111,
+          6.503564965946955
+        ]
+      ],
+      "rhs": [
+        19.82713719716499,
+        19.67397685600689
+      ]
+    },
+    {
+      "model": "Hàm mũ",
+      "linear_coefficients": [
+        0.6931471805599454,
+        0.29999999999999993
+      ],
+      "normal_system": [
+        [
+          7.0,
+          18.0
+        ],
+        [
+          18.0,
+          52.0
+        ]
+      ],
+      "rhs": [
+        10.252030263919616,
+        28.076649250079015
+      ]
+    },
+    {
+      "model": "Log của tổ hợp cơ sở",
+      "linear_coefficients": [
+        0.9999999999999987,
+        2.0000000000000004
+      ],
+      "normal_system": [
+        [
+          7.0,
+          18.0
+        ],
+        [
+          18.0,
+          52.0
+        ]
+      ],
+      "rhs": [
+        43.0,
+        122.0
+      ]
+    },
+    {
+      "model": "1/(a+b*x)",
+      "linear_coefficients": [
+        2.0,
+        3.0
+      ],
+      "normal_system": [
+        [
+          7.0,
+          18.0
+        ],
+        [
+          18.0,
+          52.0
+        ]
+      ],
+      "rhs": [
+        68.0,
+        192.0
+      ]
+    },
+    {
+      "model": "x/(a+b*x)",
+      "linear_coefficients": [
+        3.0000000000000004,
+        1.9999999999999996
+      ],
+      "normal_system": [
+        [
+          7.0,
+          3.25
+        ],
+        [
+          3.25,
+          1.8958333333333333
+        ]
+      ],
+      "rhs": [
+        27.5,
+        13.541666666666666
+      ]
+    },
+    {
+      "model": "a+b*ln(x)",
+      "linear_coefficients": [
+        1.0000000000000002,
+        1.9999999999999998
+      ],
+      "normal_system": [
+        [
+          7.0,
+          6.068425588244111
+        ],
+        [
+          6.068425588244111,
+          6.503564965946955
+        ]
+      ],
+      "rhs": [
+        19.13685117648822,
+        19.07555552013802
+      ]
+    },
+    {
+      "model": "A*b^x",
+      "linear_coefficients": [
+        0.6931471805599452,
+        1.0986122886681098
+      ],
+      "normal_system": [
+        [
+          7.0,
+          18.0
+        ],
+        [
+          18.0,
+          52.0
+        ]
+      ],
+      "rhs": [
+        24.62705145994559,
+        69.60448826082072
+      ]
+    },
+    {
+      "model": "power Jacobian",
+      "jacobian": [
+        [
+          1.0,
+          0.0
+        ],
+        [
+          3.249009585424942,
+          6.756125501248606
+        ],
+        [
+          6.47300783992378,
+          21.333977872755845
+        ],
+        [
+          10.556063286183152,
+          43.90143302778121
+        ]
+      ]
+    },
+    {
+      "model": "exponential Jacobian",
+      "jacobian": [
+        [
+          4.953032424395115,
+          7.429548636592672,
+          7.429548636592672
+        ],
+        [
+          1.1051709180756475,
+          6.6310255084538845,
+          0.8288781885567356
+        ],
+        [
+          0.301194211912202,
+          4.066121860814728,
+          0.150597105956101
+        ],
+        [
+          0.06392786120670757,
+          1.5342686689609817,
+          0.02397294795251534
+        ]
+      ]
+    }
+  ]
+}

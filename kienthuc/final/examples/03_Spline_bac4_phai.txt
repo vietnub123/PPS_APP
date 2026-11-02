@@ -1,0 +1,193 @@
+Spline — Biên tổng quát
+
+================================================================
+
+1. Bài toán, dữ liệu và điều kiện biên
+
+Phương pháp: Biên tổng quát; bậc tối đa 4. Có 3 mốc và 2 đoạn. Mốc không đều là hợp lệ.
+
+Các cặp sau sắp tăng x
+================================================================
+
+Các cặp sau sắp tăng x
+dòng gốc  x_i  y_i
+0         0    0
+1         1    1
+2         2    16
+
+
+Điều kiện đã chọn: ['phải', 1, 32].
+
+Điều kiện đã chọn: ['phải', 2, 48].
+
+Điều kiện đã chọn: ['phải', 3, 48].
+
+Spline thông thường là phép dựng mảnh/giải hệ, không có vòng hội tụ t=Phi(t).
+
+2. Tiền kiểm và số điều kiện
+
+✓ Các cặp hữu hạn, hoành độ phân biệt; giữ nguyên tất cả mốc.
+
+Bậc p=4 cần 3 điều kiện bổ sung độc lập ngoài nội suy và ghép đạo hàm. Đếm đủ hàng chưa tự chứng minh độc lập.
+
+3. Các khoảng, hệ phương trình và hệ số
+
+Lưới và độ dốc
+
+Độ dài và độ dốc từng đoạn
+================================================================
+
+Độ dài và độ dốc từng đoạn
+i  x trái  x phải  h_i  δ_i
+0  0       1       1    1
+1  1       2       1    15
+
+
+Hệ số các mảnh
+
+u=x−x_i; hệ số theo bậc tăng từ trái sang phải.
+
+Hệ số theo u=x−x_i, bậc tăng
+================================================================
+
+Hệ số theo u=x−x_i, bậc tăng
+i  u^0  u^1  u^2  u^3  u^4
+0  0    0    0    0    1
+1  1    4    6    4    1
+
+
+Ẩn a_(i,r) là hệ số của u^r trong từng mảnh; giữ tất cả điều kiện được đưa vào.
+
+Hệ phương trình đầy đủ đã dùng
+
+Ma trận hệ và vế phải
+================================================================
+
+Ma trận hệ và vế phải
+a_0  a_1  a_2  a_3  a_4  a_5  a_6  a_7  a_8  a_9  vế phải
+1    0    0    0    0    0    0    0    0    0    0
+1    1    1    1    1    0    0    0    0    0    1
+0    0    0    0    0    1    0    0    0    0    1
+0    0    0    0    0    1    1    1    1    1    16
+0    1    2    3    4    0    -1   0    0    0    0
+0    0    2    6    12   0    0    -2   0    0    0
+0    0    0    6    24   0    0    0    -6   0    0
+0    0    0    0    0    0    1    2    3    4    32
+0    0    0    0    0    0    0    2    6    12   48
+0    0    0    0    0    0    0    0    6    24   48
+
+
+4. Truy hồi, khử và thế ngược thực tế
+
+Bộ giải đã dùng: Gauss chọn trụ hữu tỷ.
+
+Mọi bước khử đã dùng
+
+Chọn trụ Gauss
+================================================================
+
+Chọn trụ Gauss
+bước  cột  hàng chọn  pivot  các hệ số khử
+0     0    0          1      [(1, '1')]
+1     1    1          1      [(4, '1')]
+2     2    5          2      [(4, '0.5')]
+3     3    6          6      [(4, '-1/6')]
+4     4    4          1      []
+5     5    5          1      [(6, '1')]
+6     6    6          1      [(7, '1')]
+7     7    8          2      [(8, '0.5')]
+8     8    9          6      [(9, '-1/6')]
+9     9    9          1      []
+
+
+Thế ngược
+================================================================
+
+Thế ngược
+ẩn  vế phải sau khử  đóng góp ẩn sau  pivot  nghiệm
+9   1                0                1      1
+8   48               24               6      4
+7   48               36               2      6
+6   15               11               1      4
+5   1                0                1      1
+4   -1               -2               1      1
+3   0                0                6      0
+2   0                0                2      0
+1   1                1                1      0
+0   0                0                1      0
+
+
+5. Các mảnh và miền áp dụng
+
+Mỗi mảnh dùng u=x−mốc trái của chính đoạn đó. Không thay x toàn cục trực tiếp vào đa thức theo u.
+
+Mảnh 0: [0, 1]
+
+u=x−(0), 0≤u≤1.
+
+S_{0}(x_i+u) = 1*u^4
+
+Mảnh 1: [1, 2]
+
+u=x−(1), 0≤u≤1.
+
+S_{1}(x_i+u) = 1+4*u+6*u^2+4*u^3+1*u^4
+
+6. Kiểm tra nút, biên và đánh giá
+
+23/23 kiểm tra nội suy, ghép đạo hàm, hệ và biên đạt ngưỡng công bố.
+
+Mọi phần dư và phép kiểm tra
+
+Kiểm tra điều kiện đã chọn
+================================================================
+
+Kiểm tra điều kiện đã chọn
+điều kiện                         phần dư  ngưỡng              đạt
+Nội suy đoạn 0, đầu trái          0        0                   Đạt
+Nội suy đoạn 0, đầu phải          0        1.000000000000e-10  Đạt
+Nội suy đoạn 1, đầu trái          0        1.000000000000e-10  Đạt
+Nội suy đoạn 1, đầu phải          0        1.600000000000e-9   Đạt
+Ghép cấp 0 tại nút 1              0        1.000000000000e-10  Đạt
+Ghép cấp 1 tại nút 1              0        4.000000000000e-10  Đạt
+Ghép cấp 2 tại nút 1              0        1.200000000000e-9   Đạt
+Ghép cấp 3 tại nút 1              0        2.400000000000e-9   Đạt
+Biên phải, đạo hàm cấp 1          0        3.200000000000e-9   Đạt
+Biên phải, đạo hàm cấp 2          0        4.800000000000e-9   Đạt
+Biên phải, đạo hàm cấp 3          0        4.800000000000e-9   Đạt
+Điều kiện đầy đủ hàng 0           0        0                   Đạt
+Điều kiện đầy đủ hàng 1           0        1.000000000000e-10  Đạt
+Điều kiện đầy đủ hàng 2           0        1.000000000000e-10  Đạt
+Điều kiện đầy đủ hàng 3           0        1.600000000000e-9   Đạt
+Điều kiện đầy đủ hàng 4           0        4.000000000000e-10  Đạt
+Điều kiện đầy đủ hàng 5           0        1.200000000000e-9   Đạt
+Điều kiện đầy đủ hàng 6           0        2.400000000000e-9   Đạt
+Điều kiện đầy đủ hàng 7           0        3.200000000000e-9   Đạt
+Điều kiện đầy đủ hàng 8           0        4.800000000000e-9   Đạt
+Điều kiện đầy đủ hàng 9           0        4.800000000000e-9   Đạt
+PPoly sau chuyển float tại mốc 1  0        1.000000000000e-10  Đạt
+PPoly sau chuyển float tại mốc 2  0        1.600000000000e-9   Đạt
+
+
+Hai phía tại nút
+================================================================
+
+Hai phía tại nút
+nút  cấp  trái  phải  chênh
+1    0    1     1     0
+1    1    4     4     0
+1    2    12    12    0
+1    3    24    24    0
+
+
+z=1.5 dùng đoạn 1: [1, 2], u=z−x_i=0.5. Đầu mút phải cuối cùng dùng mảnh cuối.
+
+S^(0)(1.5)=5.0625.
+
+Đạo hàm theo x bằng đạo hàm theo u vì du/dx=1; không chia thêm h_i.
+
+7. Kết luận đúng phạm vi
+
+Đã dựng 2 mảnh bậc không quá 4, giữ đúng dữ liệu và điều kiện biên.
+
+Phần dư nút/hệ và chênh đạo hàm kiểm tra việc giải mô hình; chúng không phải cận sai số với hàm thật giữa các mốc. Spline nội suy không tự làm trơn nhiễu hoặc bảo đảm giữ đơn điệu.

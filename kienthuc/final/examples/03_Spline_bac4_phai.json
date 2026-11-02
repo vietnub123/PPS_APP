@@ -1,0 +1,35 @@
+{
+  "tool": "Spline",
+  "method": "Biên tổng quát",
+  "values": {
+    "degree": 4,
+    "conditions": [
+      [
+        "phải",
+        1,
+        32
+      ],
+      [
+        "phải",
+        2,
+        48
+      ],
+      [
+        "phải",
+        3,
+        48
+      ]
+    ],
+    "target": 1.5
+  },
+  "x": [
+    0,
+    1,
+    2
+  ],
+  "y": [
+    0,
+    1,
+    16
+  ]
+}

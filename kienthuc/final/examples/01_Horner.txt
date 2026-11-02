@@ -1,0 +1,122 @@
+Horner
+
+================================================================
+
+Kết quả
+
+P^(0)(2)=19.
+
+P^(1)(2)=34.
+
+P^(2)(2)=36.
+
+P^(3)(2)=18.
+
+1. Đọc đa thức và yêu cầu
+
+Hệ số đầu vào theo bậc giảm: 3, 0, -2, -1. Giữ các số 0 ở giữa/cuối vì chúng xác định đúng lũy thừa.
+
+P(x) = 3·x^3 - 2·x - 1
+
+Điểm c=2; lấy đạo hàm đến cấp 3; bậc thực=3.
+
+2. Công thức Horner và ý nghĩa các lượt
+
+b_0=A_0; b_j=A_j+c·b_(j−1).
+
+Mỗi lượt chia Q_r cho x−c, giữ thương Q_(r+1) cho lượt sau, số dư là s_r.
+
+Chia lặp tạo hệ số Taylor s_r; đạo hàm cấp r bằng r!·s_r, không phải chỉ số dư.
+
+Lượt r+1 tính s_r. Đây là phép tính hữu hạn; không cần dung sai hay điều kiện hội tụ.
+
+3. Các lượt chia Horner — từng phép nhân và cộng
+
+Lượt 1: Q_0, lấy s_0
+
+Nhân–cộng trong lượt 1
+================================================================
+
+Nhân–cộng trong lượt 1
+j  bậc  Aⱼ  bⱼ₋₁  c·bⱼ₋₁  bⱼ
+0  3    3   —     —       3
+1  2    0   3     6       6
+2  1    -2  6     12      10
+3  0    -1  10    20      19
+
+
+Thương theo bậc giảm: 3, 6, 10.
+
+s_0=19; 0!·s_0=19.
+
+Bỏ phần tử số dư; dùng toàn bộ dãy thương này làm hệ số A_j ở lượt sau.
+
+Lượt 2: Q_1, lấy s_1
+
+Nhân–cộng trong lượt 2
+================================================================
+
+Nhân–cộng trong lượt 2
+j  bậc  Aⱼ  bⱼ₋₁  c·bⱼ₋₁  bⱼ
+0  2    3   —     —       3
+1  1    6   3     6       12
+2  0    10  12    24      34
+
+
+Thương theo bậc giảm: 3, 12.
+
+s_1=34; 1!·s_1=34.
+
+Bỏ phần tử số dư; dùng toàn bộ dãy thương này làm hệ số A_j ở lượt sau.
+
+Lượt 3: Q_2, lấy s_2
+
+Nhân–cộng trong lượt 3
+================================================================
+
+Nhân–cộng trong lượt 3
+j  bậc  Aⱼ  bⱼ₋₁  c·bⱼ₋₁  bⱼ
+0  1    3   —     —       3
+1  0    12  3     6       18
+
+
+Thương theo bậc giảm: 3.
+
+s_2=18; 2!·s_2=36.
+
+Bỏ phần tử số dư; dùng toàn bộ dãy thương này làm hệ số A_j ở lượt sau.
+
+Lượt 4: Q_3, lấy s_3
+
+Nhân–cộng trong lượt 4
+================================================================
+
+Nhân–cộng trong lượt 4
+j  bậc  Aⱼ  bⱼ₋₁  c·bⱼ₋₁  bⱼ
+0  0    3   —     —       3
+
+
+Thương theo bậc giảm: 0.
+
+s_3=3; 3!·s_3=18.
+
+Đã đến đa thức hằng; không cần chia tiếp để lấy các đạo hàm bằng 0.
+
+4. Tổng kết và kiểm tra
+
+Số dư và đạo hàm
+================================================================
+
+Số dư và đạo hàm
+r  s_r  r!  P^(r)(c)
+0  19   1   19
+1  34   1   34
+2  18   2   36
+3  3    6   18
+
+
+Mỗi dãy b bỏ phần tử cuối là thương; phần tử cuối là số dư. Đẳng thức chia Q_r=(x−c)Q_(r+1)+s_r đúng tại từng lượt.
+
+Đã có đủ hệ số Taylor: s_0=19, s_1=34, s_2=18, s_3=3.
+
+Phép tính dùng hệ số đầy đủ, bảng làm tròn ở khâu hiển thị. Kết quả thuộc đa thức đã nhập; độ chính xác của hệ số dữ liệu được xét riêng.

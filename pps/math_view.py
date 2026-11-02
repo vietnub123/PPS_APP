@@ -14,11 +14,19 @@ from matplotlib import rc_context
 from .common import fmt
 
 
+def mathtext_latex(latex):
+    """Đổi literal số máy thành ký pháp toán; không đổi các biểu thức e^x."""
+    # fmt() dùng 5e-101 cho những số rất nhỏ. MathText vẫn chấp nhận chuỗi
+    # đó nhưng vẽ e như một biến, không phải lũy thừa mười.
+    return re.sub(r'(?<![\w.])(\d+(?:\.\d*)?|\.\d+)[eE]([+-]?\d+)(?![\d.])',
+                  lambda m:m.group(1)+r'\cdot 10^{'+str(int(m.group(2)))+'}',str(latex))
+
+
 @lru_cache(maxsize=512)
 def math_png(latex, size=14):
     out=io.BytesIO()
     with rc_context({'savefig.transparent':True}):
-        math_to_image('$'+latex+'$',out,prop=FontProperties(size=size,math_fontfamily='stix'),
+        math_to_image('$'+mathtext_latex(latex)+'$',out,prop=FontProperties(size=size,math_fontfamily='stix'),
                       dpi=130,format='png',color='#162d39')
     return out.getvalue()
 

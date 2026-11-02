@@ -1,0 +1,107 @@
+\section{Bắt đầu từ các ô nhập: ba tool liên quan đến nội suy}
+\input{verification/inputs_poly.tex}
+\paragraph{Input dữ liệu.} Bảng $m=n+1$ cặp phải giữ đúng thứ tự ghép $x_i,y_i$. Tool sắp theo $x$ cùng cả cặp. Hoành độ phân biệt; Lagrange/Newton bất kỳ không cần đều, các công thức sai phân đều cần bước $h$ chung. Ô \emph{Số mốc dùng} trống dùng cả bảng; nhập $K$ thì chọn đúng $K$ mốc và công khai nhóm được chọn. $K$ là số mốc, không phải bậc.
+
+\subsection{Bảng tổng quát phải lập trước khi chọn hệ số}
+Lập từ trái sang phải, hết một cấp rồi sang cấp sau:
+\begin{center}\small\begin{tabular}{clllll}\toprule
+Dòng&$x_i$&$y_i$&Cấp 1&Cấp 2&$\cdots$, cấp $n$\\\midrule
+0&$x_0$&$y_0$&$A_{0,1}$&$A_{0,2}$&$\cdots,A_{0,n}$\\
+1&$x_1$&$y_1$&$A_{1,1}$&$A_{1,2}$&\\
+$i$&$x_i$&$y_i$&$A_{i,1}$ nếu $i<n$&$A_{i,2}$ nếu $i<n-1$&\\
+$n$&$x_n$&$y_n$&&&\\\bottomrule
+\end{tabular}\end{center}
+\textbf{Với mốc đều}: $A_{i,0}=y_i$, $A_{i,k}=A_{i+1,k-1}-A_{i,k-1}$. Chẳng hạn
+\[
+A_{0,1}=y_1-y_0,\quad A_{1,1}=y_2-y_1,\quad
+A_{0,2}=(y_2-y_1)-(y_1-y_0)=y_2-2y_1+y_0.
+\]
+\textbf{Với mốc bất kỳ}: dùng bảng cùng khuôn nhưng ký hiệu $D$:
+\[
+D_{i,k}=\frac{D_{i+1,k-1}-D_{i,k-1}}{x_{i+k}-x_i},\quad
+D_{0,1}=\frac{y_1-y_0}{x_1-x_0},\quad
+D_{0,2}=\frac{\frac{y_2-y_1}{x_2-x_1}-\frac{y_1-y_0}{x_1-x_0}}{x_2-x_0}.
+\]
+Ô ngoài tam giác không tồn tại, để trống; ô đã tính bằng 0 phải ghi 0. Output của bước lập bảng là nguồn hệ số cho những bước tiếp theo, chưa phải giá trị $P(z)$.
+
+\subsection{Lagrange: bảng tổng quát và đường đi của một hàng}
+\textbf{Input riêng}: chọn Lagrange; không có hướng tiến/lùi. Với mỗi mốc $i$, làm đủ một hàng:
+\begin{center}\small\begin{tabular}{cllll}\toprule
+$i$&Mẫu $d_i$&Hệ số $C_i$&Tích $W_i(z)$&Đóng góp $v_i$\\\midrule
+0&$\prod_{j\ne0}(x_0-x_j)$&$y_0/d_0$&$\prod_{j\ne0}(z-x_j)$&$C_0W_0(z)$\\
+$i$&$\prod_{j\ne i}(x_i-x_j)$&$y_i/d_i$&$\prod_{j\ne i}(z-x_j)$&$C_iW_i(z)$\\
+$n$&$\prod_{j\ne n}(x_n-x_j)$&$y_n/d_n$&$\prod_{j\ne n}(z-x_j)$&$C_nW_n(z)$\\\bottomrule
+\end{tabular}\end{center}
+Tích ở hàng $i$ viết rõ bằng
+\[
+W_i(x)=(x-x_0)\cdots(x-x_{i-1})(x-x_{i+1})\cdots(x-x_n),
+\]
+bỏ đúng mốc $i$. Tính mẫu $d_i=W_i(x_i)$ $\to$ chia $C_i=y_i/d_i$ $\to$ thế $z$ vào tích $\to$ cộng
+\[
+P(z)=\sum_{i=0}^nC_iW_i(z)=C_0W_0(z)+C_1W_1(z)+\cdots+C_nW_n(z).
+\]
+\textbf{Output}: đa thức qua tập mốc, bảng các đóng góp, $P(z)$ nếu nhập điểm và $P^{(s)}(z)$ nếu cấp $s>0$. Khi $z$ bằng một mốc, giá trị phải khớp tung độ; không tính dạng $0/0$.
+
+\subsection{Newton: tách loại mốc và hướng trước khi lấy hệ số}
+\textbf{Input riêng}: ô \emph{Loại mốc} và \emph{Hướng nội suy}. Bảng tổng quát dưới đây định nghĩa từng hạng $c_kB_k$; hàng tổng luôn là $P=\sum c_kB_k=c_0B_0+c_1B_1+\cdots+c_nB_n$.
+\begin{center}\small\begin{tabular}{@{}p{.20\linewidth}p{.21\linewidth}p{.49\linewidth}@{}}\toprule
+Lựa chọn&$c_k$ lấy ở đâu&$B_k$ dùng để nhân\\\midrule
+Bất kỳ, tiến&$D_{0,k}$&$B_0=1$; $B_k=(x-x_0)(x-x_1)\cdots(x-x_{k-1})$\\
+Bất kỳ, lùi&$D_{n-k,k}$&$B_0=1$; $B_k=(x-x_n)(x-x_{n-1})\cdots(x-x_{n-k+1})$\\
+Đều, tiến&$A_{0,k}/k!$&$t=(x-x_0)/h$; $B_k=t(t-1)\cdots(t-k+1)$\\
+Đều, lùi&$A_{n-k,k}/k!$&$t=(x-x_n)/h$; $B_k=t(t+1)\cdots(t+k-1)$\\\bottomrule
+\end{tabular}\end{center}
+\textbf{Quá trình}: bảng $A/D$ $\to$ lấy đúng đường hệ số $\to$ dựng tích theo đúng hướng $\to$ tính đóng góp $c_kB_k$ $\to$ cộng. Với mốc bất kỳ không chia thêm $k!$. \textbf{Output}: cùng loại với Lagrange, kèm gốc đổi biến và hướng đang dùng. Nếu dùng cùng mốc đủ số hạng, các lựa chọn biểu diễn cùng đa thức.
+
+\subsection{Gauss I, Gauss II, Stirling, Bessel: mỗi hạng cần ghi đủ ba thứ}
+\textbf{Input}: chọn đúng tên công thức; kiểm lưới đều. Stirling dùng số mốc lẻ; Bessel số mốc chẵn. Gauss dùng được cả hai. Ghi gốc $a$ và $t=(z-a)/h$ trước khi điền bảng.
+\begin{center}\small\begin{tabular}{cllll}\toprule
+Cấp $k$&Ô sai phân đã lấy $\sigma_k$&$c_k=\sigma_k/k!$&Tích $B_k(t)$&Đóng góp $c_kB_k(t)$\\\midrule
+0&Ô/giá trị giữa theo loại&$c_0$&1&$c_0$\\
+1&Nguồn cấp 1&$c_1$&$B_1(t)$&$c_1B_1(t)$\\
+$k$&Nguồn cấp $k$&$c_k$&$B_k(t)$&$c_kB_k(t)$\\
+$n$&Nguồn cấp cuối&$c_n$&$B_n(t)$&$c_nB_n(t)$\\\bottomrule
+\end{tabular}\end{center}
+Không ghi chỉ một dãy hệ số mà thiếu nguồn ô hoặc thiếu tích. Quy tắc lấy nguồn và các tích đầy đủ nằm ở các mục từng phương pháp bên dưới. Các hạng đầu được khai triển để nhận dạng:
+\begin{align*}
+\text{Gauss I: }&y_0+t\Delta y_0+\tfrac{t(t-1)}2\Delta^2y_{-1}
+ +\tfrac{t(t-1)(t+1)}6\Delta^3y_{-1}+\cdots,\\
+\text{Gauss II: }&y_0+t\Delta y_{-1}+\tfrac{t(t+1)}2\Delta^2y_{-1}
+ +\tfrac{t(t+1)(t-1)}6\Delta^3y_{-2}+\cdots,\\
+\text{Stirling: }&y_0+t\tfrac{\Delta y_{-1}+\Delta y_0}2+\tfrac{t^2}2\Delta^2y_{-1}\\
+ &\quad+\tfrac{t(t^2-1)}6\tfrac{\Delta^3y_{-2}+\Delta^3y_{-1}}2
+ +\tfrac{t^2(t^2-1)}{24}\Delta^4y_{-2}+\cdots,\\
+\text{Bessel: }&\tfrac{y_0+y_1}2+(t-\tfrac12)\Delta y_0
+ +\tfrac{t(t-1)}2\tfrac{\Delta^2y_{-1}+\Delta^2y_0}2\\
+ &\quad+\tfrac{(t-\tfrac12)t(t-1)}6\Delta^3y_{-1}+\cdots.
+\end{align*}
+\textbf{Output}: bảng mốc đã chọn, bảng sai phân, nguồn/hệ số/tích từng hạng, $P(z)$ và đạo hàm yêu cầu. Khi lấy đạo hàm theo $t$, phải đổi $P^{(s)}(z)=Q^{(s)}(t)/h^s$. Một hạng có giá trị 0 tại điểm hỏi vẫn có thể có đạo hàm khác 0.
+
+\subsection{Tool Chọn mốc: output là dữ liệu để đưa sang tool tiếp theo}
+\input{verification/inputs_nodes.tex}
+\textbf{Mốc cách đều}: input toàn bảng, điểm $z$, số mốc $K$ $\to$ xét các cửa sổ liên tiếp $j,\ldots,j+K-1$ $\to$ tính $c_j=(x_j+x_{j+K-1})/2$, $d_j=|c_j-z|$ $\to$ lấy cửa sổ gần tâm nhất, hòa lấy trái. Trên mốc bất kỳ bộ chọn có thể dùng nhóm gần điểm rồi sắp lại. Output là $K$ cặp, không phải $P(z)$.
+
+\textbf{Mốc nội suy ngược}: input bảng và mức $\bar y$ $\to$ tìm cặp kề nhau có tung độ khác nhau và kẹp mức $\to$ mở rộng trái/phải khi các hiệu tung độ giữ cùng dấu $\to$ xuất từng bảng \emph{đoạn đơn điệu chứa mức}, bỏ các đoạn trùng. Output là các tập mốc ứng viên để chọn nhánh, chưa phải nghiệm nội suy ngược. Một đoạn phẳng bằng mức cần khảo sát riêng; tool chọn mốc này không thay chức năng quét mức đầy đủ trong bộ giải ngược.
+
+\textbf{Chebyshev}: input bậc $n$, đoạn $[a,b]$ $\to$ sinh $m=n+1$ mốc
+\[
+x_k=\tfrac{a+b}2+\tfrac{b-a}2\cos\tfrac{(2k+1)\pi}{2m},\quad k=0,\ldots,m-1.
+\]
+Output là dãy $x$ sắp tăng. Cần tự có $y_k=f(x_k)$ rồi mới nội suy; không thể lấy tùy tiện tung độ của bảng cũ gắn vào các mốc mới.
+
+\subsection{Tool Horner: input hệ số, output giá trị và các đạo hàm}
+\input{verification/inputs_horner.tex}
+\textbf{Horner nhận hệ số giảm dần}: $P=a_0x^n+a_1x^{n-1}+\cdots+a_n$, điểm $c$, cấp đạo hàm đến $s$. Giữ hệ số 0 giữa/cuối. Mẫu bảng ngang tổng quát:
+\begin{center}\small\setlength{\tabcolsep}{10pt}\begin{tabular}{@{}lrrrr|r@{}}\toprule
+Điểm $c$&Bậc $n$&Bậc $n-1$&$\cdots$&Bậc 1&Dư\\\midrule
+Hệ số&$a_0$&$a_1$&$\cdots$&$a_{n-1}$&$a_n$\\
+Nhân, chuyển phải&---&$cb_0$&$\cdots$&$cb_{n-2}$&$cb_{n-1}$\\\midrule
+Cộng xuống&$b_0$&$b_1$&$\cdots$&$b_{n-1}$&$b_n$\\\bottomrule
+\end{tabular}\end{center}
+Tính từ trái sang phải: $b_0=a_0$, $b_1=a_1+cb_0$, $b_2=a_2+cb_1$, $\ldots$, $b_n=a_n+cb_{n-1}$. Hàng Nhân lấy ô \emph{Cộng xuống của cột trước} nhân $c$ rồi chuyển sang cột kế; sau đó cộng với hệ số phía trên.
+Khuôn trên minh họa nhiều cột. Đa thức bậc 1 chỉ có hai cột; đa thức hằng chỉ hạ hệ số, không tạo phép nhân thừa. Cấp đạo hàm lớn hơn bậc thực cho 0.
+Ô cuối $b_n=P(c)$; các ô trước là hệ số thương. Đưa \emph{chỉ thương} vào lượt sau. Nếu các số dư lần lượt $s_0,s_1,\ldots$, output đạo hàm là
+\[
+P(c)=s_0,\quad P'(c)=s_1,\quad P''(c)=2s_2,\quad P'''(c)=6s_3,\quad P^{(r)}(c)=r!s_r.
+\]
+Các mục tiếp theo giải thích công thức và đưa ví dụ số trên đúng các khuôn bảng này. Tool \emph{Đạo hàm từ bảng} cùng nhóm dùng cặp $x,y$, được hướng dẫn riêng ở Chương \ref{ch:calculus}.

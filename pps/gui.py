@@ -276,7 +276,12 @@ class App(tk.Tk):
         self.set_output('Nhập dữ liệu ở bên trái rồi chọn Tính kết quả.\n\nBạn có thể gõ trực tiếp, dán các dãy số hoặc nhập Excel/CSV.\nCác kết quả có thể xuất ra Excel, CSV và tệp lời giải.')
 
     def scroll_form(self,event):
-        widget=self.winfo_containing(event.x_root,event.y_root)
+        try:
+            widget=self.winfo_containing(event.x_root,event.y_root)
+        except (KeyError,tk.TclError):
+            # Combobox popdown là cửa sổ Tcl nội bộ, không có widget Python.
+            # Để Tk xử lý con lăn của popup; cửa sổ vừa đóng cũng bỏ qua.
+            return
         while widget:
             if widget==self.form_body or widget==self.form_canvas:
                 self.form_canvas.yview_scroll(-int(event.delta/120),'units'); return

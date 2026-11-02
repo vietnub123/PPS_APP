@@ -1,0 +1,76 @@
+\documentclass[11pt,a4paper,oneside,openany]{book}
+\usepackage{fontspec}
+\setmainfont{Times New Roman}
+\setsansfont{Arial}
+\setmonofont[Scale=.86]{Consolas}
+\usepackage{amsmath,amssymb,array,longtable,booktabs,graphicx,xcolor}
+\usepackage[margin=20mm,headheight=15pt,headsep=7mm,footskip=11mm]{geometry}
+\usepackage{fancyhdr}
+\usepackage[unicode,colorlinks=true,linkcolor=teal!65!black,urlcolor=blue!60!black,
+  bookmarksnumbered=true,bookmarksopen=false,pdfencoding=auto]{hyperref}
+\hypersetup{pdftitle={Sổ tay thuật toán PPS},pdfauthor={Tài liệu đối chiếu mã nguồn PPS},
+  pdfsubject={Đầu vào, công thức, phép tính, vòng lặp và giới hạn của công cụ}}
+\renewcommand{\chaptername}{Chương}
+\renewcommand{\contentsname}{Mục lục}
+\renewcommand{\appendixname}{Phụ lục}
+\renewcommand{\tablename}{Bảng}
+\renewcommand{\figurename}{Hình}
+\renewcommand{\bibname}{Nguồn trong repo}
+\setcounter{tocdepth}{1}
+\setcounter{secnumdepth}{2}
+\setcounter{LTchunksize}{200}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt plus 1pt}
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.18}
+\setlength{\emergencystretch}{2em}
+\allowdisplaybreaks[2]
+\raggedbottom
+% Keep a worked example's heading with its input and first table.
+\newcommand{\examplebreak}{\par\ifdim\dimexpr\pagegoal-\pagetotal\relax<230pt\relax\newpage\fi}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\sffamily SỔ TAY THUẬT TOÁN PPS}
+\fancyhead[R]{\small\sffamily\nouppercase{\leftmark}}
+\fancyfoot[L]{\footnotesize Đối chiếu mã nguồn trong repo}
+\fancyfoot[R]{\thepage}
+\renewcommand{\chaptermark}[1]{\markboth{\thechapter. #1}{}}
+\fancypagestyle{plain}{\fancyhf{}\fancyfoot[L]{\footnotesize Sổ tay PPS}\fancyfoot[R]{\thepage}\renewcommand{\headrulewidth}{0pt}}
+\begin{document}
+\frontmatter
+\begin{titlepage}
+\color{teal!65!black}\sffamily
+\vspace*{18mm}
+{\large PHƯƠNG PHÁP SỐ · MI3042\par}
+\vspace{12mm}
+{\Huge\bfseries Sổ tay\par thuật toán PPS\par}
+\vspace{8mm}
+{\Large Input của tool $\longrightarrow$ quá trình tính $\longrightarrow$ output\par}
+\vspace{12mm}
+\rule{\textwidth}{1.2pt}
+\vspace{4mm}
+{\large Nội suy · Horner · Nội suy ngược · Spline\par
+ Bình phương tối thiểu · Đạo hàm · Tích phân\par
+ Phương trình vi phân · Bài toán biên · Trị riêng\par}
+\vfill
+\color{black}\rmfamily
+Mỗi nhóm bắt đầu bằng \textbf{tên ô nhập trên GUI}, cách biến đổi dữ liệu, \textbf{khuôn bảng tổng quát}, thứ tự tính và \textbf{output cần đọc}. Các công thức tổng/tích có dạng khai triển để điền số; ví dụ cụ thể đặt sau khuôn làm chung.
+
+Ví dụ nhỏ được tự dựng để thấy hết phép tính. Ví dụ đề 20241 và dữ liệu 20251 được ghi riêng nguồn, tập mốc và mục tiêu. Các con số được đối chiếu bằng công cụ trong repo; phần suy diễn không được nhận là nhật ký nội bộ nếu app không lưu nhật ký đó.
+\vspace{8mm}
+{\small Bản đối chiếu ngày 02/11/2026. Nguồn chỉnh sửa trực tiếp: \texttt{So\_tay\_PPS.tex} và thư mục \texttt{chapters/}.\par}
+\end{titlepage}
+\tableofcontents
+\input{chapters/00_cach_doc.tex}
+\mainmatter
+\input{chapters/01_noi_suy_horner.tex}
+\input{chapters/02_noi_suy_nguoc.tex}
+\input{chapters/03_spline.tex}
+\input{chapters/04_binh_phuong_toi_thieu.tex}
+\input{chapters/05_dao_ham_tich_phan.tex}
+\input{chapters/06_phuong_trinh_vi_phan.tex}
+\input{chapters/07_bien_tri_rieng.tex}
+\appendix
+\input{chapters/08_api_bo_tro.tex}
+\input{chapters/09_de_thi_va_kiem_tra.tex}
+\end{document}

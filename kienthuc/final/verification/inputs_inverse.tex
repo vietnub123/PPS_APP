@@ -1,0 +1,69 @@
+\subsection*{Input: các ô đúng tên trên giao diện}
+Bảng này được lấy từ biểu mẫu của tool. Giá trị mặc định là ví dụ nhập, cần thay bằng dữ liệu đề. Hai dãy $x,y$ là bảng dữ liệu riêng bên dưới nếu chức năng dùng bảng.
+\subsubsection*{Ô chung của các lựa chọn trong nhóm}
+\begin{center}\small\begin{tabular}{@{}p{.32\linewidth}p{.17\linewidth}p{.43\linewidth}@{}}\toprule
+Ô nhập & Khóa JSON & Cách nhập / mặc định\\\midrule
+Mốc dùng (JSON,\allowbreak{} trống: toàn bộ bảng) & \texttt{selected\_indices} & Để trống
+\par Ví dụ [9,\allowbreak{}10,\allowbreak{}11,\allowbreak{}12] dùng đúng bốn dòng đó,\allowbreak{} đánh số từ 0;\allowbreak{} dữ liệu nguồn vẫn được giữ.\\[3pt]
+Mức trình bày & \texttt{detail\_level} & \texttt{Tổng hợp}
+\par Bảng tổng hợp luôn hiện;\allowbreak{} có thể mở từng nhóm phép tính hoặc từng vòng. Bản xuất vẫn giữ đủ chi tiết.\\[3pt]
+\bottomrule\end{tabular}\end{center}
+\subsubsection*{Ô riêng: Lặp tiến}
+\begin{center}\small\begin{tabular}{@{}p{.32\linewidth}p{.17\linewidth}p{.43\linewidth}@{}}\toprule
+Ô nhập & Khóa JSON & Cách nhập / mặc định\\\midrule
+Giá trị y cần tìm ngược & \texttt{target} & \texttt{4}
+\par Tập cặp nhập là các mốc đã chọn;\allowbreak{} bậc bằng số cặp trừ 1. Không tự đổi nhánh hoặc mốc. Lặp thực hành mặc định kiểm tra thêm phần dư 1e-6,\allowbreak{} tối đa 100 vòng.\\[3pt]
+Cận x trái (trống: khoảng đổi dấu duy nhất) & \texttt{a} & Để trống\\[3pt]
+Cận x phải (trống: khoảng đổi dấu duy nhất) & \texttt{b} & Để trống\\[3pt]
+Dung sai vị trí/\allowbreak{}bước theo x & \texttt{tol} & \texttt{1e-06}
+\par Giữ toàn bộ tập mốc và gốc đầu/\allowbreak{}cuối tập;\allowbreak{} khoảng nghiệm có thể ở giữa bảng.\\[3pt]
+Dung sai phần dư & \texttt{residual\_tol} & \texttt{1e-06}\\[3pt]
+Số vòng tối đa & \texttt{max\_iter} & \texttt{100}\\[3pt]
+Quy tắc khởi tạo & \texttt{initial\_rule} & \texttt{Tuyến tính tại gốc}\\[3pt]
+t₀ khi khởi tạo thủ công & \texttt{initial\_t} & Để trống\\[3pt]
+\bottomrule\end{tabular}\end{center}
+\subsubsection*{Ô riêng: Lặp lùi}
+\begin{center}\small\begin{tabular}{@{}p{.32\linewidth}p{.17\linewidth}p{.43\linewidth}@{}}\toprule
+Ô nhập & Khóa JSON & Cách nhập / mặc định\\\midrule
+Giá trị y cần tìm ngược & \texttt{target} & \texttt{2}
+\par Tập cặp nhập là các mốc đã chọn;\allowbreak{} bậc bằng số cặp trừ 1. Không tự đổi nhánh hoặc mốc. Lặp thực hành mặc định kiểm tra thêm phần dư 1e-6,\allowbreak{} tối đa 100 vòng.\\[3pt]
+Cận x trái (trống: khoảng đổi dấu duy nhất) & \texttt{a} & Để trống\\[3pt]
+Cận x phải (trống: khoảng đổi dấu duy nhất) & \texttt{b} & Để trống\\[3pt]
+Dung sai vị trí/\allowbreak{}bước theo x & \texttt{tol} & \texttt{1e-06}
+\par Giữ toàn bộ tập mốc và gốc đầu/\allowbreak{}cuối tập;\allowbreak{} khoảng nghiệm có thể ở giữa bảng.\\[3pt]
+Dung sai phần dư & \texttt{residual\_tol} & \texttt{1e-06}\\[3pt]
+Số vòng tối đa & \texttt{max\_iter} & \texttt{100}\\[3pt]
+Quy tắc khởi tạo & \texttt{initial\_rule} & \texttt{Tuyến tính tại gốc}\\[3pt]
+t₀ khi khởi tạo thủ công & \texttt{initial\_t} & Để trống\\[3pt]
+\bottomrule\end{tabular}\end{center}
+\subsubsection*{Ô riêng: Lặp có cận co}
+\begin{center}\small\begin{tabular}{@{}p{.32\linewidth}p{.17\linewidth}p{.43\linewidth}@{}}\toprule
+Ô nhập & Khóa JSON & Cách nhập / mặc định\\\midrule
+Giá trị y cần tìm ngược & \texttt{target} & \texttt{4}
+\par Tập cặp nhập là các mốc đã chọn;\allowbreak{} bậc bằng số cặp trừ 1. Không tự đổi nhánh hoặc mốc. Lặp thực hành mặc định kiểm tra thêm phần dư 1e-6,\allowbreak{} tối đa 100 vòng.\\[3pt]
+Cận x trái của khoảng nghiệm & \texttt{a} & \texttt{1.6}\\[3pt]
+Cận x phải của khoảng nghiệm & \texttt{b} & \texttt{1.8}\\[3pt]
+Dung sai vị trí & \texttt{tol} & \texttt{1e-06}\\[3pt]
+Dung sai phần dư & \texttt{residual\_tol} & \texttt{1e-06}\\[3pt]
+Hướng nội suy & \texttt{direction} & \texttt{Tiến}\\[3pt]
+Số vòng tối đa & \texttt{max\_iter} & \texttt{100}\\[3pt]
+Quy tắc khởi tạo & \texttt{initial\_rule} & \texttt{Tuyến tính tại gốc}\\[3pt]
+t₀ khi khởi tạo thủ công & \texttt{initial\_t} & Để trống\\[3pt]
+\bottomrule\end{tabular}\end{center}
+\subsubsection*{Ô riêng: Hàm ngược — Newton /\allowbreak{} Hàm ngược — Lagrange}
+\begin{center}\small\begin{tabular}{@{}p{.32\linewidth}p{.17\linewidth}p{.43\linewidth}@{}}\toprule
+Ô nhập & Khóa JSON & Cách nhập / mặc định\\\midrule
+Giá trị y cần tìm ngược & \texttt{target} & \texttt{6}
+\par Tập cặp nhập là các mốc đã chọn;\allowbreak{} bậc bằng số cặp trừ 1. Không tự đổi nhánh hoặc mốc. Lặp thực hành mặc định kiểm tra thêm phần dư 1e-6,\allowbreak{} tối đa 100 vòng.\\[3pt]
+Số mốc đã chọn (để trống: toàn tập nhập) & \texttt{count} & Để trống
+\par Không tự lấy mốc gần mức. Muốn dùng ít mốc hơn,\allowbreak{} giữ đúng các cặp cần dùng trong bảng nhập.\\[3pt]
+\bottomrule\end{tabular}\end{center}
+\subsubsection*{Ô riêng: Chia đôi đa thức}
+\begin{center}\small\begin{tabular}{@{}p{.32\linewidth}p{.17\linewidth}p{.43\linewidth}@{}}\toprule
+Ô nhập & Khóa JSON & Cách nhập / mặc định\\\midrule
+Giá trị y cần tìm ngược & \texttt{target} & \texttt{2}
+\par Tập cặp nhập là các mốc đã chọn;\allowbreak{} bậc bằng số cặp trừ 1. Không tự đổi nhánh hoặc mốc. Lặp thực hành mặc định kiểm tra thêm phần dư 1e-6,\allowbreak{} tối đa 100 vòng.\\[3pt]
+Cận trái & \texttt{a} & \texttt{1}\\[3pt]
+Cận phải & \texttt{b} & \texttt{2}\\[3pt]
+Dung sai vị trí & \texttt{tol} & \texttt{0.001}\\[3pt]
+\bottomrule\end{tabular}\end{center}

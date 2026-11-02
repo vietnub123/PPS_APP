@@ -1,0 +1,20 @@
+{
+  "pages": 105,
+  "bookmarks": 107,
+  "review_pages_zero_based": {
+    "horner": 11,
+    "inverse": 34,
+    "spline": 48,
+    "least_squares": 53,
+    "power_model": 55,
+    "rational_model": 59,
+    "raw_lm": 64,
+    "cubic_template": 40,
+    "integration": 74,
+    "ode": 89,
+    "bvp": 94,
+    "exam": 101
+  },
+  "replacement_chars": 0,
+  "over_page_words": []
+}

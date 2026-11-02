@@ -1,0 +1,530 @@
+\chapter{Spline: dựng từng mảnh và giữ đúng điều kiện biên}
+\label{ch:spline}
+\input{chapters/toolflow_03.tex}
+
+\section{Nhìn đúng bài toán trước khi bấm tính}
+\label{sec:spline-map}
+Cho các cặp $(x_i,y_i)$, $i=0,\ldots,n$, với $x_0<\cdots<x_n$.
+Spline là một hàm gồm $n$ mảnh: mảnh $S_i$ áp dụng trên $[x_i,x_{i+1}]$.
+Mỗi mảnh đi qua hai đầu đoạn; tại nút trong, các mảnh được ghép theo cấp trơn đã chọn.
+\emph{Không cần các mốc cách đều.} Spline nội suy đi qua dữ liệu; nó không tự làm trơn nhiễu đo.
+
+Trong chương này, spline bậc $p$ có mỗi mảnh bậc \emph{không quá} $p$ và ghép trơn
+$C^{p-1}$. Một mảnh có thể thực tế chỉ là đường thẳng dù đang dựng spline bậc 4.
+Đó là kết quả hợp lệ khi những hệ số cao bằng 0.
+
+\begin{center}\small
+\begin{tabular}{p{.28\linewidth}p{.32\linewidth}p{.31\linewidth}}
+\toprule
+Đề cho/yêu cầu & Chọn trong tool & Cần thêm gì?\\ \midrule
+Nối các điểm bằng đoạn thẳng & Tuyến tính & Không cần biên bổ sung\\
+Parabol, biết độ dốc ở một đầu & Bậc hai -- biên trái/phải & Một đạo hàm cấp 1 ở đúng đầu đó\\
+Cubic, hai đầu có độ cong 0 & Cubic tự nhiên & $S''(x_0)=S''(x_n)=0$ là giả thiết được chọn\\
+Cubic, cho hai độ dốc & Cubic kẹp & $S'(x_0),S'(x_n)$\\
+Cubic, cho hai độ cong & Cubic đạo hàm bậc hai & $S''(x_0),S''(x_n)$\\
+Cubic, mỗi đầu cho cấp khác & Cubic hỗn hợp & Mỗi cấp là 1 hoặc 2, cùng giá trị tương ứng\\
+Cubic tuần hoàn/not-a-knot & Đúng tên loại biên & Điều kiện nối chu kỳ/điều kiện cấp 3 đặc biệt\\
+Bậc 4, biết ba đạo hàm trái & Bậc 4 -- đạo hàm trái & $S',S'',S'''$ tại $x_0$\\
+Bậc khác, hoặc biên phải/trộn & Biên tổng quát & Bậc $p$ và các điều kiện độc lập\\
+\bottomrule
+\end{tabular}\end{center}
+
+\subsection{Những ô nhập có ý nghĩa gì?}
+\begin{enumerate}
+\item \textbf{Hai dãy $x,y$:} các số hữu hạn, cùng độ dài, ít nhất hai cặp. Tool sắp cả cặp theo $x$; không tự gộp mốc trùng. Hai tung độ khác nhau tại cùng $x$ không thể là một giá trị của hàm nội suy.
+\item \textbf{Loại spline và biên:} xác định một bài toán cụ thể. Không lấy kết quả tự nhiên để trả lời bài có biên kẹp.
+\item \textbf{Điểm tính và cấp đạo hàm:} để trống điểm nếu chỉ dựng spline. Cấp 0 là giá trị, cấp 1 là đạo hàm một, v.v.
+\item \textbf{Hai cận tích phân:} nhập đồng thời nếu cần tích phân spline; tool chia tích phân qua đúng các mảnh.
+\item \textbf{Bộ giải:} Thomas phù hợp hệ ba đường chéo thông thường; Gauss dùng cho hệ đầy đủ. Tự chọn giữ cấu trúc thuận tiện khi có thể. Những ngoại lệ thực tế được nêu ở mục~\ref{sec:spline-limits}.
+\item \textbf{Số chữ số:} phục vụ hiển thị. Nó không phải cam kết số chữ số đúng của hàm thật.
+\end{enumerate}
+
+\section{Bước chuẩn bị chung: tính khoảng mốc và độ dốc}
+\label{sec:spline-prepare}
+Đặt, cho từng đoạn $i=0,\ldots,n-1$,
+\[
+h_i=x_{i+1}-x_i>0,\qquad
+\Delta y_i=y_{i+1}-y_i,\qquad \delta_i=\frac{\Delta y_i}{h_i}.
+\]
+Không lấy một $h$ chung khi lưới không đều. Đặt biến cục bộ
+\[
+u=x-x_i,\qquad 0\leq u\leq h_i.
+\]
+Mọi hệ số mảnh trong chương đều nhân các lũy thừa của \emph{$u$ này}, không phải $x$ toàn cục.
+
+\paragraph{Bảng dùng xuyên suốt nhiều ví dụ.}
+Với $(x,y)=(0,0),(1,1),(2,0)$:
+\begin{center}
+\begin{tabular}{rrrrrr}
+\toprule
+$i$ & $x_i$ & $x_{i+1}$ & $h_i$ & $\Delta y_i$ & $\delta_i$\\ \midrule
+0&0&1&1&1&1\\
+1&1&2&1&$-1$&$-1$\\ \bottomrule
+\end{tabular}\end{center}
+Từ đúng cùng bảng này, các điều kiện biên khác nhau cho spline khác nhau.
+Đó là thay đổi bài toán, không phải bằng chứng rằng một trong các đáp số bị sai.
+
+\section{Spline tuyến tính: không có ẩn biên}
+\label{sec:spline-linear}
+\textbf{Đầu vào:} chỉ bảng điểm. \textbf{Đầu ra:} các dây cung
+\[
+S_i(x_i+u)=y_i+\delta_i u.
+\]
+\begin{enumerate}
+\item Tính $h_i,\delta_i$ theo mục~\ref{sec:spline-prepare}.
+\item Lấy hệ số tự do bằng $y_i$, hệ số $u$ bằng $\delta_i$.
+\item Tìm đoạn chứa điểm hỏi $z$, đặt $u=z-x_i$ rồi thế số.
+\end{enumerate}
+Trong ví dụ chung,
+\[
+S_0(x)=x\quad(0\leq x\leq1),\qquad
+S_1(1+u)=1-u\quad(0\leq u\leq1).
+\]
+Tại $z=1/2$, dùng mảnh 0: $S(1/2)=1/2$.
+Tại nút $x=1$, đạo hàm trái bằng $1$, đạo hàm phải bằng $-1$; $S'(1)$ không tồn tại.
+Không lấy riêng đạo hàm của mảnh phải rồi gọi đó là đạo hàm chung của spline.
+Đây là phép dựng hữu hạn, không có tiêu chuẩn hội tụ theo vòng lặp.
+
+\section{Spline bậc hai: truyền độ dốc từ đúng đầu đã biết}
+\label{sec:spline-quadratic}
+Đặt $m_i=S'(x_i)$ và viết $S_i(x_i+u)=y_i+m_i u+c_i u^2$.
+Điều kiện đi qua đầu phải cho $c_i=(\delta_i-m_i)/h_i$.
+Đạo hàm tại đầu phải cho
+\[
+m_{i+1}=m_i+2c_i h_i=2\delta_i-m_i,
+\qquad
+c_i=\frac{m_{i+1}-m_i}{2h_i}.
+\]
+Quan hệ này vừa dựng mảnh vừa ghép đạo hàm cấp 1 giữa hai mảnh.
+
+\subsection{Biên trái: biết $m_0$}
+\label{sec:spline-quadratic-left}
+\begin{enumerate}
+\item Ghi $m_0=s_L$ từ đề, không tự thay bằng 0.
+\item Với $i=0,1,\ldots,n-1$, tính $m_{i+1}=2\delta_i-m_i$.
+\item Tính $c_i$ rồi viết mảnh. Mỗi vòng dùng $m_i$ đã có để tạo $m_{i+1}$ cho vòng sau.
+\end{enumerate}
+Ví dụ chung, cho $S'(0)=0$:
+\begin{center}
+\begin{tabular}{rrrrr}
+\toprule
+Đoạn & $\delta_i$ & Độ dốc đã biết & Phép tính độ dốc mới & $c_i$\\ \midrule
+0&1&$m_0=0$&$m_1=2(1)-0=2$&1\\
+1&$-1$&$m_1=2$&$m_2=2(-1)-2=-4$&$-3$\\ \bottomrule
+\end{tabular}\end{center}
+Do đó
+\[
+S_0(x)=x^2,\qquad S_1(1+u)=1+2u-3u^2.
+\]
+Tại $1.5$, $u=0.5$, nên $S(1.5)=1+1-3/4=5/4$.
+Kiểm tra tại nút 1: cả hai giá trị bằng 1 và cả hai đạo hàm bằng 2.
+
+\subsection{Biên phải: biết $m_n$}
+\label{sec:spline-quadratic-right}
+Lần này ghi $m_n=s_R$ rồi duyệt \emph{ngược}:
+\[
+\boxed{m_i=2\delta_i-m_{i+1},\qquad i=n-1,n-2,\ldots,0.}
+\]
+Sau khi có mọi $m_i$, vẫn dựng mảnh theo $u=x-x_i$ từ đầu trái như trên.
+Với cùng dữ liệu và $m_2=-4$:
+\[
+m_1=2(-1)-(-4)=2,\qquad m_0=2(1)-2=0.
+\]
+Nhận lại đúng hai mảnh vừa tính. Nếu thay biên phải bằng số khác, kết quả thường đổi.
+Không gán độ dốc phải vào vị trí $m_0$.
+
+\section{Cubic: từ các moment đến bốn hệ số mỗi mảnh}
+\label{sec:spline-cubic}
+Đặt $M_i=S''(x_i)$, gọi là moment. Khi biết hai moment của đoạn,
+\begin{align}
+S_i(x_i+u)&=a_i+b_i u+c_i u^2+d_i u^3,\\
+a_i&=y_i,&
+b_i&=\delta_i-\frac{h_i}{6}(2M_i+M_{i+1}),\nonumber\\
+c_i&=\frac{M_i}{2},&
+d_i&=\frac{M_{i+1}-M_i}{6h_i}.\label{eq:spline-cubic-coef}
+\end{align}
+Nội suy và liên tục cấp 2 đã được xây vào công thức; ghép đạo hàm cấp 1 ở nút trong tạo hệ
+\[
+h_{i-1}M_{i-1}+2(h_{i-1}+h_i)M_i+h_iM_{i+1}
+=6(\delta_i-\delta_{i-1}),\quad i=1,\ldots,n-1.
+\]
+\textbf{Thứ tự thực hiện:}
+\begin{enumerate}
+\item Tính $h_i,\delta_i$.
+\item Viết $n-1$ hàng nút trong theo công thức trên.
+\item Thêm đúng hai hàng biên. Phần tiếp theo cho từng loại hàng.
+\item Giải hệ tìm $M_0,\ldots,M_n$.
+\item Trên từng đoạn, tính lần lượt $a_i,b_i,c_i,d_i$ bằng~\eqref{eq:spline-cubic-coef}.
+\item Kiểm các giá trị và đạo hàm ở hai phía nút; cuối cùng mới thế điểm hỏi.
+\end{enumerate}
+Không cần vòng hội tụ để dựng cubic. Độ tin cậy của phép giải phụ thuộc hệ, thang số liệu và sai số làm tròn; phần dư nhỏ không tự là cận sai số với hàm thật.
+
+\subsection{Biên tự nhiên: hai độ cong bằng 0}
+\label{sec:spline-natural}
+Hai hàng biên là $M_0=0,M_n=0$. Đây là giả thiết về \emph{độ cong}, không phải hai độ dốc bằng 0.
+Ví dụ ba mốc chung có hàng trong
+\[
+M_0+4M_1+M_2=6(-1-1)=-12.
+\]
+Suy ra $M=(0,-3,0)$, rồi
+\[
+S_0(x)=\frac32x-\frac12x^3,\qquad
+S_1(1+u)=1-\frac32u^2+\frac12u^3.
+\]
+Vì vậy $S(1.5)=1-3/8+1/16=11/16$.
+Đạo hàm trái tại đầu bảng bằng $3/2$, không bằng 0.
+
+\subsection{Thomas: khử xuôi và thế ngược trên hệ ba đường chéo}
+\label{sec:spline-thomas}
+Viết hàng $i$ là $l_iM_{i-1}+b_iM_i+q_iM_{i+1}=r_i$.
+Khởi tạo $\widetilde b_0=b_0$, $\widetilde r_0=r_0$. Tại mỗi hàng $i\geq1$:
+\[
+\lambda_i=\frac{l_i}{\widetilde b_{i-1}},\quad
+\widetilde b_i=b_i-\lambda_i q_{i-1},\quad
+\widetilde r_i=r_i-\lambda_i\widetilde r_{i-1}.
+\]
+Thế ngược:
+\[
+M_n=\frac{\widetilde r_n}{\widetilde b_n},\qquad
+M_i=\frac{\widetilde r_i-q_iM_{i+1}}{\widetilde b_i}.
+\]
+Phải kiểm pivot khác 0. Không dùng các công thức ba đường chéo này cho một ma trận còn có hệ số ngoài băng mà không xử lý chúng.
+
+\paragraph{Ví dụ bốn mốc, đủ mọi vòng.}
+Cho $x=(0,1,2,3)$, $y=(0,1,0,1)$ và biên tự nhiên. Hệ là
+\[
+\begin{bmatrix}1&0&0&0\\1&4&1&0\\0&1&4&1\\0&0&0&1\end{bmatrix}
+\begin{bmatrix}M_0\\M_1\\M_2\\M_3\end{bmatrix}
+=\begin{bmatrix}0\\-12\\12\\0\end{bmatrix}.
+\]
+\begin{center}
+\begin{tabular}{rrrrrr}
+\toprule
+$i$&$l_i$&$\lambda_i$&$\widetilde b_i$&$\widetilde r_i$&$q_i/\widetilde b_i$\\ \midrule
+0&0&---&1&0&0\\
+1&1&1&4&$-12$&$1/4$\\
+2&1&$1/4$&$15/4$&15&$4/15$\\
+3&0&0&1&0&0\\ \bottomrule
+\end{tabular}\end{center}
+Các phép thế ngược, theo đúng thứ tự, là
+\[
+M_3=0/1=0,\quad M_2=(15-0)/(15/4)=4,
+\quad M_1=(-12-4)/4=-4,\quad M_0=0.
+\]
+Không đổi dấu $M_1$ vì nó là một độ cong âm hợp lệ.
+Từ $M=(0,-4,4,0)$, bảng bốn hệ số là
+\begin{center}
+\begin{tabular}{rrrrrr}
+\toprule
+Đoạn & Miền $x$ & $a_i$ & $b_i$ & $c_i$ & $d_i$\\ \midrule
+0&$[0,1]$&0&$5/3$&0&$-2/3$\\
+1&$[1,2]$&1&$-1/3$&$-2$&$4/3$\\
+2&$[2,3]$&0&$-1/3$&2&$-2/3$\\ \bottomrule
+\end{tabular}\end{center}
+Chẳng hạn đoạn 1:
+$b_1=-1-(2(-4)+4)/6=-1/3$, $c_1=-4/2=-2$, $d_1=(4-(-4))/6=4/3$.
+Tại $z=1.5$, $u=0.5$, nên $S(z)=1-1/6-1/2+1/6=1/2$.
+
+\subsection{Biên kẹp: cho độ dốc ở hai đầu}
+\label{sec:spline-clamped}
+Đầu vào thêm $s_L=S'(x_0)$, $s_R=S'(x_n)$. Hai hàng biên là
+\[
+2h_0M_0+h_0M_1=6(\delta_0-s_L),\qquad
+h_{n-1}M_{n-1}+2h_{n-1}M_n=6(s_R-\delta_{n-1}).
+\]
+Ví dụ ba mốc chung, $s_L=2,s_R=-2$:
+\[
+\begin{bmatrix}2&1&0\\1&4&1\\0&1&2\end{bmatrix}M
+=\begin{bmatrix}-6\\-12\\-6\end{bmatrix},\qquad M=(-2,-2,-2)^T.
+\]
+Thomas cho $\lambda_1=1/2$, pivot mới $7/2$, vế phải $-9$;
+$\lambda_2=2/7$, pivot mới $12/7$, vế phải $-24/7$.
+Thế ngược cho ba moment $-2$.
+Các mảnh là $S_0(x)=2x-x^2$, $S_1(1+u)=1-u^2$.
+Tại $1/2$, $S=3/4$; tại hai đầu, đạo hàm lần lượt bằng $2,-2$, đúng đề.
+
+\subsection{Cho đạo hàm cấp hai ở hai đầu}
+\label{sec:spline-second}
+Nếu đề cho $L=S''(x_0)$, $R=S''(x_n)$ thì dùng trực tiếp $M_0=L,M_n=R$.
+Các hàng trong và công thức mảnh giữ nguyên.
+Vẫn bảng ba mốc, $L=R=-2$:
+\[
+M_0=-2,\quad -2+4M_1-2=-12\ \Longrightarrow\ M_1=-2,\quad M_2=-2.
+\]
+Nhận lại $S(x)=2x-x^2$. Hai loại biên khác tên có thể cho cùng spline nếu cùng mô tả đúng hàm này; không mặc định chúng luôn tương đương.
+
+\subsection{Biên hỗn hợp: mỗi đầu được chọn riêng}
+\label{sec:spline-mixed}
+Tại mỗi đầu, chọn cấp 1 hoặc cấp 2; ghép hàng tương ứng từ hai mục trên.
+Nếu trái cho cấp 1, phải cho cấp 2:
+\[
+2h_0M_0+h_0M_1=6(\delta_0-s_L),\qquad M_n=R.
+\]
+Nếu trái cho cấp 2, phải cho cấp 1:
+\[
+M_0=L,\qquad h_{n-1}M_{n-1}+2h_{n-1}M_n=6(s_R-\delta_{n-1}).
+\]
+Trường hợp $(1,1)$ chính là kẹp; $(2,2)$ là cho hai độ cong.
+Ví dụ $s_L=2,R=-2$ trên bảng chung:
+$2M_0+M_1=-6$, $M_0+4M_1+M_2=-12$, $M_2=-2$.
+Suy ra $M=(-2,-2,-2)$, $S(0.5)=3/4$.
+Đổi sang trái cấp 2 giá trị $-2$, phải cấp 1 giá trị $-2$ cũng nhận đúng spline này.
+Phải nhập \emph{cấp} và \emph{giá trị} riêng; số $-2$ tự nó không cho biết là độ dốc hay độ cong.
+
+\subsection{Lưới không đều vẫn làm cùng quy trình}
+\label{sec:spline-nonuniform}
+Cho $(0,0),(1,1),(3,0)$, biên tự nhiên.
+Tính $h=(1,2)$, $\delta=(1,-1/2)$. Hàng trong:
+\[
+1M_0+2(1+2)M_1+2M_2=6(-1/2-1)=-9.
+\]
+Do đó $M=(0,-3/2,0)$.
+Mảnh thứ hai là $S_1(1+u)=1+\frac12u-\frac34u^2+\frac18u^3$, $0\leq u\leq2$.
+Ở $x=2$, $u=1$ nên $S(2)=1+1/2-3/4+1/8=7/8$.
+Không thay hai bước $1,2$ bằng bước trung bình để dựng cubic.
+
+\section{Cubic tuần hoàn: hai hàng nối đầu và cuối}
+\label{sec:spline-periodic}
+Đầu vào phải có $y_0=y_n$ chính xác theo dữ liệu đã đọc. Ngoài ghép trong, yêu cầu
+$S'(x_0)=S'(x_n)$ và $S''(x_0)=S''(x_n)$.
+Giữ các hàng nút trong, thay hai hàng biên bằng
+\begin{align*}
+M_0-M_n&=0,\\
+2h_0M_0+h_0M_1+h_{n-1}M_{n-1}+2h_{n-1}M_n
+&=6(\delta_0-\delta_{n-1}).
+\end{align*}
+Các hệ số ở hai đầu có thể nằm ngoài ba đường chéo thông thường.
+Khi ít mốc, một ô có thể nhận hai đóng góp: phải \emph{cộng dồn}, không ghi đè.
+
+Ví dụ $(0,0),(1,1),(2,0)$ có hệ
+\[
+M_0-M_2=0,\quad M_0+4M_1+M_2=-12,\quad
+2M_0+2M_1+2M_2=12.
+\]
+Từ $M_2=M_0$, hai hàng còn lại cho $M_0+2M_1=-6$ và $2M_0+M_1=6$.
+Suy ra $M=(6,-6,6)$.
+Các mảnh là
+\[
+S_0(x)=3x^2-2x^3,\qquad S_1(1+u)=1-3u^2+2u^3.
+\]
+Tại hai đầu, giá trị đều 0, độ dốc đều 0 và độ cong đều 6.
+Tool yêu cầu ít nhất 3 mốc cho quy ước tuần hoàn này; không tự tạo trường hợp hai mốc.
+
+\section{Cubic not-a-knot: nối cả đạo hàm cấp ba ở hai nút gần biên}
+\label{sec:spline-notaknot}
+Với ít nhất 4 mốc, yêu cầu mảnh 0 và 1 có cùng đạo hàm cấp 3; tương tự hai mảnh cuối.
+Vì $S_i'''=(M_{i+1}-M_i)/h_i$, hai hàng là
+\begin{align*}
+-\frac{M_0}{h_0}+\left(\frac1{h_0}+\frac1{h_1}\right)M_1-\frac{M_2}{h_1}&=0,\\
+-\frac{M_{n-2}}{h_{n-2}}+\left(\frac1{h_{n-2}}+\frac1{h_{n-1}}\right)M_{n-1}-\frac{M_n}{h_{n-1}}&=0.
+\end{align*}
+Giữ các hàng nút trong và giải hệ. Đây không phải tự nhiên và cũng không đòi $y_0=y_n$.
+
+Ví dụ $x=(0,1,2,3)$, $y=(0,1,8,27)$:
+\[
+-M_0+2M_1-M_2=0,\quad M_0+4M_1+M_2=36,
+\]
+\[
+M_1+4M_2+M_3=72,\quad -M_1+2M_2-M_3=0.
+\]
+Nghiệm $M=(0,6,12,18)$ cho hệ số mảnh lần lượt
+$(0,0,0,1)$, $(1,3,3,1)$, $(8,12,6,1)$ theo bậc $u$ tăng.
+Chúng là các khai triển của $x^3$ quanh $0,1,2$; $S(1.5)=27/8$.
+Hai mảnh gần mỗi biên thực chất thuộc cùng một đa thức cubic.
+
+\section{Spline bậc p: vì sao cần p−1 điều kiện bổ sung?}
+\label{sec:spline-degree-p}
+Có $n$ đoạn, mỗi đoạn $p+1$ hệ số, tổng $n(p+1)$ ẩn.
+Nội suy hai đầu mỗi đoạn cho $2n$ phương trình. Ghép đạo hàm cấp $1,\ldots,p-1$
+tại $n-1$ nút trong cho $(n-1)(p-1)$ phương trình.
+Số bậc tự do còn lại là
+\[
+n(p+1)-2n-(n-1)(p-1)=p-1.
+\]
+Vì vậy cần thêm $p-1$ điều kiện \emph{độc lập và tương thích} để xác định duy nhất.
+Đếm đủ số hàng không chứng minh độc lập. Một điều kiện về giá trị ở đầu mút có thể chỉ lặp lại dữ liệu nội suy và không giảm bậc tự do.
+Hai mốc cũng có thể đủ nếu các điều kiện thêm xác định một mảnh duy nhất; không bắt số mốc bằng $p+1$ như nội suy toàn cục.
+
+\subsection{Truy hồi khi biết $p-1$ đạo hàm ở đầu trái}
+\label{sec:spline-left-general}
+Trên đoạn $i$, biết $v_r=S^{(r)}(x_i)$, $r=1,\ldots,p-1$.
+Viết $S_i(x_i+u)=\sum_{r=0}^p a_{i,r}u^r$.
+\begin{enumerate}
+\item Gán $a_{i,0}=y_i$ và $a_{i,r}=v_r/r!$ cho $1\leq r<p$.
+\item Tính giá trị đầu phải từ các hệ số đã biết:
+$K_i=\sum_{r=0}^{p-1}a_{i,r}h_i^r$.
+\item Dùng nội suy đầu phải tìm hệ số cuối:
+\[
+a_{i,p}=\frac{y_{i+1}-K_i}{h_i^p}.
+\]
+\item Tính \emph{toàn bộ} đạo hàm đầu phải vào mảng mới:
+\[
+w_r=\sum_{j=r}^{p}a_{i,j}\frac{j!}{(j-r)!}h_i^{j-r},\qquad r=1,\ldots,p-1.
+\]
+\item Lưu mảnh, rồi gán đồng thời $v\leftarrow w$ để bắt đầu đoạn $i+1$.
+\end{enumerate}
+Không cập nhật từng phần tử $v_r$ khi những đạo hàm khác vẫn cần bộ cũ.
+Đây là truyền hữu hạn qua các đoạn, không phải một phép lặp đến epsilon.
+
+\subsection{Bậc 4, ví dụ đủ hai lần truyền}
+\label{sec:spline-quartic-left}
+Nhập bảng chung và $S'(0)=1,S''(0)=S'''(0)=0$.
+\begin{center}\small
+\begin{tabular}{rp{.25\linewidth}p{.25\linewidth}p{.25\linewidth}}
+\toprule
+Đoạn & Đạo hàm đầu vào & Hệ số tìm được & Đạo hàm chuyển sang phải\\ \midrule
+0 & $(1,0,0)$ & $(0,1,0,0,0)$ & $(1,0,0)$\\
+1 & $(1,0,0)$ & $(1,1,0,0,-2)$ & $(-7,-24,-48)$\\ \bottomrule
+\end{tabular}\end{center}
+Đoạn 0: $K_0=0+1=1$, $a_{0,4}=(1-1)/1^4=0$.
+Đoạn 1: $K_1=1+1=2$, $a_{1,4}=(0-2)/1^4=-2$.
+Do đó
+\[
+S_0(x)=x,\qquad S_1(1+u)=1+u-2u^4.
+\]
+Các đạo hàm chuyển sau đoạn 1 lần lượt là
+$1-8=-7$, $-24$, $-48$. Tại nút 1, ba đạo hàm hai phía là $(1,0,0)$.
+Tại $1.5$: $u=0.5$ nên $S=1+1/2-2/16=11/8$.
+Không nhầm bộ $(-7,-24,-48)$ ở đầu bảng cuối với điều kiện đầu trái ban đầu.
+
+\section{Biên tổng quát: đầu phải, hai đầu hoặc tổ hợp tuyến tính}
+\label{sec:spline-general-boundary}
+Trong tool chọn \textbf{Biên tổng quát}, nhập bậc $p$.
+Một điều kiện đơn có dạng \texttt{["trái", cấp, giá trị]} hoặc
+\texttt{["phải", cấp, giá trị]}. Một tổ hợp có dạng
+\texttt{[[[phía,cấp,hệ số],...], giá trị]}.
+Các phía đều là \emph{hai đầu toàn bộ bảng}, không phải một nút trong tùy ý.
+
+\subsection{Lập hệ từ định nghĩa}
+\label{sec:spline-general-system}
+\begin{enumerate}
+\item Đặt toàn bộ $a_{i,0},\ldots,a_{i,p}$ làm ẩn, theo từng đoạn và bậc tăng.
+\item Với đoạn $i$, thêm $a_{i,0}=y_i$ và $\sum_{r=0}^p a_{i,r}h_i^r=y_{i+1}$.
+\item Với mỗi nút trong và mỗi $k=1,\ldots,p-1$, thêm
+\[
+\sum_{r=k}^p a_{i,r}\frac{r!}{(r-k)!}h_i^{r-k}=k!a_{i+1,k}.
+\]
+\item Chuyển từng điều kiện biên thành một hàng tuyến tính trên cùng dãy ẩn.
+\item Khử Gauss có chọn trụ. Kiểm hạng và tính tương thích; nếu duy nhất thì thế ngược.
+\item Dựng các mảnh rồi kiểm lại \emph{mọi} điều kiện đã nhập, kể cả điều kiện dư tương thích.
+\end{enumerate}
+Nếu hạng hệ số nhỏ hơn số ẩn thì chưa duy nhất. Nếu có hàng $0=\beta\ne0$ sau khử thì mâu thuẫn.
+Một điều kiện dư đúng có thể được giữ; một điều kiện dư sai không được bỏ qua.
+
+\subsection{Bậc 4 chỉ cho đầu phải: một ví dụ hoàn chỉnh}
+\label{sec:spline-quartic-right}
+Cho $x=(0,1,2)$, $y=(0,1,16)$ và
+$S'(2)=32,S''(2)=48,S'''(2)=48$.
+Gọi mảnh 0 là $A(x)=\sum_{r=0}^4a_rx^r$, mảnh 1 là $B(1+u)=\sum_{r=0}^4b_ru^r$.
+Mười phương trình theo đúng thứ tự lập hệ là
+\begin{align*}
+a_0&=0,&a_0+a_1+a_2+a_3+a_4&=1,\\
+b_0&=1,&b_0+b_1+b_2+b_3+b_4&=16,\\
+a_1+2a_2+3a_3+4a_4-b_1&=0,\\
+2a_2+6a_3+12a_4-2b_2&=0,\\
+6a_3+24a_4-6b_3&=0,\\
+b_1+2b_2+3b_3+4b_4&=32,\\
+2b_2+6b_3+12b_4&=48,\\
+6b_3+24b_4&=48.
+\end{align*}
+Vết chọn trụ thực tế của tool cho thứ tự ẩn $(a_0,\ldots,a_4,b_0,\ldots,b_4)$:
+\begin{center}\small
+\begin{tabular}{rrrrl}
+\toprule
+Bước & Cột & Hàng được chọn & Pivot & Hàng dưới bị khử: hệ số nhân\\ \midrule
+0&0&0&1&$1:1$\\
+1&1&1&1&$4:1$\\
+2&2&5&2&$4:1/2$\\
+3&3&6&6&$4:-1/6$\\
+4&4&4&1&không có\\
+5&5&5&1&$6:1$\\
+6&6&6&1&$7:1$\\
+7&7&8&2&$8:1/2$\\
+8&8&9&6&$9:-1/6$\\
+9&9&9&1&không có\\ \bottomrule
+\end{tabular}\end{center}
+Chỉ số hàng/cột bắt đầu từ 0; hàng được chọn là vị trí tại \emph{bước đang xét}, sau các lần đổi hàng trước.
+Khử dùng $R_i\leftarrow R_i-\lambda R_k$, đồng thời trên vế phải.
+Thế ngược cho
+\[
+a=(0,0,0,0,1),\qquad b=(1,4,6,4,1).
+\]
+Hai mảnh chính là $x^4$ ở hai gốc khác nhau; $S(1.5)=81/16=5.0625$.
+JSON nhập vào ô điều kiện là
+\begin{verbatim}
+[["phải",1,32],["phải",2,48],["phải",3,48]]
+\end{verbatim}
+
+\subsection{Biên chia ở hai đầu hoặc tổ hợp}
+\label{sec:spline-quartic-mixed}
+Trên cùng bảng, thay ba biên phải bằng
+$S'(0)=0,S'(2)=32,S''(2)=48$. Hàng thêm là
+\[
+a_1=0,\quad b_1+2b_2+3b_3+4b_4=32,\quad
+2b_2+6b_3+12b_4=48.
+\]
+Giữ bảy hàng nội suy/ghép; hệ vẫn cho hai dãy hệ số trên. JSON:
+\begin{verbatim}
+[["trái",1,0],["phải",1,32],["phải",2,48]]
+\end{verbatim}
+Hoặc dùng $S'(0)+S'(2)=32$, $S''(2)=48$, $S'''(2)=48$:
+\begin{verbatim}
+[[[["trái",1,1],["phải",1,1]],32],
+ ["phải",2,48],["phải",3,48]]
+\end{verbatim}
+Hàng đầu khi ấy là $a_1+b_1+2b_2+3b_3+4b_4=32$.
+Đây cũng cho $S=x^4$, đã được chạy đối chiếu bằng tool.
+Sự trùng kết quả trong ví dụ này do các biên đều đúng với $x^4$; không được tự đổi các bộ biên trong một đề khác.
+
+\section{Đánh giá, đạo hàm ở nút và tích phân qua nhiều mảnh}
+\label{sec:spline-evaluation}
+\begin{enumerate}
+\item \textbf{Tìm đoạn:} với $z$ trong miền, lấy đoạn chứa $z$. Tại đầu phải cuối cùng, dùng mảnh cuối.
+\item \textbf{Thế biến đúng:} $u=z-x_i$. Giá trị là $\sum a_{i,r}u^r$.
+\item \textbf{Đạo hàm:} $S_i^{(s)}(z)=\sum_{r=s}^p a_{i,r}r!u^{r-s}/(r-s)!$.
+Vì $du/dx=1$, không chia thêm $h_i^s$ như khi dùng biến chuẩn hóa $t$ của nội suy đều.
+\item \textbf{Ở nút trong:} kiểm hai phía cho mọi cấp đến cấp đang hỏi. Bậc $p$ chỉ được đảm bảo trơn đến $p-1$.
+Ngay cả khi hai mảnh đều có đạo hàm cấp $p+1$ bằng 0, spline toàn cục vẫn có thể không có đạo hàm cấp $p$ tại nút, nên không thể suy ra đạo hàm cấp $p+1$ tại đó.
+\end{enumerate}
+Ví dụ cubic tự nhiên ba mốc có $S_0'''=-3,S_1'''=3$ tại nút 1.
+Đạo hàm cấp 3 tại nút không tồn tại; hỏi cấp 4 ở đúng nút cũng không được trả 0 chỉ từ hai mảnh.
+
+Tích phân từ $a$ đến $b$: chèn mọi nút nằm giữa hai cận, rồi tính trên từng đoạn con
+\[
+\int_{x_i+u}^{x_i+v}S_i(x)\,dx
+=\sum_{r=0}^p a_{i,r}\frac{v^{r+1}-u^{r+1}}{r+1}.
+\]
+Nếu đảo cận thì đổi dấu. Ví dụ cubic tự nhiên ba mốc:
+$\int_0^1(3x/2-x^3/2)dx=5/8$ và $\int_1^2S_1dx=5/8$,
+nên $\int_0^2S=5/4$.
+
+Ngoài miền, mặc định không đánh giá. Khi được bật ngoại suy tường minh, tool kéo dài mảnh biên và ghi cảnh báo; không kẹp điểm hỏi về đầu mút.
+Đây là giá trị ngoại suy của mảnh, chưa có bảo đảm về hàm thật.
+
+\section{Tính duy nhất, sai số và những giới hạn thực tế}
+\label{sec:spline-limits}
+\begin{itemize}
+\item Với các $h_i>0$, hệ cubic tự nhiên/kẹp/cấp hai/hỗn hợp cấp 1--2 chuẩn được giải trực tiếp bằng hệ moment. Cần giữ đúng các hàng biên và kiểm pivot/phần dư.
+\item Spline tổng quát cần kiểm hạng; không có định lý rằng \emph{mọi} ba số biên tùy ý của spline bậc 4 đều xác định một nghiệm duy nhất.
+\item Spline có thể vượt ngoài khoảng các tung độ hoặc dao động; spline tự nhiên không tự bảo toàn đơn điệu. Sai lệch đúng ở các mốc không đo sai số giữa mốc.
+\item Cận sai số cần giả thiết đủ trơn và đúng kiểu biên. Không áp một hằng số sai số của spline kẹp cho mọi spline tự nhiên hoặc cho mọi bậc.
+\item Các mảnh và vết giải trong ví dụ nhỏ của tool dùng hữu tỷ của số thập phân đã đọc; sau đó chuyển sang biểu diễn số máy để vẽ/đánh giá. Báo cáo còn kiểm sự chuyển đổi này. Đây không làm dữ liệu đo ban đầu trở thành chính xác tuyệt đối.
+\item Cubic thường dùng Thomas; chọn Gauss thì có vết khử Gauss thật. Tuần hoàn/not-a-knot không dùng Thomas thường. Với hơn 80 mốc và chế độ tự chọn cho hai loại này, tool gọi bộ giải thư viện, giữ hệ thưa và kiểm điều kiện; không tạo một vết khử Gauss/Thomas giả để trang trí.
+\item Menu chỉ có lựa chọn nhanh \emph{bậc 4 đầu trái}. Biên phải và biên trộn đi qua \emph{Biên tổng quát}; không phải giới hạn toán học của spline.
+\item Trong phiên bản được đối chiếu, nhánh Biên tổng quát lập hệ đặc cho mọi hệ số và dùng Gauss. Lựa chọn Thomas ở nhánh này đang bị bỏ qua; nên chọn Gauss/tự chọn và đọc bộ giải thực tế trong báo cáo. Đây là giới hạn triển khai, không phải một phép biến đổi Thomas hợp lệ.
+\item Lõi \texttt{solve\_spline} nhận bậc nguyên $p\geq1$; hai API phụ cũ \texttt{spline\_degree}/\texttt{spline\_boundary} giới hạn bậc 1--4 và có quy tắc số biên riêng. Không đồng nhất hai đường gọi.
+\item Biên tổng quát hiện là các điều kiện tuyến tính ở hai đầu; nó không bao gồm mọi họ B-spline, spline làm trơn, knot bội hay mức trơn tùy ý.
+\end{itemize}
+
+\paragraph{Khi chép bài thi.}
+Ghi bảng mốc, $h_i,\delta_i$; loại biên và dữ kiện biên; ẩn và hệ/truy hồi;
+các bước giải; bốn hoặc $p+1$ hệ số trên mỗi đoạn; miền mảnh và biến $u$;
+phép thế tại điểm hỏi; kiểm nội suy/ghép/biên; cuối cùng ghi loại sai số biết được.
+Không gọi khử hệ hoặc truyền qua hữu hạn các đoạn là ``lặp đến hội tụ''.
+
+\paragraph{Nguồn trong repo và dữ liệu kiểm chứng.}
+Nội dung đối chiếu \texttt{pps/spline\_worked.py}, các trường Spline trong
+\texttt{pps/gui.py}, tài liệu spline 54 trang ở \texttt{kienthuc/real}, và các bài kiểm tra spline.
+Các ví dụ số trong chương là ví dụ tự dựng/bài mẫu đã có trong repo, không gán là dữ liệu của một đề thi khác.
+File \texttt{verification/spline\_ls\_examples.py} chạy lại các ví dụ bằng bộ tính thật;
+JSON cùng tên giữ hệ số và vết giải đầy đủ để đối chiếu.
