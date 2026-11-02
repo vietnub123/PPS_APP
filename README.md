@@ -52,33 +52,72 @@
 
 ### Yêu cầu hệ thống
 - Hệ điều hành: Windows 10/11 (hoặc Linux/macOS có cài đặt môi trường đồ họa Tk).
-- Python: Phiên bản **3.11 trở lên**.
+- Cài mới trên Windows: **Python 3.12, 64-bit**, có `pip`, `venv` và **Tcl/Tk (Tkinter)**.
+- **Python 3.11 không chạy được bản mã hiện tại.** Lỗi `f-string expression part cannot include a backslash` trong ảnh là lỗi cú pháp do phiên bản Python; đổi dữ liệu Stirling hoặc cài lại thư viện không giải quyết được. Python 3.12 hỗ trợ cú pháp này theo [PEP 701 trong tài liệu Python](https://docs.python.org/3.12/whatsnew/3.12.html#pep-701-syntactic-formalization-of-f-strings).
 
 ### Cách 1: Khởi chạy nhanh trên Windows (Khuyên dùng)
-1. **Lần đầu tiên**: Nhấp đúp vào **`CAI_DAT.bat`** để tạo môi trường ảo `.venv` và tự động cài đặt các thư viện cần thiết.
-2. **Sử dụng**: Nhấp đúp vào **`CHAY_PPS.bat`** để mở ứng dụng.
+1. Cài **Python 3.12 64-bit** từ Python.org. Có thể dùng [trang Python 3.12.10](https://www.python.org/downloads/release/python-31210/), mục **Windows installer (64-bit)**. Chọn bản cài đầy đủ, không dùng *embeddable package*. Giữ các thành phần **pip**, **tcl/tk and IDLE**, **Python Launcher**; nên bật **Add python.exe to PATH**. Không cần gỡ Python 3.11 đang dùng cho dự án khác.
+2. Mở một terminal mới, kiểm tra:
+
+   ```powershell
+   py -3.12 --version
+   py -3.12 -c "import struct; print(struct.calcsize('P') * 8)"
+   ```
+
+   Kết quả phải là `Python 3.12.x` và `64`.
+3. Đóng ứng dụng PPS, chạy **`CAI_DAT.bat`**. Bộ cài chọn rõ Python 3.12 64-bit, tạo `.venv`, nâng cấp pip, cài các phiên bản trong `requirements.txt`, kiểm tra phụ thuộc và biên dịch/import các mô-đun để phát hiện lỗi môi trường ngay khi cài.
+4. Chạy **`CHAY_PPS.bat`** để mở ứng dụng. Các file chạy luôn dùng Python của `.venv`, không tự quay về một Python mặc định có thể là 3.11. Môi trường 3.13 64-bit đang hoạt động vẫn được các file chạy chấp nhận; bộ cài chuẩn hóa môi trường mới về 3.12.
+
+**Nếu đã có `.venv` từ Python 3.11 hoặc môi trường bị hỏng:** chỉ cần chạy lại `CAI_DAT.bat` sau khi cài Python 3.12. Bộ cài đổi tên thư mục cũ thành `.venv.backup-<thời gian>-<mã>` trong cùng repo rồi tạo `.venv` mới; không xóa môi trường cũ. `.venv` đã đúng 3.12 64-bit được dùng lại và cài/kiểm tra thư viện. Nếu chưa tìm thấy Python 3.12 hoặc thiếu thành phần cơ bản, bộ cài dừng trước khi thay môi trường cũ.
+
+**Không chép `.venv` từ máy khác.** Chỉ chép mã nguồn, dữ liệu và `requirements.txt`, rồi chạy bộ cài trên máy nhận. Cài thêm Python 3.12 không tự nâng cấp `.venv` cũ.
+
+Nếu không có lệnh `py` hoặc Python nằm ở đường dẫn tùy chỉnh, có thể chỉ rõ file thực thi:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\setup_environment.ps1 -PythonExe "C:\duong-dan\Python312\python.exe"
+```
+
+`ExecutionPolicy Bypass` ở đây chỉ áp dụng cho tiến trình chạy script cài đặt; không đổi thiết lập PowerShell toàn máy. Nếu pip báo chưa tải được thư viện, kiểm tra Internet và chạy lại `CAI_DAT.bat`.
 
 Để chạy không cần cửa sổ Tk, dùng `CHAY_CONSOLE.bat examples\02_bessel.json` hoặc `.venv\Scripts\python.exe exam_cli.py examples\02_bessel.json`. Chuẩn bị thư viện trước khi ngắt mạng. Xem [hướng dẫn dùng khi thi](Huong_dan_dung_khi_thi.md), [báo cáo kiểm định](Bao_cao_kiem_dinh.md) và [bảng bao phủ](Bao_phu_kien_thuc.csv).
 
 Đợt kiểm tra các thuật toán còn lại và các lỗi đã sửa ở ODE, biên Robin, trị riêng, spline, hồi quy và tích phân được ghi trong [kiểm định thuật toán khác](Kiem_dinh_thuat_toan_khac.md).
 
-### Cách 2: Khởi chạy thủ công bằng dòng lệnh
-```bash
-# 1. Tạo môi trường ảo (nếu chưa có)
-python -m venv .venv
+### Cách 2: Tạo môi trường thủ công bằng đúng Python 3.12
 
-# 2. Kích hoạt môi trường ảo
-# Trên Windows:
-.venv\Scripts\activate
-# Trên Linux/macOS:
-source .venv/bin/activate
+Trên Windows, đóng PPS và giữ bản sao `.venv` cũ nếu có. Cách đơn giản để đổi phiên bản là dùng `CAI_DAT.bat` ở trên. Với thư mục **chưa có `.venv`**, chạy:
 
-# 3. Cài đặt các thư viện phụ thuộc
-pip install -r requirements.txt
-
-# 4. Khởi chạy ứng dụng
-python main.py
+```powershell
+py -3.12 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install --upgrade pip
+.\.venv\Scripts\python.exe -m pip install --only-binary=:all: -r requirements.txt
+.\.venv\Scripts\python.exe -m pip check
+.\.venv\Scripts\python.exe main.py
 ```
+
+Không cần kích hoạt môi trường khi dùng đường dẫn Python đầy đủ như trên. Không dùng `py -3 -m venv` hoặc `pip` trần vì chúng có thể trỏ sang phiên bản khác.
+
+Trên Linux/macOS, dùng Python 3.12 có hỗ trợ Tk và môi trường mới:
+
+```bash
+python3.12 -m venv .venv
+.venv/bin/python -m pip install --upgrade pip
+.venv/bin/python -m pip install -r requirements.txt
+.venv/bin/python main.py
+```
+
+### Kiểm tra sau khi cài / xử lý lỗi phiên bản
+
+```powershell
+.\.venv\Scripts\python.exe --version
+.\.venv\Scripts\python.exe -c "import sys; print(sys.executable)"
+.\.venv\Scripts\python.exe -m pip check
+```
+
+Python phải là `3.12.x` và đường dẫn phải nằm trong `.venv` của **đúng bản repo đang mở**. Nếu vẫn báo 3.11, chạy lại `CAI_DAT.bat`; trong VS Code chọn **Python: Select Interpreter → .venv\Scripts\python.exe** rồi mở terminal mới.
+
+Để kiểm tra cửa sổ Tk, chạy `py -3.12 -m tkinter`. Nếu thiếu `_tkinter` hoặc không tìm được `init.tcl`, mở trình cài Python 3.12, dùng **Modify/Repair** và cài **tcl/tk and IDLE**, rồi chạy lại bộ cài repo. Không cài `tkinter` bằng pip. Nếu chạy từ nút Run của IDE vẫn lỗi nhưng `CHAY_PPS.bat` chạy được, kiểm tra lại interpreter mà IDE đã chọn.
 
 ---
 
@@ -116,6 +155,7 @@ PPS_APP/
 ├── data/                       # Dữ liệu bài tập đã trích xuất
 ├── output/                     # Báo cáo, ảnh lời giải và kết quả chạy bài tập
 ├── CAI_DAT.bat                 # Script cài đặt môi trường tự động
+├── scripts/                    # Chọn Python 3.12, sao lưu/tạo .venv và kiểm tra phiên bản
 ├── CHAY_PPS.bat                # Script chạy nhanh ứng dụng
 ├── KIEM_TRA.bat                # Script chạy kiểm thử độ chính xác
 ├── main.py                     # Điểm khởi động ứng dụng
@@ -133,6 +173,6 @@ KIEM_TRA.bat
 ```
 Hoặc qua dòng lệnh:
 ```bash
-python -m unittest discover tests
+.venv\Scripts\python.exe -m unittest discover -s tests -v
 ```
 Bộ kiểm thử kiểm tra tái lập đa thức chuẩn, các phương pháp tích phân, ODE, cách trình bày và tải/xuất dữ liệu Excel/CSV.
