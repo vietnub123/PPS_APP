@@ -13,7 +13,10 @@ needles={'horner':'Mẫu bảng ngang tổng quát','inverse':'Bảng đủ các
     'least_squares':'Hàng i là khuôn','power_model':'Lũy thừa: Ax mũ b',
     'rational_model':'trả lại đúng thứ tự a,b','raw_lm':'một vòng nhận gì',
     'cubic_template':'Khuôn bảng cubic','integration':'Vector nguyên','ode':'Ví dụ Adams 4',
-    'bvp':'Ví dụ Robin','exam':'Tìm mọi nghiệm'}
+    'bvp':'Ví dụ Robin','exam':'Tìm mọi nghiệm',
+    'gauss_restored':'toàn bộ phép khử và thế ngược',
+    'qr_restored':'QR: hai lượt trực giao hóa',
+    'svd_restored':'SVD: ngưỡng hạng'}
 with pdfplumber.open(PDF) as doc:
     texts=[unicodedata.normalize('NFC',p.extract_text() or '') for p in doc.pages]
     compact=lambda t:''.join(t.split())

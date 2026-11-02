@@ -1,19 +1,22 @@
 {
-  "pages": 105,
-  "bookmarks": 107,
+  "pages": 109,
+  "bookmarks": 111,
   "review_pages_zero_based": {
     "horner": 11,
     "inverse": 34,
     "spline": 48,
     "least_squares": 53,
-    "power_model": 55,
-    "rational_model": 59,
-    "raw_lm": 64,
+    "power_model": 59,
+    "rational_model": 63,
+    "raw_lm": 68,
     "cubic_template": 40,
-    "integration": 74,
-    "ode": 89,
-    "bvp": 94,
-    "exam": 101
+    "integration": 78,
+    "ode": 93,
+    "bvp": 98,
+    "exam": 105,
+    "gauss_restored": 55,
+    "qr_restored": 56,
+    "svd_restored": 57
   },
   "replacement_chars": 0,
   "over_page_words": []

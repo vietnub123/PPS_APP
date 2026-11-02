@@ -18,7 +18,7 @@ Không dùng lời giải trên mạng. Các bảng tầng RK hoặc phép giả
 
 ## Kết quả kiểm tra
 
-Bản viết lại tổ chức nội dung theo **input cụ thể → bảng/quá trình tổng quát → output**. Tên trường được lấy lại từ `pps/gui.py`; chương bình phương tối thiểu tách từng mô hình và bỏ phần giảng Gauss/QR/SVD. Thay đổi trong đợt này là nội dung và công cụ kiểm tra tài liệu.
+Bản viết lại tổ chức nội dung theo **input cụ thể → bảng/quá trình tổng quát → output**. Tên trường được lấy lại từ `pps/gui.py`; chương bình phương tối thiểu tách từng mô hình. **Phần giải thích Gauss/QR/SVD và ví dụ số được khôi phục đầy đủ** trong [nguồn riêng](chapters/04a_Gauss_QR_SVD.tex), được đưa trực tiếp vào Chương 4; phần Gauss ở Phụ lục A cũng được giữ. Thay đổi trong đợt này là nội dung và công cụ kiểm tra tài liệu.
 
 | Kiểm tra | Kết quả và dữ liệu đối chiếu |
 |---|---|
@@ -28,7 +28,7 @@ Bản viết lại tổ chức nội dung theo **input cụ thể → bảng/qu�
 | Giải tích số và ODE | Kiểm trọng số Newton–Cotes 1–10 bằng hệ moment hữu tỷ; đạo hàm, quadrature, các RK, Adams 2–5, BVP/Robin và giảm lưới trị riêng. [Script](verification/calculus_verification.py), [kết quả](verification/calculus_examples.json). |
 | Công thức thật sinh từ tool | **78 trường hợp, 1.354 lượt công thức, 360 công thức khác nhau; 0 lỗi phân tích cú pháp hoặc cảnh báo thiếu glyph** ở bộ kiểm đã chạy. [Audit](verification/latex_audit.json), [script](verification/audit_latex.py). |
 | Kiểm thử hồi quy repo trước đợt viết lại hướng dẫn | `Ran 223 tests`; kết quả `OK (skipped=1)`. Nhóm `test_gui.GuiTests` bị bỏ qua do môi trường không có Tcl/Tk dùng được. Các test số học, xuất báo cáo và ba test xử lý cuộn Combobox chạy được. [Log](verification/test_suite.txt), [tóm tắt có cấu trúc](verification/test_summary.json). |
-| PDF viết lại | **105 trang, 107 bookmark**; mục lục/tham chiếu biên dịch ba lượt. Log cuối không có lỗi, tham chiếu chưa xác định, thiếu ký tự hay hộp tràn. Kiểm biên trang toàn PDF; xem trực tiếp các trang bảng tổng quát Horner, BPTT, lũy thừa, phân thức, LM, spline, tích phân, ODE và đề thật. [Kết quả kiểm PDF](verification/pdf_inspection.json). |
+| PDF hiện tại | **109 trang, 111 bookmark**; mục lục/tham chiếu biên dịch ba lượt. Log cuối không có lỗi, tham chiếu chưa xác định, thiếu ký tự hay hộp tràn. Kiểm biên trang toàn PDF; xem trực tiếp các trang Gauss/QR/SVD đã khôi phục và các trang bảng tổng quát Horner, BPTT, lũy thừa, phân thức, LM, spline, tích phân, ODE và đề thật. [Kết quả kiểm PDF](verification/pdf_inspection.json). |
 
 Script [run_regression.py](verification/run_regression.py) ghi log UTF-8 và trả mã thoát từ kết quả unittest. Cách này tránh PowerShell cũ biến dòng tiến độ ghi ra stderr thành `NativeCommandError`; dòng tiến độ đó tự nó không phải lỗi thuật toán.
 

@@ -59,7 +59,7 @@ INTRO=r'''\chapter[Bình phương tối thiểu: từng mô hình]{Tool Bình ph
 \section{Chọn mô hình rồi mới chọn phép biến đổi}
 Cho $N$ cặp $(x_0,y_0),\ldots,(x_{N-1},y_{N-1})$. Các $x$ có thể lặp: đó là các quan sát riêng. Tool tìm hàm khớp $g$, không ép hàm đi qua mọi điểm.
 \input{verification/inputs_ls.tex}
-\paragraph{Các bước bấm.} Chọn nhóm Bình phương tối thiểu $\to$ chọn đúng mô hình bên dưới $\to$ nhập $x,y$ $\to$ nhập cơ sở nếu có ô đó $\to$ trọng số nếu đề cho $\to$ điểm dự đoán nếu cần $\to$ Tính kết quả. Mục \emph{Chi tiết} mở các bước của bộ giải thực tế. Chương này tập trung việc lập bài toán và đọc kết quả; không giảng lại Gauss, QR hay SVD.
+\paragraph{Các bước bấm.} Chọn nhóm Bình phương tối thiểu $\to$ chọn đúng mô hình bên dưới $\to$ nhập $x,y$ $\to$ nhập cơ sở nếu có ô đó $\to$ trọng số nếu đề cho $\to$ điểm dự đoán nếu cần $\to$ Tính kết quả. Mục \emph{Chi tiết} mở các bước của bộ giải thực tế. Các phần Gauss, QR và SVD giải thích đầy đủ đường giải và ví dụ, bên cạnh hướng dẫn input, bảng tổng quát và output từng mô hình.
 
 \section{Mẫu chung cho bài hai tham số sau biến đổi}
 \label{sec:ls-general-table}
@@ -137,6 +137,7 @@ Riêng $M_0=w_0+\cdots+w_{N-1}$, $T_0=w_0y_0+\cdots+w_{N-1}y_{N-1}$, kể cả k
 \begin{bmatrix}c_0\\c_1\\c_2\end{bmatrix}=\begin{bmatrix}T_0\\T_1\\T_2\end{bmatrix}.
 \]
 Khôi phục $g=c_0+c_1x+c_2x^2$. Bậc cao hơn tạo hệ tương tự với đủ các lũy thừa đến $2p-2$.
+\input{chapters/04a_Gauss_QR_SVD.tex}
 '''
 
 # Mỗi mô hình có bảng và các tổng riêng, không thay bằng một ví dụ số.

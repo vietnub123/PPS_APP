@@ -1,0 +1,175 @@
+\section{Ba đường giải bình phương tối thiểu trong app}
+\label{sec:ls-solvers}
+Với thiết kế $\Phi_{ij}=\phi_j(x_i)$, đích $z$ (có thể là $y$ hoặc tung độ đã biến đổi) và $W=\operatorname{diag}(w_i)$, bài toán là
+\[
+\min_c F(c)=\sum_{i=0}^{N-1}w_i\left(\sum_{j=0}^{p-1}\Phi_{ij}c_j-z_i\right)^2
+          =\min_c\|\sqrt W(\Phi c-z)\|_2^2.
+\]
+Đạo hàm theo các hệ số cho
+\[
+\nabla F=2\Phi^TW(\Phi c-z)=0
+\quad\Longrightarrow\quad
+Gc=b,\qquad G=\Phi^TW\Phi,\quad b=\Phi^TWz.
+\]
+Nếu $W^{1/2}\Phi$ đủ hạng cột thì cực tiểu duy nhất. Thiếu hạng vẫn có cực tiểu nhưng hệ số có thể không duy nhất; không gọi đó là vô nghiệm bình phương tối thiểu.
+\begin{center}\small\begin{tabular}{@{}p{.20\linewidth}p{.39\linewidth}p{.32\linewidth}@{}}\toprule
+Lựa chọn&Phép giải thực tế&Bảng cần đọc\\\midrule
+Hệ chuẩn -- Gauss&Lập $G,b$, khử có chọn trụ, thế ngược&Ma trận mở rộng, pivot, hệ số khử, nghiệm\\
+QR (mặc định)&Trực giao hóa thiết kế có trọng số, giải hệ tam giác&$Q,R,Q^T\widetilde z$, các lượt chiếu và thế ngược\\
+SVD&Phân rã thiết kế có trọng số, nghịch đảo các giá trị kỳ dị được giữ&Ngưỡng hạng, các giá trị kỳ dị, nghiệm chuẩn nhỏ nhất nếu đã chọn\\\bottomrule
+\end{tabular}\end{center}
+Khi nghiệm duy nhất, trong số học chính xác cả ba giải cùng mục tiêu. QR/SVD không giả sử $\Phi c=z$ khớp đúng từng quan sát. Đề yêu cầu lập hệ chuẩn rồi khử thì chọn đúng bộ giải Gauss để có đúng vết tính.
+
+\section{Hệ chuẩn -- Gauss: toàn bộ phép khử và thế ngược}
+\label{sec:ls-normal-gauss}
+Tiếp tục ví dụ $x=(0,1,2,3)$, $y=(1,2,2,4)$, cơ sở $(1,x)$, trọng số 1:
+\[
+\Phi=\begin{bmatrix}1&0\\1&1\\1&2\\1&3\end{bmatrix},\quad
+G=\begin{bmatrix}4&6\\6&14\end{bmatrix},\quad b=\begin{bmatrix}9\\18\end{bmatrix}.
+\]
+Tool chọn phần tử có trị tuyệt đối lớn nhất trong cột còn xét làm pivot. Cột 0 có $|6|>|4|$, nên đổi hai hàng:
+\[
+\left[\begin{array}{cc|c}4&6&9\\6&14&18\end{array}\right]
+\xrightarrow{R_0\leftrightarrow R_1}
+\left[\begin{array}{cc|c}6&14&18\\4&6&9\end{array}\right].
+\]
+Hệ số khử $m_{10}=4/6=2/3$. Đổi cả hệ số và vế phải:
+\[
+R_1\leftarrow R_1-\tfrac23R_0
+\quad\Longrightarrow\quad
+\left[\begin{array}{cc|c}6&14&18\\0&-10/3&-3\end{array}\right].
+\]
+Thế từ ẩn cuối lên đầu:
+\[
+c_1=\frac{-3}{-10/3}=\frac9{10},\qquad
+c_0=\frac{18-14(9/10)}6=\frac9{10}.
+\]
+Đây là pivot và phép khử thực tế của app với lựa chọn Gauss, không phải một bảng được dựng sau khi chạy QR.
+
+\subsection{Các bước tổng quát với p hệ số}
+\begin{enumerate}
+\item Nhận ma trận mở rộng $[G\mid b]$ đã lập từ các tổng trong bảng dữ liệu.
+\item Tại cột $k=0,\ldots,p-1$, chọn hàng $r\ge k$ có $|a_{rk}|$ lớn nhất. Kiểm pivot theo ngưỡng được công bố; đổi hàng $r,k$ ở cả hai vế nếu cần.
+\item Với mọi hàng $i>k$, tính $m_{ik}=a_{ik}/a_{kk}$ rồi cập nhật
+\[
+a_{ij}\leftarrow a_{ij}-m_{ik}a_{kj}\quad(j=k,\ldots,p-1),\qquad
+b_i\leftarrow b_i-m_{ik}b_k.
+\]
+\item Sau khi thành hệ tam giác $Rc=d$, thế ngược:
+\[
+c_i=\frac{d_i-(R_{i,i+1}c_{i+1}+\cdots+R_{i,p-1}c_{p-1})}{R_{ii}},
+\quad i=p-1,\ldots,0.
+\]
+\item Kiểm phần dư bằng $Gc-b$ của hệ chuẩn ban đầu. Báo cáo giữ hàng trước/sau khử, ma trận sau mỗi cột và từng dòng thế ngược.
+\end{enumerate}
+Đây là số bước hữu hạn theo kích thước hệ. Ngưỡng pivot là kiểm số học, không phải ngưỡng hội tụ vòng lặp. Hệ chuẩn bình phương số điều kiện của thiết kế trong chuẩn 2 khi đủ hạng; dữ liệu nhạy số có thể làm kết quả nhạy dù phần dư nhỏ.
+
+\section{QR: hai lượt trực giao hóa rồi giải hệ tam giác}
+\label{sec:ls-qr}
+\subsection{Ma trận và vế phải có trọng số}
+Đặt $w_{\max}=\max_iw_i>0$. Tool tạo
+\[
+B=\sqrt{W/w_{\max}}\,\Phi,\qquad
+\widetilde z=\sqrt{W/w_{\max}}\,z.
+\]
+Nhân cả ma trận và đích bằng cùng căn trọng số. Chia mọi trọng số cho cùng $w_{\max}$ chỉ nhân mục tiêu với một hằng dương, không đổi nghiệm. Phân rã $B=QR$ với $Q^TQ=I$, rồi giải
+\[
+\boxed{Rc=Q^T\widetilde z.}
+\]
+Không dùng $Q^Tz$ khi $z$ chưa được nhân căn trọng số.
+
+\subsection{Thứ tự từng lượt chiếu trong triển khai}
+Gọi $B_j$ là cột $j$ của $B$. Tool giữ số thập phân độ chính xác cao, thực hiện hai lượt trực giao hóa:
+\begin{enumerate}
+\item Với cột $j$, khởi tạo $v=B_j$ và $R_{ij}=0$ cho các hàng cần tính.
+\item Ở mỗi lượt 1 và 2, lần lượt với $i=0,\ldots,j-1$, tính
+\[
+\rho=q_i^Tv=q_{0i}v_0+q_{1i}v_1+\cdots+q_{N-1,i}v_{N-1},
+\]
+rồi $R_{ij}\leftarrow R_{ij}+\rho$, $v\leftarrow v-\rho q_i$. Lượt sau dùng vector còn lại từ lượt trước.
+\item Tính $R_{jj}=\|v\|_2$. Nếu cột không phân biệt được với 0 theo ngưỡng đang dùng thì báo thiếu hạng. Nếu hợp lệ, đặt $q_j=v/R_{jj}$.
+\item Sau mọi cột, tính $d_j=q_j^T\widetilde z$ và thế ngược $Rc=d$.
+\end{enumerate}
+\begin{center}\small\begin{tabular}{cllll}\toprule
+Cột j&Lượt&Chiếu lên cột i&Hệ số $\rho$&Đại lượng chuyển tiếp\\\midrule
+$j$&1&$0,\ldots,j-1$&$q_i^Tv$&$v-\rho q_i$, cộng $\rho$ vào $R_{ij}$\\
+$j$&2&$0,\ldots,j-1$&$q_i^Tv$ mới&Vector còn lại để chuẩn hóa\\\bottomrule
+\end{tabular}\end{center}
+Đây là phép tính hữu hạn theo số cột và hai lượt chiếu. App không lặp trực giao hóa đến một epsilon tham số.
+
+\subsection{Ví dụ đường thẳng: đủ Q, R và phép thế}
+Không có trọng số khác nhau nên $B=\Phi$, $\widetilde z=y$. Cột 0 có chuẩn 2, do đó $q_0=(1,1,1,1)^T/2$. Chiếu cột 1:
+\[
+R_{01}=q_0^T(0,1,2,3)^T=3,\quad
+v=(-3/2,-1/2,1/2,3/2)^T,\quad\|v\|_2=\sqrt5.
+\]
+Lượt chiếu thứ hai có hệ số 0 trong số học chính xác; app vẫn ghi giá trị số thập phân thực tế của nó.
+\[
+Q=\begin{bmatrix}
+1/2&-3/(2\sqrt5)\\1/2&-1/(2\sqrt5)\\
+1/2&1/(2\sqrt5)\\1/2&3/(2\sqrt5)
+\end{bmatrix},\quad
+R=\begin{bmatrix}2&3\\0&\sqrt5\end{bmatrix},\quad
+Q^Ty=\begin{bmatrix}9/2\\9/(2\sqrt5)\end{bmatrix}.
+\]
+Thế ngược:
+\[
+c_1=\frac{9/(2\sqrt5)}{\sqrt5}=\frac9{10},\qquad
+c_0=\frac{9/2-3(9/10)}2=\frac9{10}.
+\]
+Nếu chỉ xem bảng ``Hệ chuẩn'' rồi chép rằng QR đã khử $G$ thì đã mô tả sai đường tính; vết thực tế là các phép chiếu, $R,Q^T\widetilde z$ và thế ngược trên đây.
+
+\section{SVD: ngưỡng hạng và nghiệm có chuẩn nhỏ nhất}
+\label{sec:ls-svd}
+\subsection{Công thức và cách đọc các giá trị kỳ dị}
+Với $B,\widetilde z$ đã định nghĩa, phân rã
+\[
+B=U\Sigma V^T,\qquad c=V\Sigma^+U^T\widetilde z,
+\]
+trong đó $\Sigma^+$ nghịch đảo các giá trị kỳ dị được giữ. Theo từng chỉ số $j$:
+\[
+\eta_j=\begin{cases}(U^T\widetilde z)_j/\sigma_j,&\sigma_j>\tau,\\0,&\sigma_j\le\tau,\end{cases}
+\qquad c=V\eta.
+\]
+Ngưỡng dùng trên thiết kế đang phân rã là
+\[
+\tau=\max(N,p)\,\epsilon_{\rm máy}\,\sigma_{\max}.
+\]
+Đó là hạng số theo ngưỡng đã công bố, không phải chứng minh hạng đại số của các hàm cơ sở. Khi thiếu hạng, lựa chọn ``Nghiệm duy nhất'' báo chưa xác định duy nhất; lựa chọn SVD cùng ``Chuẩn nhỏ nhất'' nhận nghiệm có chuẩn Euclid nhỏ nhất theo ngưỡng.
+
+\subsection{Đổi thang trong app và ví dụ số}
+Trước phân rã, app chia \emph{toàn bộ} thiết kế $B$ cho một thang chung $s_B$ và đích $\widetilde z$ cho $s_z$ để đưa về miền số máy. Sau cùng nhân hệ số với $s_z/s_B$. Dùng một thang chung cho thiết kế giúp giữ đúng ý nghĩa chuẩn của các hệ số gốc khi chọn nghiệm chuẩn nhỏ nhất.
+
+Với bài đường thẳng, $s_B=3,s_z=4$. Phân rã $\Phi/3$ có các số thực tế:
+\begin{align*}
+\sigma&=(1.36667681605608,\ 0.363585588898702),\\
+U^T(y/4)&=(-1.22669870398535,\ 0.118153669603069)^T.
+\end{align*}
+Nghiệm trên thang nội bộ là $(0.675,0.675)$; nhân $4/3$ cho $(0.9,0.9)$. Dấu một cặp vector kỳ dị có thể đảo đồng thời mà không đổi nghiệm.
+
+\subsection{Ví dụ thiếu hạng và quy tắc chuẩn nhỏ nhất}
+Cho $x=(1,1,1)$, $y=(1,2,3)$, cơ sở $(1,x)$. Hai cột thiết kế trùng nhau; hệ chuẩn chỉ còn $c_0+c_1=2$. Mọi cặp thỏa điều kiện này có
+\[
+\mathrm{SSE}_y=(2-1)^2+(2-2)^2+(2-3)^2=2.
+\]
+Lựa chọn ``Nghiệm duy nhất'' báo thiếu hạng. Chọn SVD và ``Chuẩn nhỏ nhất'' cho $c_0=c_1=1$, vì đó là điểm có $c_0^2+c_1^2$ nhỏ nhất trên đường $c_0+c_1=2$. Không âm thầm bỏ một cột hoặc tự gán một cặp tùy ý rồi gọi là nghiệm duy nhất.
+
+\subsection{Kiểm lại bài đường thẳng: phần dư khác 0 là bình thường}
+Với $g(x)=0.9+0.9x$:
+\begin{center}\begin{tabular}{rrrrr}\toprule
+$x_i$&$y_i$&$g_i$&$e_i=y_i-g_i$&$e_i^2$\\\midrule
+0&1&0.9&0.1&0.01\\1&2&1.8&0.2&0.04\\
+2&2&2.7&$-0.7$&0.49\\3&4&3.6&0.4&0.16\\\midrule
+Tổng&&&&0.70\\\bottomrule
+\end{tabular}\end{center}
+Kiểm $\sum e_i=0$, $\sum x_ie_i=0$; tổng quát là $\Phi^TW(y-\Phi c)\approx0$. Đây là điều kiện tối ưu tuyến tính; không yêu cầu từng $e_i=0$.
+
+\subsection{Trọng số khác nhau: phân biệt mục tiêu và SSE gốc}
+Ví dụ $x=(0,1,2)$, $y=(1,2,2)$, $w=(1,2,1)$:
+\[
+G=\begin{bmatrix}4&4\\4&6\end{bmatrix},\quad
+b=\begin{bmatrix}7\\8\end{bmatrix},\quad c=(1.25,0.5)^T.
+\]
+Ở đây $\mathrm{SSE}_y=0.1875$ nhưng $\sum_iw_ie_i^2=0.25$. Dòng trọng số 0 vẫn được giữ trong báo cáo, đóng góp bằng 0 vào mục tiêu có trọng số. Các cột và tung độ biến đổi vẫn phải có giá trị hữu hạn theo kiểm tra input của tool.
+
+Các phép giải và con số trên đối chiếu với các ca \texttt{line\_gauss}, \texttt{line\_qr}, \texttt{line\_svd}, \texttt{line\_weighted}, \texttt{minimum\_norm} trong JSON kiểm tra spline/hồi quy. Các mô hình tiếp theo dùng cùng các đường giải tuyến tính này sau khi biến đổi dữ liệu; hai nhánh SSE phi tuyến có chu trình riêng.
